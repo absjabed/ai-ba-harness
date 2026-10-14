@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FleetKeep Walkthrough</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230F8A72'/%3E%3Cpath d='M7 10.4c3-1.3 6-1.1 9 .8 3-1.9 6-2.1 9-.8v12.2c-3-1.3-6-1.1-9 .8-3-1.9-6-2.1-9-.8z' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linejoin='round'/%3E%3Cpath d='M16 11.2v12.2' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f7f9fb; --surface-2:#eef2f6; --text:#101a24; --muted:#5b6b7f;
+  --border:#dde4ec; --accent:#0b5d51; --accent-soft:#e6f4f1; --warn-bg:#fef3c7; --warn-text:#92400e;
+  --danger:#b91c1c; --ok:#166534; --code-bg:#f1f5f9; --shadow:0 1px 2px rgba(16,26,36,.06),0 8px 24px rgba(16,26,36,.06);
+  --mark-bg:#0F8A72; /* brand mark + favicon: one value for both themes (same as the Dev handbook) */
+  --dg-proc:#dae8fc; --dg-proc-s:#6c8ebf; --dg-gate:#fff2cc; --dg-gate-s:#d6b656; --dg-par:#d5e8d4; --dg-par-s:#82b366;
+  --dg-rv:#e1d5e7; --dg-rv-s:#9673a6; --dg-opt:#f5f5f5; --dg-opt-s:#999999; --dg-lane:#ffffff; --dg-lane-h:#f1f4f8;
+  --dg-badge:#9a7a12; --dg-edge:#5b6b7f;
+  --mono:ui-monospace,'Cascadia Mono','SF Mono',Consolas,monospace;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1120; --surface:#111c33; --surface-2:#16233d; --text:#e2e8f0; --muted:#94a3b8;
+    --border:#2b3a52; --accent:#45af9b; --accent-soft:#0f2b28; --warn-bg:#3b2f10; --warn-text:#fbbf24;
+    --danger:#f87171; --ok:#4ade80; --code-bg:#0f1a2e;
+    --dg-proc:#1b2c47; --dg-proc-s:#7b9fd4; --dg-gate:#3a3014; --dg-gate-s:#d6b656; --dg-par:#1a3324; --dg-par-s:#82b366;
+    --dg-rv:#2d2340; --dg-rv-s:#b195d1; --dg-opt:#151e30; --dg-opt-s:#7d8799; --dg-lane:#0e1729; --dg-lane-h:#16233d;
+    --dg-badge:#e2c35c; --dg-edge:#94a3b8; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:1rem}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;font-size:16px}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:0;max-width:1400px;margin:0 auto}
+nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:28px 20px;border-right:1px solid var(--border);background:var(--surface)}
+nav h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:22px 0 8px}
+nav h2:first-child{margin-top:0}
+nav a{display:block;padding:5px 10px;margin:1px -10px;color:var(--text);text-decoration:none;border-radius:6px;font-size:.88rem}
+nav a:hover{background:var(--surface-2);color:var(--accent)}
+nav a.sub{padding-left:22px;font-size:.84rem;color:var(--muted)}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.brand .mark{width:34px;height:34px;flex:none;display:block}
+.brand .mark svg{display:block}
+.brand strong{font-size:1rem;letter-spacing:-.01em}
+.brand span{display:block;font-size:.72rem;color:var(--muted);font-weight:400}
+main{padding:44px 48px 90px;min-width:0}
+h1{font-size:2.1rem;line-height:1.2;margin:0 0 .4rem;letter-spacing:-.02em}
+.lede{font-size:1.08rem;color:var(--muted);margin:0 0 2rem;max-width:68ch}
+h2{font-size:1.45rem;margin:3rem 0 .9rem;padding-top:.6rem;letter-spacing:-.015em;border-top:1px solid var(--border)}
+h3{font-size:1.08rem;margin:1.9rem 0 .6rem}
+p,li{max-width:80ch}
+p code,li code{overflow-wrap:anywhere}
+code{font-family:var(--mono);font-size:.855em;background:var(--code-bg);padding:.12em .38em;border-radius:4px;border:1px solid var(--border)}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.855rem;line-height:1.55}
+pre code{background:none;border:none;padding:0}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.9rem;display:block;overflow-x:auto}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+th{background:var(--surface-2);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap}
+tbody tr:hover{background:var(--surface)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin:1.1rem 0;box-shadow:var(--shadow)}
+.card h3{margin:0 0 .35rem;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.card>p{margin:.2rem 0 .4rem}
+.card table{margin:.5rem 0 0}
+.card td:first-child{white-space:nowrap;width:1%}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:14px 18px;margin:1.1rem 0}
+.callout.warn{border-left-color:var(--warn-text);background:var(--warn-bg);color:var(--warn-text)}
+.callout p{margin:.3rem 0}
+.callout strong{color:inherit}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:1.1rem 0}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.tile h4{margin:0 0 .3rem;font-size:.95rem}
+.tile p{margin:0;font-size:.87rem;color:var(--muted)}
+.pill{display:inline-block;font-size:.7rem;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--border);white-space:nowrap}
+.pill.block{background:var(--warn-bg);color:var(--warn-text)}
+.steps{counter-reset:s;list-style:none;padding:0;margin:1.2rem 0}
+.steps>li{counter-increment:s;position:relative;padding:0 0 1.5rem 3rem;border-left:2px solid var(--border);margin-left:14px}
+.steps>li:last-child{border-left-color:transparent;padding-bottom:0}
+.steps>li::before{content:counter(s);position:absolute;left:-15px;top:-2px;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.steps h3{margin:0 0 .4rem}
+footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--border);color:var(--muted);font-size:.84rem}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:1rem 0;font-family:var(--mono);font-size:.82rem}
+.flow span{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:7px 11px}
+.flow em{color:var(--muted);font-style:normal}
+main a{color:var(--accent);text-underline-offset:2px}
+.dg-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:10px;margin:1.1rem 0}
+.dg{display:block;width:100%;min-width:860px;height:auto;font-family:var(--sans)}
+.dg-lane{fill:var(--dg-lane);stroke:var(--border)}
+.dg-lane-h{fill:var(--dg-lane-h);stroke:var(--border)}
+.dg-n{stroke-width:1.3}
+.dg-proc{fill:var(--dg-proc);stroke:var(--dg-proc-s)}
+.dg-gate{fill:var(--dg-gate);stroke:var(--dg-gate-s);stroke-width:2}
+.dg-par{fill:var(--dg-par);stroke:var(--dg-par-s)}
+.dg-rv{fill:var(--dg-rv);stroke:var(--dg-rv-s);stroke-width:2}
+.dg-opt{fill:var(--dg-opt);stroke:var(--dg-opt-s)}
+.dg-note{fill:var(--dg-lane-h);stroke:var(--dg-opt-s);stroke-dasharray:4 3}
+.dg-guard{fill:var(--accent-soft);stroke:var(--accent)}
+.dg-e{stroke:var(--dg-edge);stroke-width:1.4;fill:none}
+.dg-dash{stroke-dasharray:3 3}
+.dg-ah{fill:var(--dg-edge)}
+.dg-h{font-size:15px;font-weight:700;fill:var(--text)}
+.dg-lg{font-size:11px;fill:var(--muted)}
+.dg-lt{font-size:12.5px;font-weight:700;fill:var(--text)}
+.dg-lc{font-size:9.5px;fill:var(--muted);font-family:var(--mono)}
+.dg-t{font-size:10.5px;font-weight:600;fill:var(--text)}
+.dg-s{font-size:9.5px;fill:var(--muted)}
+.dg-badge{font-size:7.5px;font-weight:800;letter-spacing:.06em;fill:var(--dg-badge)}
+.tl{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:1.1rem 0}
+.tl-row{display:grid;grid-template-columns:84px 200px minmax(0,1fr);gap:12px;padding:9px 14px;border-bottom:1px solid var(--border);font-size:.9rem;align-items:baseline}
+.tl-row:last-child{border-bottom:none}
+.tl-part{padding:7px 14px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tl-date{color:var(--muted);font-size:.8rem;font-weight:600}
+.tl-cmd{font-family:var(--mono);font-size:.84rem;color:var(--accent);font-weight:600}
+.io{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:1rem 0}
+.io-col{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;min-width:0}
+.io-col h4{margin:0 0 .3rem;font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.io-col ul{margin:0;padding-left:1.1rem;font-size:.88rem}
+.io-col li{margin:.15rem 0}
+.chat{display:flex;flex-direction:column;gap:10px;margin:1rem 0}
+.msg{border:1px solid var(--border);border-radius:12px;padding:10px 14px;max-width:82ch;font-size:.92rem;min-width:0}
+.msg>b{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:2px}
+.msg p{margin:.35rem 0}
+.msg ul,.msg ol{margin:.35rem 0;padding-left:1.2rem}
+.msg.ai{background:var(--surface)}
+.msg.you{background:var(--accent-soft);align-self:flex-end;border-color:var(--accent)}
+.cmd{margin:1.4rem 0 .5rem}
+.cmd code{font-size:.95rem;padding:.35em .7em;border-color:var(--accent)}
+.flow-list{padding-left:1.3rem}
+.flow-list li{margin:.4rem 0}
+h4{font-size:.98rem;margin:1.6rem 0 .4rem}
+@media(max-width:900px){
+  .tl-row{grid-template-columns:1fr;gap:2px}
+  .msg.you{align-self:stretch}
+  .layout{grid-template-columns:1fr}
+  nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}
+  main{padding:28px 16px 60px}
+  h1{font-size:1.65rem}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav>
+  <div class="brand">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" width="34" height="34" role="img">
+        <rect width="32" height="32" rx="7" fill="var(--mark-bg)"/>
+        <path d="M7 10.4c3-1.3 6-1.1 9 .8 3-1.9 6-2.1 9-.8v12.2c-3-1.3-6-1.1-9 .8-3-1.9-6-2.1-9-.8z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linejoin="round"/>
+        <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div><strong>AI BA Harness</strong><span>Walkthrough · v0.4.2</span></div>
+  </div>
+  <h2>The walkthrough</h2>
+  <a href="#ex-project">The example</a>
+  <a href="#ex-glance">At a glance</a>
+  <a class="sub" href="#ex-setup">1 · Set up the project (Sep 15)</a>
+  <a class="sub" href="#ex-first">2 · The first knowledge (Sep 17 and 24)</a>
+  <a class="sub" href="#ex-daily">3 · Every day (Oct 6 to 16)</a>
+  <a class="sub" href="#ex-epic">4 · An epic, into Jira (Oct 9 to 13)</a>
+  <a class="sub" href="#ex-after">5 · Changes and release (Oct 15 to Nov 30)</a>
+  <a class="sub" href="#ex-ask">6 · Anyone asks</a>
+  <a href="#ex-who">Who does what</a>
+  <h2>More</h2>
+  <a href="index.html">The BA handbook</a>
+</nav>
+<main>
+<h1>FleetKeep, from setup to ask</h1>
+<p class="lede">One example, start to finish: setting up a project, building its knowledge base,
+writing an epic, putting it into Jira, changing it afterwards, shipping it, and answering a
+teammate's question. Every command appears at least once, with what you type, what it reads, what it
+asks you and what you end up with. Written for someone who has never worked this way.</p>
+
+<div class="callout warn">
+<p><strong>An illustration of the design, not a recording.</strong> The harness has not yet run
+against a real Jira site; this is what each command is written to do. Parts 1 to 4 end in real files:
+the worked example in the template at <code>examples/fleetkeep-ba-knowledge/</code>, which stops on
+Oct 14. Part 5 goes further than those files. The chat exchanges show what the commands ask; the
+wording varies from run to run.</p>
+</div>
+
+<h3 id="ex-project">The example</h3>
+<p><strong>FleetKeep</strong>, by Northwind Systems, keeps commercial vehicle fleets road-legal:
+driver walkaround checks, defects, workshop job cards and return to service. Jira project
+<code>FK</code> on <code>northwind.atlassian.net</code>, Confluence space <code>FK</code>. The pilot
+customer's workshop keeps missing escalated defects, and the Product owner wants that fixed in
+release <code>2026.11</code>. Everything here is fictional.</p>
+<table>
+<thead><tr><th>Role</th><th>In this story</th></tr></thead>
+<tbody>
+<tr><td>Lead BA</td><td>Runs the commands and maintains the repository. "You" below</td></tr>
+<tr><td>BA</td><td>A second BA on the project, who also applies changes</td></tr>
+<tr><td>Product owner</td><td>Decides product behaviour, business rules, scope and release content</td></tr>
+<tr><td>Engineering lead</td><td>Answers technical questions in Jira; decides the technical approach, not rules</td></tr>
+<tr><td>Compliance adviser</td><td>Interprets the regulator's guidance for the product</td></tr>
+<tr><td>Pilot transport manager, Pilot workshop supervisor</td><td>The customer's people. They give views; they decide nothing in the product</td></tr>
+<tr><td>A developer</td><td>Has a clone of the repository and asks questions with <code>/ask</code></td></tr>
+</tbody>
+</table>
+
+<h4>Words you will see</h4>
+<table>
+<thead><tr><th>Term</th><th>Means</th></tr></thead>
+<tbody>
+<tr><td><b>Knowledge base</b></td><td>The folder <code>knowledge/</code>: what the project knows, as plain markdown pages, each with an ID, a status and its sources</td></tr>
+<tr><td><b>Source record</b> (<code>SRC-</code>)</td><td>A short, redacted summary of one input (a meeting, a document, a Jira sync) and what it changed. The raw notes are never committed</td></tr>
+<tr><td><b>Staging file</b></td><td>A proposal in <code>knowledge/_staging/</code>: everything a command wants to add or change, item by item. Nothing in it is knowledge yet</td></tr>
+<tr><td><b>Item</b></td><td>One proposed change: a new rule, an answer, a term, a risk. You accept, edit or reject each one</td></tr>
+<tr><td><b>Verdict</b></td><td>How an item relates to what is already known: <code>new</code>, <code>confirms</code>, <code>extends</code>, <code>contradicts</code>, <code>duplicate</code>, <code>answers</code></td></tr>
+<tr><td><b>Critic</b></td><td>A second look at every staging file, in a fresh context, before you see it: missed items, wrong quotes, wrong verdicts, data to redact</td></tr>
+<tr><td><b>Status</b></td><td><code>draft</code> (unchecked), <code>confirmed</code> (a BA checked it), <code>approved</code> (someone with authority agreed), <code>superseded</code> (replaced; never used in answers)</td></tr>
+<tr><td><b>Capability</b> (<code>CAP-</code>)</td><td>A page on one thing the product does, with its numbered business rules</td></tr>
+<tr><td><b>Business rule</b> (<code>BR-</code>)</td><td>One testable rule, such as "a category-B defect escalates after 36 hours"</td></tr>
+<tr><td><b>Decision</b> (<code>DEC-</code>), <b>open question</b> (<code>Q-</code>), <b>action</b> (<code>ACT-</code>)</td><td>Who decided what; what nobody can answer yet, and who should; who will do what, by when</td></tr>
+<tr><td><b>Requirement document</b></td><td><code>requirements/&lt;epic&gt;/requirement.md</code>: the epic's goal, scope, requirements and user stories, written from the knowledge base</td></tr>
+<tr><td><b>Trace map</b></td><td><code>trace/map.csv</code>: which requirement became which Jira story, and which pages it relies on</td></tr>
+<tr><td><b>Profile</b></td><td><code>PROJECT-PROFILE.md</code>: the project's settings, filled by <code>/setup</code></td></tr>
+</tbody>
+</table>
+
+<h3 id="ex-glance">At a glance</h3>
+<p>The parts are grouped by kind of work, so their dates overlap a little.</p>
+<div class="tl">
+<div class="tl-part">Part 1 · Set up</div>
+<div class="tl-row"><span class="tl-date">Sep 15</span><span class="tl-cmd">/setup</span><span>Profile, Jira and Confluence settings, stakeholders with a RACI, five business areas</span></div>
+<div class="tl-part">Part 2 · The first knowledge</div>
+<div class="tl-row"><span class="tl-date">Sep 17</span><span class="tl-cmd">/intake</span><span>Discovery workshop notes become the first glossary, capabilities, process and questions</span></div>
+<div class="tl-row"><span class="tl-date">Sep 24</span><span class="tl-cmd">/intake</span><span>The regulator's guidance (PDF): audit expectations, one new question</span></div>
+<div class="tl-part">Part 3 · Every day</div>
+<div class="tl-row"><span class="tl-date">Oct 6</span><span class="tl-cmd">/sync jira</span><span>A question answered in a Jira comment, one page superseded, two decisions</span></div>
+<div class="tl-row"><span class="tl-date">Oct 7</span><span class="tl-cmd">/review FK-1215</span><span>A story written straight into Jira contradicts an approved decision</span></div>
+<div class="tl-row"><span class="tl-date">Oct 14</span><span class="tl-cmd">/intake</span><span>Triage call staged; the critic finds four things before you do</span></div>
+<div class="tl-row"><span class="tl-date">Oct 16</span><span class="tl-cmd">/review kb</span><span>Friday health check, and a drafted message of questions for the Product owner</span></div>
+<div class="tl-part">Part 4 · An epic</div>
+<div class="tl-row"><span class="tl-date">Oct 9</span><span class="tl-cmd">/requirements</span><span>The requirement for escalated defects reaching the workshop</span></div>
+<div class="tl-row"><span class="tl-date">Oct 12</span><span class="tl-cmd">/review</span><span>Ready, with four minor findings</span></div>
+<div class="tl-row"><span class="tl-date">Oct 13</span><span class="tl-cmd">/backlog</span><span>Epic FK-1301 and stories FK-1302 to FK-1305, after your approval</span></div>
+<div class="tl-part">Part 5 · Changes and release (beyond the example files)</div>
+<div class="tl-row"><span class="tl-date">Oct 15</span><span class="tl-cmd">/intake, /backlog task</span><span>Triage call decided, with its delivery impact; an action becomes a Jira task</span></div>
+<div class="tl-row"><span class="tl-date">Oct 20</span><span class="tl-cmd">/intake, /requirements, /review, /backlog</span><span>A rule changes after the stories exist; three stories updated, nothing created twice</span></div>
+<div class="tl-row"><span class="tl-date">Oct 22</span><span class="tl-cmd">/intake</span><span>The Product owner signs the requirement off</span></div>
+<div class="tl-row"><span class="tl-date">Oct 26</span><span class="tl-cmd">/kb-seed confluence</span><span>The rewritten product rules are seeded; the inspections area gets its first pages</span></div>
+<div class="tl-row"><span class="tl-date">Nov 9</span><span class="tl-cmd">/backlog bug</span><span>A UAT finding becomes a bug</span></div>
+<div class="tl-row"><span class="tl-date">Nov 30</span><span class="tl-cmd">/sync</span><span>The stories are done; the pages now describe what shipped</span></div>
+<div class="tl-part">Part 6 · Anyone asks</div>
+<div class="tl-row"><span class="tl-date">Any day</span><span class="tl-cmd">/ask</span><span>A developer gets a cited answer, and a drafted question when the knowledge base doesn't know</span></div>
+</div>
+
+<!-- ============ PART 1 ============ -->
+<h3 id="ex-setup">Part 1 · Set up the project (Sep 15)</h3>
+<p><b>Before <code>/setup</code></b>, about fifteen minutes of plumbing, as in
+<a href="index.html#setup">Set up a project</a>:</p>
+<pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
+cd ../fleetkeep-ba-knowledge
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.4.2"
+git remote add origin &lt;URL of the empty private repository&gt;
+git push -u origin main
+claude</code></pre>
+<p>Claude Code asks twice the first time: trust the folder (yes) and use the <code>atlassian</code>
+server from <code>.mcp.json</code> (yes). Then <code>/mcp</code>, choose <code>atlassian</code>, and sign
+in in the browser with your own account.</p>
+
+<div class="cmd"><code>/setup</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul>
+<li>your answers</li>
+<li>Jira and Confluence: projects, issue types, versions, link types, required fields, spaces</li>
+<li>the template's profile and conventions</li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul>
+<li>eight short rounds, with a proposed answer wherever it can make one</li>
+<li>how to fill each field Jira requires</li>
+<li>a yes before writing, and before pushing</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul>
+<li>a filled <code>PROJECT-PROFILE.md</code></li>
+<li><code>knowledge/stakeholders.md</code> with a RACI (draft)</li>
+<li>a folder per business area, a log line, one commit</li></ul></div>
+</div>
+<p>It starts with checks: git has a remote; Atlassian answers with one site,
+<code>northwind.atlassian.net</code>; the copy script already filled the name, the repository name and
+the harness version, so it only confirms them. Then the interview:</p>
+<table>
+<thead><tr><th>Round</th><th>It asks or does</th><th>You answer</th></tr></thead>
+<tbody>
+<tr><td><b>1 · Project</b></td><td>"FleetKeep, from the copy script; right? What does it do, for whom, in one sentence? Which roles maintain this repository? Only they apply changes. I'd suggest Lead BA."</td><td>"Keeps commercial fleets road-legal and roadworthy for transport managers, technicians, drivers and compliance officers. Lead BA, BA, Product owner."</td></tr>
+<tr><td><b>2 · Jira</b></td><td>Lists the projects it can see (FK, NWOPS, SUP). Maps FK's issue types to the five templates. Proposes the scope for <code>/sync</code>, <code>project = FK AND (labels = ba-harness OR issuetype in (Epic, Story, Spike))</code>, and shows "at least 100 issues, starting FK-1188, FK-1192, FK-1197". Reads the versions (2026.09 to 2026.11) and proposes "year.month, <code>unscheduled</code> until planned"; offers the link types</td><td>"FK only. The JQL is right. Versions as you say, no default component, Duplicate and Relates."</td></tr>
+<tr><td><b>3 · Confluence</b></td><td>"Do you use it? I can see the spaces FK and ENG. Is there a parent page for a published copy?"</td><td>"Space FK. Parent page: FleetKeep BA knowledge (published copy)."</td></tr>
+<tr><td><b>4 · Areas</b></td><td>"Four to eight areas? From the epics I'd guess vehicles, inspections, defects, workshop, tenancy and access."</td><td>"Those five."</td></tr>
+<tr><td><b>5 · Stakeholders</b></td><td>"Who are the stakeholders by role, what do they own, and what can each decide?" Then proposes a RACI for recurring decisions: a business rule change, release content, regulator guidance, accepting a knowledge change</td><td>Lists seven roles; adds a RACI row: "defect escalation thresholds: Lead BA responsible, Product owner accountable, consult both pilot people."</td></tr>
+<tr><td><b>6 · Material</b></td><td>"What exists to build the first knowledge base from? If little is written down, we can start from a workshop."</td><td>"A product rules tree in Confluence, but it's being rewritten. The regulator's PDF. Our best source is tomorrow's workshop."</td></tr>
+<tr><td><b>7 · Writing rules</b></td><td>"Which words do you prefer, and avoid? I'd propose walkaround check (not daily check), job card (not work order), VOR (not grounded), transport manager (not fleet manager)."</td><td>"Yes, plus category-A defect instead of critical defect, return to service instead of release. Add promptly, urgent, soon and real time to the vague words."</td></tr>
+<tr><td><b>8 · Options</b></td><td>"Automatic sync on? Is markitdown installed? At most 15 issues per Jira approval?"</td><td>"On, yes, 15."</td></tr>
+<tr><td><b>Jira fields</b></td><td>"Jira requires Team on stories (<code>customfield_10001</code>) and Affected area on bugs (<code>customfield_10045</code>). A fixed default, a value from the requirement, or ask each time?"</td><td>"Team is always FleetKeep Core. Affected area comes from the requirement's area; ask if there isn't one."</td></tr>
+</tbody>
+</table>
+<p>It shows the whole profile as a diff. After your yes it writes:</p>
+<table>
+<thead><tr><th>File</th><th>What changes</th></tr></thead>
+<tbody>
+<tr><td><code>PROJECT-PROFILE.md</code></td><td>Sections 1 to 7 filled, including the Cloud ID</td></tr>
+<tr><td><code>knowledge/stakeholders.md</code></td><td>Seven roles with what each can decide, and five RACI rows, as <code>draft</code></td></tr>
+<tr><td><code>knowledge/glossary.md</code>, <code>raid.md</code></td><td>Dated today; otherwise empty</td></tr>
+<tr><td><code>knowledge/domains/</code></td><td><code>vehicles/</code>, <code>inspections/</code>, <code>defects/</code>, <code>workshop/</code>, <code>tenancy-and-access/</code></td></tr>
+<tr><td><code>knowledge/log.md</code></td><td><code>- 2026-09-15 | SETUP | interview | profile, stakeholders, areas | accepted by Lead BA</code></td></tr>
+<tr><td>git</td><td>Commit <code>kb: setup FleetKeep</code>, then "Push now?"</td></tr>
+</tbody>
+</table>
+<div class="chat">
+<div class="msg ai"><b>Claude</b>
+<p><b>Configured.</b> FleetKeep on northwind.atlassian.net: Jira FK with all five issue types mapped,
+the scope JQL, the Team and Affected area rules, Confluence space FK, five areas, seven stakeholders
+and five RACI rows, six house terms. <b>Still unknown:</b> nothing required.</p>
+<p><b>Next:</b> give the BAs write access to the repository and everyone else read access. You said
+the best source is tomorrow's workshop, so skip <code>/kb-seed</code> for now: save your notes in
+<code>inbox/</code> and run <code>/intake</code> on them. When the product rules tree is republished,
+run <code>/kb-seed confluence</code>. Invite the team once the main areas have pages.</p></div>
+</div>
+<p><b>Then:</b> set the repository access; don't invite the team yet, because <code>/ask</code> would
+know nothing. Most projects have documents to start from and run <code>/kb-seed</code> straight away;
+FleetKeep runs it later, in <a href="#ex-seed">Part 5</a>.</p>
+
+<!-- ============ PART 2 ============ -->
+<h3 id="ex-first">Part 2 · The first knowledge (Sep 17 and 24)</h3>
+<div class="cmd"><code>/intake inbox/2026-09-16-discovery-workshop-notes.md</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul><li>your typed notes from the half-day workshop</li><li>the knowledge base (empty so far) and <code>stakeholders.md</code></li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul><li>to accept, edit or reject each item</li><li>before pushing, and before deleting the raw notes</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul><li>the first glossary, four capabilities, three entities, a process with its diagram, a decision, two questions, a risk</li><li>the source record SRC-001</li></ul></div>
+</div>
+<p>Every command that changes knowledge runs the same five steps:</p>
+<ol class="flow-list">
+<li><b>Extract and judge.</b> Every requirement, rule, decision, question, term and risk in the notes,
+each with its quote. The Product owner's "the clock starts when the driver reports it" is a decision
+by someone who can decide. The supervisor and the transport manager gave different accounts of who
+triages, so that becomes a question (Q-001), not a fact.</li>
+<li><b>Stage.</b> One file in <code>knowledge/_staging/</code>, with the exact change for each item.</li>
+<li><b>Critic.</b> A second look in a fresh context: anything left out, quotes that don't match,
+authority not checked, names to redact. Its findings go at the top of the file.</li>
+<li><b>You decide.</b> "accept 1-24, edit 9: it's the transport manager, not the supervisor, reject 25:
+that was about another customer".</li>
+<li><b>Apply.</b> Real IDs, pages from templates, the source record, the index and registers rebuilt,
+a log line, one commit, <code>kb: intake SRC-001 discovery workshop</code>. Then "Push?" and "Delete
+the raw notes from inbox/?" (default: keep).</li>
+</ol>
+<p>What a page looks like afterwards (from <code>CAP-004</code>, as it stands in the example):</p>
+<pre><code>## Rules applied
+
+1. **BR-017** The escalation clock starts when the defect is reported. (DEC-001)
+2. **BR-015** A category-A defect still in Reported or Triaged 4 hours after it was
+   reported is escalated to the transport manager. (SRC-001, FK-1188)
+3. **BR-016** A category-B defect still in Reported or Triaged 36 hours after it was
+   reported is escalated to the transport manager. (FK-1188)</code></pre>
+<p>A week later the Compliance adviser sends a summary of the regulator's guidance as a PDF:</p>
+<div class="cmd"><code>/intake inbox/regulator-roadworthiness-guidance.pdf</code></div>
+<p>Same steps. PDFs are read directly; a Word file would go through <code>markitdown</code> first. The
+covering note asks what happens when a driver has no signal at the depot. Nobody can answer that yet,
+so it becomes Q-003, addressed to the Product owner. This time you say yes to deleting the PDF from
+<code>inbox/</code>; the source record SRC-002 keeps the summary.</p>
+
+<!-- ============ PART 3 ============ -->
+<h3 id="ex-daily">Part 3 · Every day (Oct 6 to 16)</h3>
+<div class="cmd"><code>/sync jira</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul><li>FK issues in the scope JQL changed since the last sync, with their comments and history</li><li>the source records, so nothing is proposed twice</li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul><li>first run only: how far back to go ("since Sep 28")</li><li>to decide each staged item</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul><li>Q-001 answered from a Jira comment</li><li>CAP-003 superseded by CAP-004 (category B escalates too)</li><li>DEC-002 (confirmed) and DEC-003 (approved); source record SRC-003</li></ul></div>
+</div>
+<p>It reads Jira and never writes to it, not even a comment, and ignores routine status moves,
+estimates and assignee changes. Watch the authority check: the Engineering lead's comment says the
+Product owner agreed something at stand-up. That is second-hand, so DEC-002 stays
+<code>confirmed</code>, not <code>approved</code>, until the Product owner confirms it. The sync time
+moves only after you have decided every item. After the first run it's a daily habit: two to ten
+items most mornings.</p>
+
+<div class="cmd"><code>/review FK-1215</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul><li>the issue, written straight into Jira by someone else</li><li>the knowledge base, glossary and profile</li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul><li>nothing; the report is in the chat</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul><li>findings graded critical, major and minor, each with where and how to fix it</li><li>a ready or not-ready verdict</li></ul></div>
+</div>
+<p>FK-1215 says: "Workshop supervisor can return a vehicle to service after a repair, so it's back
+on the road quickly."</p>
+<table>
+<thead><tr><th>Severity</th><th>Finding</th></tr></thead>
+<tbody>
+<tr><td><span class="pill block">critical</span></td><td>Contradicts DEC-003 (approved): only a transport manager returns a VOR vehicle to service, and there is no override (CAP-006)</td></tr>
+<tr><td>major</td><td>No acceptance criteria in Given/When/Then form, and no failure path (a category-A defect still open)</td></tr>
+<tr><td>major</td><td>No fix version</td></tr>
+<tr><td>minor</td><td>"quickly" is on the profile's list of words that need a measure</td></tr>
+</tbody>
+</table>
+<p>Verdict: not ready. Nothing is written anywhere. You take it to the Product owner: if they have
+changed their mind, their confirmation goes through <code>/intake</code> and supersedes DEC-003;
+otherwise the story is rewritten or closed in Jira by people.</p>
+
+<div class="cmd"><code>/intake inbox/2026-10-14-defect-triage-call-notes.md</code></div>
+<p>The weekly triage call with the pilot customer. The staging file has eight items covering every
+verdict: an answer to Q-002 (the Product owner says the clock runs overnight), a contradiction (the
+supervisor wants category B at 24 hours but can't decide that, so it becomes a question for the
+Product owner), a new term, a confirmation, a duplicate question, a risk and two actions. The critic
+found four things before you saw it:</p>
+<table>
+<thead><tr><th>Critic finding</th><th>What happened</th></tr></thead>
+<tbody>
+<tr><td>The Engineering lead's action was in the summary but had no item</td><td>Fixed: added as item 8, "added by the critic"</td></tr>
+<tr><td>Item 1 answered Q-002 but didn't set <code>state: answered</code></td><td>Fixed: it would have stayed in the open list</td></tr>
+<tr><td>Item 2's new question had no <code>blocks</code></td><td>Fixed: CAP-004 and the requirement added</td></tr>
+<tr><td>"Someone told whatever the hour" suggests an on-call person nobody has defined</td><td>Left for you to check</td></tr>
+</tbody>
+</table>
+<p>One item as it appears in the file:</p>
+<pre><code>### 2. Category-B defects should escalate at 24 hours
+
+| Kind             | rule                                                       |
+| Verdict          | contradicts BR-016 on CAP-004 (confirmed)                  |
+| Authority        | cannot (Pilot workshop supervisor; owner is Product owner) |
+| Quote            | "Thirty-six hours is too long for a B. ... Make it 24."    |
+| Critic           | fixed: blocks added to Q-new-1                             |
+| Affects delivery | REQ-defect-escalation-to-workshop: ST-01 (FK-1302),        |
+|                  | ST-02 (FK-1303) list CAP-004                               |
+| Proposed change  | New Q-new-1 for the Product owner, due 2026-10-28.         |
+|                  | BR-016 stays as it is                                      |
+
+- [ ] accept   - [ ] edit:   - [ ] reject:</code></pre>
+<p>In the example repository this file is still waiting, unticked. Part 5 decides it.</p>
+
+<div class="cmd"><code>/review kb</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul><li>every page, link, register and staging file</li><li>the profile's areas and draft age</li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul><li>a yes before pushing the rebuilt index</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul><li>a health report; the index and registers rebuilt</li><li>one drafted message per stakeholder with the questions waiting on them</li></ul></div>
+</div>
+<p>On Friday Oct 16 it reports two areas, inspections and tenancy-and-access, with no pages yet, and
+drafts this for you to send:</p>
+<div class="chat">
+<div class="msg ai"><b>Claude</b>
+<p><b>To the Product owner</b> (three questions):</p>
+<ol>
+<li>What state does a deferred defect take when its job card closes? Blocks CAP-005 and ENT-001. Due Oct 23.</li>
+<li>Should category-B defects escalate at 24 hours instead of 36? Blocks CAP-004 and the escalation requirement. Due Oct 28.</li>
+<li>What should happen when a driver submits a check with no signal? Blocks CAP-001. Due Oct 30.</li>
+</ol>
+<p>Nothing is sent. Copy it into an email, or take it to Tuesday's meeting.</p></div>
+</div>
+
+<!-- ============ PART 4 ============ -->
+<h3 id="ex-epic">Part 4 · An epic, into Jira (Oct 9 to 13)</h3>
+<div class="cmd"><code>/requirements defect escalation to workshop</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul><li>the knowledge base for the area: CAP-001, CAP-002, CAP-004, DEC-001, DEC-002, PROC-001, Q-002</li><li>FK-1192, the spike the work came from</li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul><li>a few clarifying questions, one at a time, multiple choice with a recommendation</li><li>a yes before writing</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul><li><code>requirement.md</code>: goal, a cited "current state", scope, six functional requirements, measurable non-functional ones, four stories with Given/When/Then criteria</li></ul></div>
+</div>
+<p>It starts by telling you what is already known, a citation on every line, and lists the open
+questions in the area. Then the questions, most important first:</p>
+<div class="chat">
+<div class="msg ai"><b>Claude</b><p>Q1 of 3, scope. When a defect escalates, who in the workshop should be
+emailed?</p>
+<p>A. Nobody: the queue flag is enough.<br>B. The depot's technicians, for category A only
+<em>(recommended: DEC-002 covers the queue, and R-001 says escalations never reach the workshop)</em>.<br>
+C. The technicians, for category A and B.</p></div>
+<div class="msg you"><b>You</b><p>B.</p></div>
+</div>
+<p>Before showing the draft it runs <code>/review</code>'s rule checks on it in a fresh context and
+fixes what is mechanical (a missing ID, a vague word the knowledge base gives a number for). The rest
+is listed with the draft. Afterwards you run <code>/intake</code> with no argument to capture the
+working session: it stages Q-004 (a deferred defect has no state), two assumptions and a dependency
+(SRC-004).</p>
+
+<div class="cmd"><code>/review requirements/defect-escalation-to-workshop/requirement.md</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul><li>the document, the knowledge base and glossary</li><li>Jira, for duplicates</li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul><li>whether to fix findings</li><li>whether to set the document <code>confirmed</code>, which <code>/backlog</code> needs</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul><li><code>review.md</code>: verdict ready, four minor findings</li></ul></div>
+</div>
+<table>
+<thead><tr><th>ID</th><th>Severity</th><th>Where</th><th>Finding</th></tr></thead>
+<tbody>
+<tr><td>F-01</td><td>minor</td><td>ST-03, AC-1</td><td>The When step describes a screen action instead of the behaviour</td></tr>
+<tr><td>F-02</td><td>minor</td><td>A-002</td><td>"usually" needs a measure</td></tr>
+<tr><td>F-03</td><td>minor</td><td>NFR-003</td><td>WHILE is used for a rule that always holds</td></tr>
+<tr><td>F-04</td><td>minor</td><td>FR-001, FR-002</td><td>Both rest on DEC-002, still second-hand: ask the Product owner to confirm it in writing</td></tr>
+</tbody>
+</table>
+
+<div class="cmd"><code>/backlog requirements/defect-escalation-to-workshop/requirement.md</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul><li>the confirmed document and its ready review</li><li>the Jira templates and the field rules from <code>/setup</code></li><li>FK, for duplicates</li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul><li>accept, edit or decline each preview row</li><li>a yes for the batch</li><li>then Claude Code asks before every single create</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul><li>epic FK-1301, stories FK-1302 to FK-1305</li><li>keys written into the document and <code>trace/map.csv</code></li></ul></div>
+</div>
+<table>
+<thead><tr><th>#</th><th>Type</th><th>Summary</th><th>Fields</th><th>Duplicates</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Epic</td><td>Defect escalation to workshop</td><td>2026.11, labels ba-harness, defects</td><td>FK-1192 is the spike it came from: link as Relates</td></tr>
+<tr><td>2</td><td>Story</td><td>See escalated defects at the top of the workshop queue</td><td>Team FleetKeep Core</td><td>none</td></tr>
+<tr><td>3</td><td>Story</td><td>Email depot technicians when a category-A defect escalates</td><td>Team FleetKeep Core</td><td>none</td></tr>
+<tr><td>4</td><td>Story</td><td>Raise a job card from an escalated defect</td><td>Team FleetKeep Core</td><td>none</td></tr>
+<tr><td>5</td><td>Story</td><td>See the escalations in a defect's history</td><td>Team FleetKeep Core</td><td>none</td></tr>
+</tbody>
+</table>
+<p>It's the only command that writes to Jira. No story points, assignee or priority are set; those
+are the team's. Each issue is read back after it is created. From here, a developer can start the Dev
+harness's <code>/ba</code> from FK-1302, and the QA harness plans tests per story.</p>
+
+<!-- ============ PART 5 ============ -->
+<h3 id="ex-after">Part 5 · Changes and release (Oct 15 to Nov 30)</h3>
+<div class="callout warn"><p><strong>Beyond the example files.</strong> The example repository stops on
+Oct 14. This part shows what the harness does next.</p></div>
+
+<h4 id="ex-impact">Oct 15: deciding the triage call, and what it touches</h4>
+<div class="cmd"><code>/intake knowledge/_staging/2026-10-14-intake-defect-triage-call.md</code></div>
+<p>You check the critic's open point with the Product owner (overnight escalations still go to the
+transport manager), then "accept all". It applies Q-002 answered, DEC-004, BR-021, Q-005 (24 hours
+for category B?), ACT-001 and ACT-002 in the Actions table of <code>raid.md</code>, a term and a risk.
+The report ends with the delivery impact, and the push needs a second try:</p>
+<div class="chat">
+<div class="msg ai"><b>Claude</b>
+<p><b>Affects delivery.</b> CAP-004 changed. The escalation requirement relies on it through ST-01
+(FK-1302) and ST-02 (FK-1303). The stories don't need to change: the requirement keeps the clock out of
+scope. Update its "Current state" with <code>/requirements</code> when convenient. Push now?</p></div>
+<div class="msg you"><b>You</b><p>Yes.</p></div>
+<div class="msg ai"><b>Claude</b>
+<p>The push was rejected: the BA pushed ten minutes ago. I pulled with rebase (Claude Code asked). Their
+change also created R-003, so ours is now R-004, with its links updated; the index and registers are
+rebuilt and both log lines kept. No page was changed by both of you. Pushed.</p></div>
+</div>
+
+<div class="cmd"><code>/backlog task ACT-002</code></div>
+<p>The Engineering lead's count of overnight escalations needs sprint time, so it goes to Jira: one
+Task from <code>templates/jira/task.md</code> and the <code>ACT-002</code> row, a duplicate search, a
+one-row preview, your yes. FK-1310 is created with no assignee, and its key goes into the action's
+Jira column.</p>
+
+<h4 id="ex-change">Oct 20: a rule changes after the stories exist</h4>
+<div class="cmd"><code>/intake inbox/2026-10-20-product-owner-email.md</code></div>
+<p>The Product owner answers Q-005: category B escalates at 24 hours. They can decide it, so it becomes
+DEC-005, approved. BR-016 is confirmed text, so it isn't rewritten: BR-022 says 24 hours, and BR-016
+stays on the page, struck through, "superseded by BR-022". This time the <code>Affects delivery</code>
+row lists stories that must change.</p>
+<div class="cmd"><code>/requirements defect escalation to workshop</code></div>
+<p>An update, shown as a diff: the current state, FR-001 citing BR-022, and every "36 hours" in the
+acceptance criteria. Re-reading the whole document also finds ST-04's "the threshold passed (4 or 36
+hours)", which the trace map couldn't: it links stories to pages, so the document is the final check.
+Then <code>/review</code> again (ready), and:</p>
+<div class="cmd"><code>/backlog requirements/defect-escalation-to-workshop/requirement.md</code></div>
+<table>
+<thead><tr><th>#</th><th>Action</th><th>Issue</th><th>What changes</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>no change</td><td>FK-1301 epic</td><td></td></tr>
+<tr><td>2</td><td>update</td><td>FK-1302 ST-01</td><td>An acceptance criterion: 36 hours becomes 24; rules: BR-016 becomes BR-022</td></tr>
+<tr><td>3</td><td>update</td><td>FK-1303 ST-02</td><td>An acceptance criterion: the 36-hour threshold becomes 24-hour</td></tr>
+<tr><td>4</td><td>no change</td><td>FK-1304 ST-03</td><td></td></tr>
+<tr><td>5</td><td>update</td><td>FK-1305 ST-04</td><td>An acceptance criterion: "4 or 36 hours" becomes "4 or 24 hours"</td></tr>
+</tbody>
+</table>
+<p>Each update is shown as a diff; Claude Code asks before each edit, and each issue is read back.
+Nothing is created twice, and nothing is moved or deleted.</p>
+
+<h4 id="ex-signoff">Oct 22: sign-off</h4>
+<div class="cmd"><code>/intake inbox/2026-10-22-sign-off.md</code></div>
+<p>"Approved for 2026.11." The Product owner can approve release content, so the item sets the
+requirement to <code>approved</code>, with <code>approved_by: Product owner</code> and
+<code>approved_on: 2026-10-22</code>. As a Jira comment, <code>/sync</code> would have proposed the
+same.</p>
+
+<h4 id="ex-seed">Oct 26: the product rules come back</h4>
+<div class="cmd"><code>/kb-seed confluence</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul><li>the page tree named in profile section 6, in batches of at most 20 pages</li><li>the knowledge base, to compare</li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul><li>once, before reading: the plan with counts</li><li>to decide each staging file, item by item</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul><li>one or more staging files, each checked by the critic</li><li>the first inspections pages</li><li>the Confluence sync time, so <code>/sync confluence</code> carries on from here</li></ul></div>
+</div>
+<div class="chat">
+<div class="msg ai"><b>Claude</b><p>Under "FleetKeep product rules" in space FK: 14 pages. I expect about 60
+items, so two staging files: defects and vehicles; inspections and workshop. Read them?</p></div>
+<div class="msg you"><b>You</b><p>Yes.</p></div>
+</div>
+<p>Most items <code>confirm</code> what the knowledge base already says, which adds the pages as
+sources. The inspections area gets its first capability, setting an inspection schedule, with its
+rules. One page says a workshop supervisor may return a vehicle to service out of hours. That
+contradicts DEC-003, which is approved, so it becomes a question for the Product owner and nothing is
+edited. On most projects this command runs on day one, right after <code>/setup</code>.</p>
+
+<h4 id="ex-uat">Nov 9: UAT finds a problem</h4>
+<div class="cmd"><code>/backlog bug SRC-008 2</code></div>
+<p>The UAT session notes went through <code>/intake</code> first (SRC-008). Item 2: a flagged defect
+stays on the old depot's queue after the vehicle moves depot, which breaks FR-001. One Bug from
+<code>templates/jira/bug.md</code>: what happened, what should happen (citing ST-01's criterion and
+FR-001), steps, environment, business impact. It asks for the fix version under test (2026.11) and the
+parent epic (FK-1301), checks duplicates, and creates FK-1321 after your yes. Defects found by the
+testers themselves stay with the QA harness.</p>
+
+<h4 id="ex-delivered">Nov 30: the release ships</h4>
+<div class="cmd"><code>/sync jira</code></div>
+<p>FK-1302 to FK-1305 reached Done. They are in the trace map, so this isn't routine: what they
+delivered is now how FleetKeep works. The staging file proposes updating the pages each story lists:
+CAP-004 gains the rules for flagging escalated defects on the depot's queue and emailing its
+technicians; CAP-002 gains triage and job card in one action; PROC-001's to-be escalation steps become
+as-is; ENT-001's history gains the escalation entry; and the requirement gets
+<code>delivered_on: 2026-11-30</code>.</p>
+
+<!-- ============ PART 6 ============ -->
+<h3 id="ex-ask">Part 6 · Anyone asks</h3>
+<p>The team was invited once the main areas had pages. A developer clones the repository once, opens
+Claude Code in it, and their copy updates itself every time they do.</p>
+<div class="cmd"><code>/ask when does a category-B defect escalate, and does it count overnight?</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul><li><code>knowledge/index.md</code>, the glossary and the pages that match, with synonyms</li><li>Jira or Confluence only if the knowledge base doesn't settle it</li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul><li>nothing</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul><li>a direct answer, every claim cited, with how sure each source is</li><li>no changes: it has no tools that write, run commands or start sub-agents</li></ul></div>
+</div>
+<p>Asked on Oct 14:</p>
+<div class="chat">
+<div class="msg you"><b>Developer</b><p>/ask when does a category-B defect escalate, and does it count overnight?</p></div>
+<div class="msg ai"><b>Claude</b>
+<p>A category-B defect is escalated to the transport manager when it has had no triage outcome 36 hours
+after it was reported (CAP-004, BR-016). The clock starts when the driver reports it, not at triage
+(BR-017, DEC-001, approved).</p>
+<p>Whether it counts overnight is still open: Q-002 is with the Product owner. An answer is waiting in
+a staging file, but the BA hasn't accepted it, so it isn't knowledge yet.</p></div>
+</div>
+<p>Before answering, it re-opened each cited page to check it says what the answer claims. Asked
+something the knowledge base doesn't cover, it says so and drafts a question:</p>
+<div class="chat">
+<div class="msg you"><b>Developer</b><p>/ask can a driver report a defect against a trailer?</p></div>
+<div class="msg ai"><b>Claude</b>
+<p>The knowledge base doesn't answer this. Nearby: drivers report defects on vehicles assigned to
+them (CAP-001), and the vehicle page (ENT-002, unconfirmed: draft page) doesn't mention trailers.</p>
+<p><b>A question you can send to the BA:</b> can a driver report a defect against a trailer, and does
+a category-A defect on a trailer put the towing vehicle off the road? <b>Why:</b> you're building the
+check form. <b>Who might know:</b> the Product owner, who decides product behaviour.</p></div>
+</div>
+<p>The BA takes it from there: it becomes an open question through <code>/intake</code>, and the next
+<code>/review kb</code> drafts it into the message for the Product owner.</p>
+
+<h3 id="ex-who">Who does what</h3>
+<table>
+<thead><tr><th>Stage</th><th>Run</th><th>You decide</th><th>Out</th></tr></thead>
+<tbody>
+<tr><td>Set up, once</td><td><code>/setup</code></td><td>The interview answers; the profile diff</td><td>Profile, stakeholders and RACI, area folders</td></tr>
+<tr><td>Start the knowledge base</td><td><code>/kb-seed</code>, or a workshop and <code>/intake</code></td><td>The reading plan; every item</td><td>The first pages and source records</td></tr>
+<tr><td>After a meeting or document</td><td><code>/intake inbox/&lt;file&gt;</code></td><td>Every item; deleting the raw file</td><td>Pages, source record, log line, commit</td></tr>
+<tr><td>Every morning</td><td><code>/sync</code></td><td>Every item</td><td>The same, from Jira and Confluence</td></tr>
+<tr><td>Someone else's Jira issue</td><td><code>/review &lt;KEY&gt;</code></td><td>What to do with the findings</td><td>A report in the chat</td></tr>
+<tr><td>Fridays</td><td><code>/review kb</code></td><td>Pushing the rebuilt index; sending the questions</td><td>Health report, rebuilt index, drafted messages</td></tr>
+<tr><td>New epic</td><td><code>/requirements &lt;epic&gt;</code></td><td>The clarifying answers; writing the document</td><td><code>requirement.md</code></td></tr>
+<tr><td>Before Jira</td><td><code>/review &lt;requirement.md&gt;</code></td><td>Fixes; setting it confirmed</td><td><code>review.md</code> with a verdict</td></tr>
+<tr><td>Into Jira</td><td><code>/backlog &lt;requirement.md&gt;</code></td><td>Each preview row, the batch, every write</td><td>Epic and stories, keys written back</td></tr>
+<tr><td>The requirement changes</td><td><code>/requirements</code>, <code>/review</code>, <code>/backlog</code></td><td>Each story update</td><td>Stories updated, never duplicated</td></tr>
+<tr><td>Action, spike or UAT bug</td><td><code>/backlog task | spike | bug</code></td><td>The one-issue preview</td><td>One Jira issue, key written back</td></tr>
+<tr><td>Sign-off and release</td><td><code>/intake</code>, <code>/sync</code></td><td>Each item</td><td>Requirement approved, then pages updated to what shipped</td></tr>
+<tr><td>Any question, anyone</td><td><code>/ask &lt;question&gt;</code></td><td>Nothing</td><td>A cited answer, or a drafted question</td></tr>
+</tbody>
+</table>
+
+<footer>
+<p>This page is generated from the "Follow a whole project" section of the
+<a href="index.html#example">BA handbook</a>, which also has the reference for every command, the
+knowledge base rules and the safety layers. The files Parts 1 to 4 end with are in
+<code>examples/fleetkeep-ba-knowledge/</code>; start with its <code>EXAMPLE.md</code>.</p>
+<p>AI BA Harness · Private repository. All rights reserved.</p>
+</footer>
+</main>
+</div>
+</body>
+</html>

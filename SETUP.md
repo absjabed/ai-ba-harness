@@ -111,7 +111,8 @@ access, otherwise no). Atlassian access is optional for them; without it, `/ask`
 knowledge base only.
 
 For every command worked through on one project, from `/setup` to `/ask`, read "Follow a whole
-project" in the handbook ([`docs/index.html`](docs/index.html#example)).
+project" in the handbook ([`docs/index.html`](docs/index.html#example)), or the same example as a
+page of its own to share with the team: [`docs/walkthrough.html`](docs/walkthrough.html).
 
 ## 7. Daily rhythm
 

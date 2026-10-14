@@ -4,6 +4,15 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.4.2 (2026-10-14)
+
+- `docs/walkthrough.html` is back, as in the QA harness: the handbook's worked example as a page of
+  its own for sharing with a team. It is generated from the handbook by
+  `scripts/build-walkthrough.py`, so the two can't drift; the handbook and the walkthrough link to
+  each other.
+
+No changes to `project/`; projects need nothing.
+
 ## 0.4.1 (2026-10-14)
 
 - One handbook. The walkthrough is now the handbook's "Follow a whole project" section, in the same

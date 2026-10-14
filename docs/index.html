@@ -147,7 +147,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.4.1</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.4.2</span></div>
   </div>
   <h2>Start here</h2>
   <a href="#what">What it is</a>
@@ -164,6 +164,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
   <a class="sub" href="#ex-after">5 · Changes and release</a>
   <a class="sub" href="#ex-ask">6 · Anyone asks</a>
   <a class="sub" href="#ex-who">Who does what</a>
+  <a class="sub" href="walkthrough.html">As a separate page</a>
   <h2>Daily use</h2>
   <a href="#commands">The eight commands</a>
   <a href="#when">When to run what</a>
@@ -252,7 +253,7 @@ miss things. A critic pass checks every staging file before you see it, but it i
 model, so everything AI-drafted stays visible as a proposal until you decide.</li>
 <li>Scale. Every question starts from <code>knowledge/index.md</code>. Once it no longer fits in one
 read (roughly 300 or more pages), a local search server will be needed.</li>
-<li>This is version 0.4.1. It has not been used on a real project yet.</li>
+<li>This is version 0.4.2. It has not been used on a real project yet.</li>
 </ul>
 
 <h2 id="map">Harness map</h2>
@@ -524,7 +525,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.4.1"
+git commit -m "Start from AI BA Harness 0.4.2"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -608,7 +609,7 @@ user-friendly that need a measure) and its preferred terms. Add your own.</p>
 <p class="lede">One example, start to finish: setting up a project, building its knowledge base,
 writing an epic, putting it into Jira, changing it afterwards, shipping it, and answering a
 teammate's question. Every command appears at least once, with what you type, what it reads, what it
-asks you and what you end up with. Written for someone who has never worked this way.</p>
+asks you and what you end up with. Written for someone who has never worked this way. The same example, as a page of its own to share with a team: <a href="walkthrough.html">the FleetKeep walkthrough</a>.</p>
 
 <div class="callout warn">
 <p><strong>An illustration of the design, not a recording.</strong> The harness has not yet run
@@ -691,7 +692,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <a href="#setup">Set up a project</a>:</p>
 <pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
 cd ../fleetkeep-ba-knowledge
-git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.4.1"
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.4.2"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main
 claude</code></pre>

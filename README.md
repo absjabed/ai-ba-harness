@@ -41,8 +41,10 @@ Then follow [SETUP.md](SETUP.md): create the shared remote, sign in to Atlassian
 |---|---|
 | [`project/`](project) | Everything a project repository receives. Edit the harness here |
 | [`scripts/new-project.sh`](scripts/new-project.sh) | Copies `project/` into a new project repository and records the harness version |
+| [`scripts/build-walkthrough.py`](scripts/build-walkthrough.py) | Rebuilds `docs/walkthrough.html` from the handbook's "Follow a whole project" section |
 | [`examples/fleetkeep-ba-knowledge/`](examples/fleetkeep-ba-knowledge) | A complete, filled-in project repository to learn from |
 | [`docs/index.html`](docs/index.html) | The BA handbook |
+| [`docs/walkthrough.html`](docs/walkthrough.html) | The handbook's worked example as a page of its own, for sharing with a team. Generated: don't edit it |
 | [`SETUP.md`](SETUP.md) | Step-by-step setup of a project repository |
 | [`design/`](design) | The agreed design: decisions, command definitions, workflow, knowledge-base conventions, Jira templates, layout |
 | [`research/`](research) | The research behind the design |
@@ -58,7 +60,9 @@ a `CHANGELOG.md` entry and tag the commit `v<version>`:
 - **minor** for new features projects can use without changes;
 - **major** when project repositories must change something.
 
-The handbook's sidebar shows the same version; update it in the same change.
+The handbook's sidebar shows the same version; update it in the same change, then run
+`python scripts/build-walkthrough.py` so the walkthrough page picks up the version and any change
+to the worked example.
 
 ## Licence
 
