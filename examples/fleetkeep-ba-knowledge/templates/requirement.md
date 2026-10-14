@@ -44,7 +44,7 @@ facts.>
 
 | ID | Requirement | Source | Rules | Status |
 |---|---|---|---|---|
-| FR-001 | <One testable statement> | <SRC- / DEC- / Q- answer> | <BR-000, or None> | <agreed / pending Q-000> |
+| FR-001 | <One testable statement> | <SRC- / DEC- / Q- answer> | <BR-000, or None> | <agreed / pending Q-000, or pending Q-000, Q-001> |
 
 Cite knowledge pages with links relative to this file, for example
 `([CAP-004](../../knowledge/domains/<area>/CAP-004-<slug>.md), BR-016)`.

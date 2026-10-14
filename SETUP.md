@@ -159,14 +159,21 @@ includes it, so they can mark the proposal `accepted`.
 
 ## Updating the harness in a project
 
-`PROJECT-PROFILE.md` records the harness version and commit the repository started from. To see what
-has changed since, read `CHANGELOG.md` in the template, or run `git log --oneline v<version>..`
-there. Copy over the files you want: usually `agents/`, `.claude/`, `templates/`, `tools/`,
-`.github/`, `knowledge/_meta/conventions.md` and `knowledge/_meta/templates/`. Never copy
-`knowledge/_meta/sync.json` (it holds the project's last sync time), `knowledge/` pages or
-`PROJECT-PROFILE.md`. Then:
+`HARNESS_VERSION` in the project says which version it runs; profile section 1 records the one it
+started from. In the template:
 
-1. re-apply the local changes listed in profile section 8 that the new version doesn't already
-   include;
-2. update `HARNESS_VERSION` in the project;
-3. run `python tools/kb.py rebuild` and `python tools/kb.py check`.
+1. **Read what changed:** the `CHANGELOG.md` entries newer than the project's version, oldest
+   first (or `git log --oneline v<version>..`).
+2. **Copy from the template's `project/` folder:** `agents/`, `.claude/`, `templates/`, `tools/`,
+   `.github/`, `CLAUDE.md`, `AGENTS.md`, `knowledge/_meta/conventions.md`,
+   `knowledge/_meta/templates/`, and any new folder a CHANGELOG entry names. Never copy
+   `knowledge/_meta/sync.json` (the project's last sync times), knowledge pages,
+   `PROJECT-PROFILE.md`, `requirements/` or `trace/map.csv`: they hold the project's own content.
+3. **Apply each entry's "To update a project" steps,** oldest first: edits to the profile, to the
+   template text inside knowledge pages, and to file formats.
+4. **Re-apply the local changes** listed in profile section 8 that the new version doesn't already
+   include (projects from before 0.5.0 have none).
+5. Set `HARNESS_VERSION` to the new version.
+6. Run `python tools/kb.py rebuild` and `python tools/kb.py check`.
+7. Commit (`harness: update to <version>`) and push. Everyone's clone picks it up the next time they
+   open Claude Code, and the GitHub check runs on every push from then on.

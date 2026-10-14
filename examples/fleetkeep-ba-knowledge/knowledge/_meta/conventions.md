@@ -50,6 +50,9 @@ Claude Code, GitHub and any text editor read it as plain markdown.
 | `BR-` | Business rule | Defined inside a capability or process page, listed in its `rules` property |
 | `R-` `A-` `I-` `D-` | Risk, assumption, issue, dependency | `raid.md` |
 | `ACT-` | Action, with owner, due date and status (`open`, `done`, `dropped`) | `raid.md`, Actions table |
+
+RAID statuses: risks `open` or `closed`; assumptions `open`, `confirmed` or `wrong`; issues `open` or
+`resolved`; dependencies `open` or `met`; actions `open`, `done` or `dropped`.
 | `T-` | Glossary term | `glossary.md` |
 | `REQ-` | Requirement document, `REQ-<epic-slug>` | `requirements/<epic-slug>/requirement.md` |
 | `REVIEW-` | Review report, `REVIEW-<epic-slug>` | `requirements/<epic-slug>/review.md` |
@@ -98,7 +101,7 @@ Type-specific properties:
 
 | Type | Adds |
 |---|---|
-| `question` | `state` (`open`, `answered`, `wontfix`), `asked_on`, `asked_of` (role), `due`, `answered_on`, `answer_source`, `blocks` (list of IDs) |
+| `question` | `state` (`open`, `answered`, `wontfix`), `asked_on`, `asked_of` (the role whose answer decides it), `consulted` (roles who must confirm part of it, optional), `due`, `answered_on`, `answer_source`, `blocks` (list of IDs) |
 | `decision` | `decided_by` (role), `decided_on`, and `approved_by` / `approved_on` when approved |
 | `source` | `kind` (`meeting`, `transcript`, `document`, `email`, `conversation`, `jira`, `confluence`), `input_date` |
 | `entity` | `kind` (`role`, `system`, `data`, `integration`) |
@@ -239,20 +242,35 @@ closed. For example `+CAP-012 +BR-031 ~CAP-007 +Q-014 ?Q-009 +DEC-007 +ACT-004`.
   `kb: intake SRC-031 scheduling workshop 2026-10-14`.
 - They ask before every push, because a push shares the change with everyone.
 - Conflicts in the generated files (`index.md`, the registers): take either side, then run
-  `/review kb`, which rebuilds them.
+  `python tools/kb.py rebuild`.
 
 **When a push is rejected because another BA pushed first:**
 
 1. `git pull --rebase` (Claude Code asks first).
-2. If it stops on conflicts only in generated files or `log.md`: keep both sides' lines in
-   `log.md`, rebuild `index.md` and the registers from the pages, `git add` them and
-   `git rebase --continue`.
-3. If the other BA created the same new IDs (same number, different item): renumber this side's
-   items to the next free numbers, update every link, `rules`, `sources` and `blocks` entry that
-   uses them, rebuild the generated files, and continue the rebase.
-4. If both sides changed the text of the same page: `git rebase --abort` and tell the BA. Two people
-   changed one page at once, and that needs a person to decide.
-5. Push again (Claude Code asks).
+2. **Find clashes,** even if the rebase went through without a conflict: new pages with the same ID
+   but a different file name sit side by side without any git conflict. Run
+   `python tools/kb.py check`, which reports any ID used twice (pages, rules, RAID rows, actions,
+   terms), and compare the other side's `log.md` lines with this side's.
+3. **Resolve conflicts:**
+   - generated files (`index.md`, the three registers): take either side, then
+     `python tools/kb.py rebuild`;
+   - `log.md`: keep both sides' lines;
+   - `raid.md` and `glossary.md`: keep both sides' new rows or entries;
+   - the text of the same page or row changed on both sides: `git rebase --abort` and tell the BA.
+     Two people changed one statement at once, and that needs a person to decide.
+4. **Renumber this side's clashing items** to the next free numbers (`python tools/kb.py next`),
+   never the other side's, which are already shared:
+   - rename the file (`git mv`) and change its `id`;
+   - every mention of the old ID in this side's changes: links, `rules`, `sources`, `blocks`, plain
+     text, the RAID row, the source record's "What it changed" table and the `log.md` line;
+   - search for each old ID across this side's changed files to be sure, leaving the other side's
+     items alone;
+   - in the source record, note "renumbered from <old> after a push clash".
+5. `python tools/kb.py rebuild`, then `check`; `git add` and `git rebase --continue`. If the commit
+   message names a renumbered ID, correct it (`git commit --amend`, before pushing).
+6. Push again (Claude Code asks).
+7. Tell the BA which of their IDs changed, old to new, and that the other BA's items kept theirs.
+   Anyone already told an old number needs the new one.
 
 ## 12. Generated files
 

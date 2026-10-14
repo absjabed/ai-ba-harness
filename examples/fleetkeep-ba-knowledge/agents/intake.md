@@ -44,12 +44,17 @@ For transcripts, use timestamps as locations. For documents, use page and sectio
 3. Show the staging file and wait for the BA's decisions (pipeline step 5). What to show is listed
    there.
 4. Apply (pipeline step 6).
-5. **Clean up the inbox, only with permission.** List the raw files and any converted copies in
+5. **Clean up the inbox, only with permission.** If the input isn't on this machine (a staging file
+   resumed elsewhere), skip this and remind the BA to delete it where it is. List the raw files and any converted copies in
    `inbox/.converted/` that this run used, and ask: "Delete these N files from inbox/? The redacted
    source record is kept. (yes / no / choose)". Default no. Delete only the files the BA agrees to.
    Never delete anything outside `inbox/`.
 
 ## Report
+
+For a teammate (not a maintainer), report in plain words instead: what was proposed, that a BA
+decides it, and the hand-over steps from the pipeline's teammate route. Leave out verdicts, IDs and
+counts.
 
 - **The source record:** its ID and title.
 - **Counts:** accepted (including accepted `ignore` items), edited, rejected and still undecided.

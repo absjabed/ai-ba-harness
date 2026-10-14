@@ -4,6 +4,39 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.5.1 (2026-10-15)
+
+A second demo test of 0.5.0: a fresh project with two BAs and a developer on three clones, plus an
+upgrade from 0.4.2 (`research/09-second-demo-test.md`, raw output in
+`examples/fleetkeep-demo-test-2/`). Fixes:
+
+- **Upgrading:** `SETUP.md` gives one complete procedure (what to copy, never `sync.json`, each
+  version's extra steps, commit and push), and the 0.5.0 notes list every profile, knowledge-page
+  and file-format change.
+- **Two BAs pushing at once:** the recovery finds clashing IDs with `kb.py check` even when git sees
+  no conflict, keeps both sides' RAID and glossary rows, renumbers this side's items everywhere
+  (file, ID, links, log line, commit message) and tells the BA what changed. `kb.py check` now
+  reports duplicate RAID, action and glossary IDs.
+- **Teammates:** the pipeline asks first whether the person maintains the repository. A teammate's
+  run ends with a plain-language report and a branch (`kb/stage-<slug>`) for a pull request; their
+  answers aren't recorded as decisions.
+- **Proposals and sign-off:** a question's Proposed answer section holds the BA's answer and the rule
+  text it would become; a sign-off answers them, adds the rules, turns unproposed parts into new
+  questions and brings the requirement's open questions and rule citations up to date. `/backlog`
+  takes what can go to Jira from `review.md`, so a sign-off never overrides the review.
+- **Rule changes by the owner:** a decision that retires the old rule and adds a new one.
+- **Updating an approved requirement:** back to draft and a new sign-off when its requirements or
+  stories change; commit `req: update <slug> <source>`.
+- **Smaller:** resuming re-checks from the commit that staged the file; deleting a committed
+  staging file; dates when applied on a later day; the critic gives one concrete change and names
+  everywhere it applies; a "take the critic's suggestion" box; provisional IDs numbered across a
+  seeding run; `[name removed]` when the role isn't known; RAID statuses in the conventions; a
+  `consulted` property on questions; `/review kb` reminds about actions due within a week;
+  `KB_TODAY` for `kb.py`; the critic agent can also run the requirement pre-check.
+
+To update a project from 0.5.0: copy the files as `SETUP.md` describes; add the "Proposed answer"
+section to open questions that need one when you next touch them.
+
 ## 0.5.0 (2026-10-15)
 
 Tested on a demo project ("FleetKeep Demo"): each command was run, in a fresh context, exactly as
@@ -51,11 +84,29 @@ harness itself.
 - **Profile:** "Other maintainers" replaces "Other BAs"; `none` instead of deleting rows; section 6
   gets a status column; section 8 lists local harness changes.
 
-To update a project from 0.4.x: copy `agents/`, `.claude/`, `templates/`, `tools/`, `.github/`,
-`knowledge/_meta/`, `CLAUDE.md` and `AGENTS.md`; add `harness-feedback/`; in `PROJECT-PROFILE.md`
-rename "Other BAs" to "Other maintainers", add the "Harness repository" row, the status column in
-section 6 and section 8; rename `trace/map.csv`'s first column to `fr_ids`; add a Status column to
-each requirement's FR table; then run `python tools/kb.py rebuild` and `check`.
+To update a project from 0.4.x, copy the files as `SETUP.md` ("Updating the harness in a project")
+describes, add the new `harness-feedback/` folder (with its `.gitkeep`), then:
+
+- **`PROJECT-PROFILE.md`:** replace the intro paragraph with the template's (write `none` instead of
+  deleting a row). Rename "Other BAs (roles)" to "Other maintainers (roles)", keep only roles that
+  apply changes (normally not the Product owner), and add the paragraph under section 1's table. Add
+  the "Harness repository" row (the template's clone address). In section 6, add the Status column
+  and its explanation: `done` for material already seeded, `ready` or `expected` for the rest. Add
+  section 8 from the template.
+- **`knowledge/stakeholders.md`:** the RACI needs an "Accepting a knowledge base change" row naming
+  the same roles as the maintainers; add it through `/intake`, or run `/setup` again.
+- **`knowledge/raid.md`:** add the Statuses line under the title (and the Actions section, if you
+  skipped 0.4.0).
+- **`knowledge/glossary.md`:** replace the "Entry format" comment with the template's.
+- **`knowledge/README.md`:** replace the Contributing section with the template's.
+- **`trace/map.csv`:** rename the first column to `fr_ids`, and separate several values in one cell
+  with semicolons.
+- **Each requirement document:** add a Status column to the FR table: `agreed`, or `pending Q-<n>`
+  where an open question still decides it. `/review` reports the other 0.5.0 format points
+  (per-criterion blocking, assumptions as `A-` rows) as minor findings to fix when the document next
+  changes.
+
+Then finish with `SETUP.md`'s remaining steps: `HARNESS_VERSION`, rebuild, check, commit and push.
 
 ## 0.4.2 (2026-10-14)
 

@@ -5,7 +5,8 @@ title: <The question, short>
 status: draft
 state: open
 asked_on: YYYY-MM-DD
-asked_of: <role who can answer>
+asked_of: <role whose answer decides it>
+consulted: []
 due: YYYY-MM-DD
 answered_on:
 answer_source:
@@ -39,6 +40,13 @@ updated: YYYY-MM-DD
 ## Why it matters
 
 <What can't be decided, built or tested until it is answered.>
+
+## Proposed answer
+
+<Only when someone who can't decide it has proposed one: the answer, who proposed it, when, the
+source, and the exact rule text it would become, with the page it belongs on. The rule gets its
+BR- number at sign-off. The question stays open until the owner
+answers or signs off the requirement that relies on it.>
 
 ## Answer
 

@@ -17,7 +17,7 @@ Jira.
 
 ## Before anything (every mode)
 
-1. Read `PROJECT-PROFILE.md` (sections 2 and 3 for the site, issue types, required fields and
+1. `git pull --ff-only`, then read `PROJECT-PROFILE.md` (sections 2 and 3 for the site, issue types, required fields and
    defaults; section 5 for `max_batch`), `knowledge/_meta/conventions.md` and `templates/jira/*.md`.
    For a requirement, also the document and its `review.md`.
 2. **Local checks first,** so the BA hears every problem at once: the requirement mode's readiness
@@ -32,16 +32,17 @@ Jira.
      `discover` and `executeRead`). If a required field isn't in the profile's table, ask for its
      value, and suggest `/setup` to record it. If the fix version doesn't exist in the project, stop
      and ask the BA to create it in Jira; "unscheduled" means the fix version field is left empty.
-4. `git pull --ff-only`.
 
 ## Steps for a requirement document
 
 1. **Check readiness.** Stop at the first that fails, and say what to run.
    - `review.md` must exist, with `reviewed_on` on or after the requirement's `updated` date.
      Writing keys back (step 6) doesn't change `updated`, so a re-run doesn't need a new review.
-   - The document's `status` must be `confirmed` or `approved`. If the verdict was not ready, the BA
-     may still confirm it for the stories `review.md` lists as ready; only `/review` (or the BA by
-     hand) changes the status, never `/backlog`.
+   - The document's `status` must be `confirmed` or `approved`; only `/review`, a sign-off or the BA
+     by hand changes it, never `/backlog`.
+   - **What can go to Jira:** `review.md` decides. With a ready verdict, every story it doesn't list
+     as blocked; with a not-ready verdict, only the stories it lists as ready. A sign-off approves the
+     content, not its quality, so it never overrides the review.
    - What blocks: the requirement's own lines decide (each story's "Open questions" and the FR
      table's Status), checked against each question's `state`. A story is blocked if it has a
      blocking open question, or relies on an FR still `pending` after the requirement's sign-off. A

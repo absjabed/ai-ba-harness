@@ -10,8 +10,8 @@
 |---|---|
 | Input | <inbox path, pasted text, conversation, Jira keys, Confluence pages> |
 | Kind | <meeting, document, email, transcript, conversation, jira, confluence> |
-| Source record to create | SRC-new |
-| Items | <n>: <n> new, <n> confirms, <n> extends, <n> contradicts, <n> duplicate, <n> answers; <n> proposed as ignore |
+| Source record to create | SRC-new-1 (number them across the files of one run: SRC-new-1, SRC-new-2) |
+| Items | <n> in all: <n> new, <n> confirms, <n> extends, <n> contradicts, <n> duplicate, <n> answers; of these, <n> proposed as ignore |
 | Needs redaction | <no / yes: what was replaced in the quotes> |
 | Critic | <n> findings: <n> fixed, <n> for you to check |
 
@@ -83,13 +83,14 @@ aren't items. "None" if none.>
 ```
 
 - [ ] accept
-- [ ] edit: <what to change>
+- [ ] accept with the critic's suggestion
+- [ ] edit: <what to change; a new page goes in its own details block here>
 - [ ] reject: <why>
 
 ## Play-back message
 
 <For meetings and transcripts: a short message for the participants: Decided (by role), Still open,
-Actions, Terms. For /requirements: a message to the owner of the pending proposals, asking them to
+Follow-up questions, Actions, Terms. For /requirements: a message to the owner of the pending proposals, asking them to
 confirm or change each. Never the risks, internal notes or the critic's findings.>
 
 **Critic:** <ok / what it flagged in this message>

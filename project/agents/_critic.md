@@ -11,7 +11,8 @@ called it updates the staging file.
 ## How to run it
 
 - **With sub-agents:** in Claude Code, start the `critic` sub-agent (`.claude/agents/critic.md`),
-  which can only read. Other tools: start a fresh-context sub-agent and tell it to read only. Give it
+  which can only read. If that agent type isn't available (for example when the session was opened
+  outside the repository), start any read-only sub-agent and give it that file's instructions. Other tools: start a fresh-context sub-agent and tell it to read only. Give it
   the staging file's path and the source: an `inbox/` path, the pasted text or conversation excerpt
   itself, or the Jira keys and Confluence page IDs.
 - **Without sub-agents:** do it yourself as a separate pass. Re-read the source from the beginning
@@ -53,13 +54,17 @@ Return a list. Each finding has:
     missed item that clearly belongs in the knowledge base, data to redact, a broken change);
   - `check`: the BA should look at it (a possible duplicate, an authority you couldn't confirm).
 - **Finding:** one sentence, with the quote or the page ID that shows it.
-- **Suggested change:** what to change in the staging file.
+- **Suggested change:** one concrete change to the staging file, written out exactly (the new
+  text, row or item), so "take the critic's suggestion" means one thing. No alternatives; if you
+  see two options, recommend one. Name every other place in the file the change must also be made
+  (the summary, the meeting sections, the play-back).
 
 If there is nothing to report, say so.
 
 ## What the calling command does with the findings
 
-1. **`fix` findings:** correct the staging file. A missed item becomes a new item marked `(added by
+1. **`fix` findings:** correct the staging file. A `check` that only points out a required row the
+   command left out (an `Affects delivery` row, a `Searched for` row) may be fixed the same way. A missed item becomes a new item marked `(added by
    the critic)`. A corrected verdict or quote keeps a short note of what changed.
 2. **`check` findings:** don't change the item; put the finding in its `Critic` row. Findings marked
    `other`, and `missed` points you didn't add as items, go under "Other findings" in the `Critic`
@@ -73,4 +78,5 @@ If there is nothing to report, say so.
 
 - Write or edit any file (as the critic).
 - Accept, reject or apply items. That is the BA's decision, in step 5.
-- Run more than once on the same staging file, unless the BA asks.
+- Run more than once on the same staging file, unless the BA asks, or a run was lost before its
+  findings were recorded (then run again and record only that run).

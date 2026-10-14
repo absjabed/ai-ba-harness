@@ -117,12 +117,13 @@ knowledge (a question, an assumption, a rule) go through `/requirements` (an upd
      a time zone, what "overdue" means), with no question tracking it;
    - business areas from profile section 4 with no capability or process page yet: gaps to fill
      through `/kb-seed` or elicitation.
-3. **Questions to chase.** Open questions grouped by the role in `asked_of`, overdue first. For each
-   role, one short message they can answer: each question in a sentence, what it blocks, and the due
-   date. Show the drafts in the chat for the BA to send; never send anything.
+3. **Questions to chase.** Open questions grouped by the role in `asked_of`, overdue first, plus the
+   role's open actions due within 7 days. For each role, one short message they can answer: each
+   question in a sentence, what it blocks, and the due date; each action and its due date. Show the drafts in the chat for the BA to send; never send anything.
 4. **Rebuild** `index.md`, `business-rules.md`, `decisions.md` and `open-questions.md`:
    `python tools/kb.py rebuild`, or by hand to conventions section 12. Show the counts and the
-   diff. Commit only the rebuilt files (`kb: review kb rebuild index`), and ask before pushing.
+   diff. Commit only the rebuilt files (`kb: review kb rebuild index`), and ask before pushing. If
+   the rebuild changed nothing, there's nothing to commit; say so.
 
 ## Never
 

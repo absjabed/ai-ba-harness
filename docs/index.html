@@ -147,7 +147,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.5.0</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.5.1</span></div>
   </div>
   <h2>Start here</h2>
   <a href="#what">What it is</a>
@@ -254,7 +254,7 @@ miss things. A critic pass checks every staging file before you see it, but it i
 model, so everything AI-drafted stays visible as a proposal until you decide.</li>
 <li>Scale. Every question starts from <code>knowledge/index.md</code>. Once it no longer fits in one
 read (roughly 300 or more pages), a local search server will be needed.</li>
-<li>This is version 0.5.0. Every command has been run on a demo project and the problems found were fixed, but it hasn't yet run against a real Jira site or on a live project.</li>
+<li>This is version 0.5.1. Every command has been run on demo projects, twice, and the problems found were fixed, but it hasn't yet run against a real Jira site or on a live project.</li>
 </ul>
 
 <h2 id="map">Harness map</h2>
@@ -527,7 +527,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.5.0"
+git commit -m "Start from AI BA Harness 0.5.1"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -696,7 +696,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <a href="#setup">Set up a project</a>:</p>
 <pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
 cd ../fleetkeep-ba-knowledge
-git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.5.0"
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.5.1"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main
 claude</code></pre>
@@ -1702,9 +1702,11 @@ Jira and Confluence write tool is disallowed for it. Other assistants (Copilot, 
 <code>AGENTS.md</code> in the repository and answer the same way. You can also read the pages
 directly: start at <code>knowledge/index.md</code>, on GitHub or in Obsidian.</p>
 <h3>Suggesting a change</h3>
-<p>Send the material to the BA. Or run <code>/intake</code> on it and open a pull request that only
-adds the staging file it writes to <code>knowledge/_staging/</code>. Either way, the BA accepts or
-rejects each item, and nothing changes until then.</p>
+<p>Send the material to the BA. Or run <code>/intake</code> on it: it asks whether you maintain the
+repository, and for anyone else it stops once the proposal is written, tells you in plain words
+what was proposed, and offers to put it on a branch (<code>kb/stage-&lt;slug&gt;</code>) for a pull
+request that only adds the staging file. Keep your original note until the BA has dealt with it.
+Either way, the BA accepts or rejects each item, and nothing changes until then.</p>
 
 <h2 id="safety">Safety</h2>
 <p>The protections are layered, so one missing step doesn't let a write through.</p>
@@ -1748,7 +1750,7 @@ They can't stop a wrong item you approve, so a yes is your decision.</p></div>
 <tr><td><code>/intake</code> can't read a Word, Excel or PowerPoint file</td><td><code>converter</code> is <code>pdf</code>, or <code>markitdown</code> isn't installed</td><td>Save the file as PDF in <code>inbox/</code>, or install <code>markitdown</code> and set <code>converter: markitdown</code></td></tr>
 <tr><td><code>/intake</code> asks you to move a file</td><td>The file is outside <code>inbox/</code></td><td>Move or copy it into <code>inbox/</code>, so the original is never committed</td></tr>
 <tr><td>Git conflict in <code>index.md</code> or a register</td><td>Two BAs changed the knowledge base on the same day</td><td>Take either side, then run <code>/review kb</code> to rebuild them</td></tr>
-<tr><td>The push after applying is rejected</td><td>Another BA pushed first</td><td>The command pulls with rebase (it asks first), rebuilds the generated files, renumbers any new IDs that clash with the other BA's, and pushes again. If you both changed the text of the same page, it stops and shows you both versions</td></tr>
+<tr><td>The push after applying is rejected</td><td>Another BA pushed first</td><td>The command pulls with rebase (it asks first) and runs the check, which finds any ID you both created, even without a git conflict. It keeps both sides' log lines and RAID rows, renumbers your clashing items (file, ID, links, log line), rebuilds the generated files, pushes again, and tells you which of your IDs changed. If you both changed the same statement, it stops and shows you both versions</td></tr>
 <tr><td><code>new-project.sh</code> copied nothing</td><td>Files already exist in the target, or the template has uncommitted changes</td><td>Use an empty target folder; commit the template changes or pass <code>--allow-dirty</code></td></tr>
 </tbody>
 </table>

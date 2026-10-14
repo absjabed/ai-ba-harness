@@ -45,6 +45,7 @@ Then follow [SETUP.md](SETUP.md): create the shared remote, sign in to Atlassian
 | [`scripts/build-walkthrough.py`](scripts/build-walkthrough.py) | Rebuilds `docs/walkthrough.html` from the handbook's "Follow a whole project" section |
 | [`examples/fleetkeep-ba-knowledge/`](examples/fleetkeep-ba-knowledge) | A complete, filled-in project repository to learn from |
 | [`examples/fleetkeep-demo-test/`](examples/fleetkeep-demo-test/DEMO-TEST.md) | The raw output of the 0.5.0 demo test, kept as it was left (see `research/08-demo-test.md`) |
+| [`examples/fleetkeep-demo-test-2/`](examples/fleetkeep-demo-test-2/DEMO-TEST.md) | The raw output of the second demo test, with two BAs and a developer (see `research/09-second-demo-test.md`) |
 | [`docs/index.html`](docs/index.html) | The BA handbook |
 | [`docs/walkthrough.html`](docs/walkthrough.html) | The handbook's worked example as a page of its own, for sharing with a team. Generated: don't edit it |
 | [`SETUP.md`](SETUP.md) | Step-by-step setup of a project repository |

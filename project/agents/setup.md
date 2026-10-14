@@ -14,8 +14,9 @@ interview the lead BA, read the project's Jira and Confluence configuration, and
      If it returns more than one site, ask which one this project uses.
      - If it fails, tell the BA to run `/mcp`, approve the project's `atlassian` server and sign in.
        Then carry on **offline**: record what the BA tells you, mark each Jira or Confluence value
-       "not verified" in the profile, leave the Cloud ID as a placeholder, and list all of them under
-       "Still unknown" in the report.
+       by adding ` (not verified)` after it (outside any backticks), leave the Cloud ID as a
+       placeholder, skip the label check in round 4 and the "Read Jira's field rules" section, and
+       list all of them under "Still unknown" in the report.
      - If Atlassian tools are available only under another name (a plugin or a claude.ai connector),
        say so: the harness's permission rules are written for the project's `atlassian` server and
        the Atlassian plugin, and any other connection would let Jira writes through without the
@@ -63,12 +64,15 @@ mark it. Don't move on until each round is answered or deliberately skipped.
    content, accepting a knowledge base change): who is responsible, accountable, consulted and
    informed for each. Propose a starting RACI from the answers and let the BA correct it.
    - Every role named in the RACI must be a stakeholder row; add any that are missing.
-   - "Can decide" and the RACI's accountable role must agree. Where they don't, ask which is right.
-     Every authority check reads both.
-   - The "Accepting a knowledge base change" row must match the maintainers from round 1.
+   - "Can decide" and the RACI's accountable role must agree. Where they don't, propose making the
+     RACI follow "Can decide" (the other role becomes consulted) and ask. Every authority check
+     reads both.
+   - The "Accepting a knowledge base change" row: every maintainer from round 1 is responsible, the
+     Lead BA is accountable, and nobody else is either.
 6. **Existing material** for `/kb-seed`: documents (to be dropped in `inbox/`), Confluence page trees,
-   Jira epics. Each row gets a status: `ready`, or `expected` for material promised but not here
-   yet. If there is little written down, say so: the first knowledge can come from a discovery
+   Jira epics. Each row gets a status: `ready` only if the file is already in `inbox/` (or the page
+   tree or epics exist); otherwise `expected`, with a placeholder name. Replace the template's
+   example rows; `none` is only for fixed rows such as the publish parent page. If there is little written down, say so: the first knowledge can come from a discovery
    workshop through `/intake` instead, and notes for `/intake` don't belong in this table.
 7. **Writing rules** (profile section 7): words the project prefers and the ones to avoid (for
    example "job card", not "work order"), and any vague words to add to the list. Propose a few

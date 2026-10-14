@@ -20,5 +20,8 @@ need to know who to go to.
 
 ## RACI for recurring decisions
 
+Anyone not listed (developers, testers, other teammates) can propose knowledge changes but decides
+nothing in the product.
+
 | Decision | Responsible | Accountable | Consulted | Informed |
 |---|---|---|---|---|

@@ -4,6 +4,8 @@
     python tools/kb.py check         check links, names, properties and IDs (exit 1 on errors)
     python tools/kb.py next CAP      print the next free ID for a prefix (CAP, BR, Q, ACT, T, ...)
 
+Set KB_TODAY=YYYY-MM-DD to judge due dates and ages against another day than today.
+
 Plain Python 3.8 or later, no packages. The harness commands run it when Python is available; when
 it isn't, they follow knowledge/_meta/conventions.md section 12 by hand, which describes the same
 output. The GitHub workflow in .github/workflows/kb-check.yml runs `check` on every push and pull
@@ -314,7 +316,7 @@ def defined_ids(pages):
 def check():
     errors, warnings = [], []
     pages = load_pages()
-    today = datetime.date.today()
+    today = datetime.date.fromisoformat(os.environ["KB_TODAY"]) if os.environ.get("KB_TODAY") else datetime.date.today()
 
     # Pages: properties, names, statuses, dates
     seen = {}
@@ -363,6 +365,16 @@ def check():
         for br in listed & set(gone):
             errors.append(f"{p['rel']}: retired {br} is still in `rules`")
 
+    # IDs in the RAID log and the glossary are unique
+    for name, pattern in (("raid.md", r"^\| ((?:R|A|I|D|ACT)-\d+) \|"), ("glossary.md", r"\*\*(T-\d+)\*\*")):
+        try:
+            text = re.sub(r"<!--.*?-->", "", read(os.path.join(KB, name)), flags=re.S)
+        except OSError:
+            continue
+        found = re.findall(pattern, text, re.M)
+        for dup in sorted({i for i in found if found.count(i) > 1}):
+            errors.append(f"knowledge/{name}: {dup} is used more than once")
+
     # Rule IDs unique across pages
     owners = {}
     for p in pages:
@@ -389,7 +401,10 @@ def check():
                 continue
             path_part, _, anchor = target.partition("#")
             dest = os.path.normpath(os.path.join(os.path.dirname(path), path_part)) if path_part else path
+            in_staging = "/_staging/" in path.replace(os.sep, "/")
             if not os.path.exists(dest):
+                if in_staging and re.search(r"-new(-\d|\b)", path_part):
+                    continue  # a staging file may link a page it is proposing
                 errors.append(f"{rel(path, ROOT)}: broken link {target}")
             elif anchor and dest.endswith(".md") and anchor not in anchors(dest):
                 errors.append(f"{rel(path, ROOT)}: no heading for #{anchor} in {target}")
@@ -405,7 +420,7 @@ def check():
     for path in cited_in:
         r = rel(path, ROOT)
         text = re.sub(r"<!--.*?-->", "", read(path), flags=re.S)
-        if "/_staging/" not in "/" + r.replace(os.sep, "/") and re.search(r"\b[A-Z]{1,5}-new-\d+\b", text):
+        if "/_staging/" not in "/" + r.replace(os.sep, "/") and re.search(r"\b[A-Z]{1,5}-new(-\d+)?\b", text):
             errors.append(f"{r}: provisional ID (like CAP-new-1) outside a staging file")
         if "/_staging/" in "/" + r:
             continue

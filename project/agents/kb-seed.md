@@ -14,6 +14,8 @@ seeding.
 
 - No argument: every `ready` row in profile section 6 (not `expected` ones, and not other files that
   happen to be in `inbox/`). Set a row to `done` once its staging files are applied.
+- `inbox`: every file in `inbox/`. Match each one to a section 6 row as part of the plan (fill in
+  its file name and set it `ready`); offer to add a row for any that don't match.
 - An argument narrows it: `confluence`, `jira`, `inbox`, or one path or page.
 
 ## Steps
@@ -35,6 +37,13 @@ seeding.
    propose an open question, not two facts.
 4. **Stage by source** (pipeline step 3): one staging file per document, per Confluence page tree and
    per Jira epic group. Run the critic on each staging file (pipeline step 4).
+   - Number provisional IDs across the whole run (`CAP-new-1` in one file is never reused in
+     another; source records are `SRC-new-1`, `SRC-new-2`), and apply the files in order.
+   - An item that adds to a page an earlier file proposes is `confirms` or `extends <provisional
+     ID>`, with a `Depends on` row naming that file and item.
+   - Something two documents raise together (a contradiction between them) goes in the later
+     document's staging file, so it can cite both sources once they are applied.
+   - Links may point forward to an item later in the same file, with a `Depends on` row.
 5. **Structure first.** Propose in this order, so later items can link to earlier ones:
    1. glossary terms;
    2. stakeholders and roles;

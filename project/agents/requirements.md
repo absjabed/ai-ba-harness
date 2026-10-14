@@ -20,7 +20,11 @@ description as the starting request.
 The slug is lowercase and hyphenated, from the epic name. If `requirements/<slug>/requirement.md`
 already exists, this is an update: read it, keep everything already confirmed, and show changes as a
 diff. If its stories already have Jira keys, say so: after the update, `/review` and then `/backlog`
-bring the changes into those stories.
+bring the changes into those stories. If the document was `approved` and the update changes its
+requirements or stories, it goes back to `draft` with `approved_by` and `approved_on` cleared and
+needs a new sign-off, unless every change comes from a decision by the person who signed it off.
+Commit an update as `req: update <slug> <source id>`, and say in the report that `review.md` is out of
+date until `/review` runs again.
 
 ## Steps
 
@@ -46,7 +50,9 @@ bring the changes into those stories.
      says can decide it. When the BA isn't that person, their answer is a **proposal**: it becomes a
      question to the owner with the BA's answer as the proposed one, and the requirement uses it
      marked "pending Q-x". The owner's sign-off of the requirement answers all of those at once
-     (pipeline step 3, sign-off).
+     (pipeline step 3, sign-off). Each proposal's question, new or existing, gets the BA's answer in
+     its Proposed answer section, with the exact rule text and the page it belongs on (no BR- number yet), so the
+     sign-off can add it as written. Tell the BA early: stories that rely on proposals wait for that sign-off.
    - Stop when what's left can be recorded as an assumption or an open question.
 3. **Write the draft** to `requirements/<slug>/requirement.md` from `templates/requirement.md`, status
    `draft`, without committing it yet:
@@ -66,8 +72,10 @@ bring the changes into those stories.
 4. **Use the project's words.** Use glossary terms and the profile's preferred terms. Avoid the
    profile's vague words unless they have a measure.
 5. **Check the draft.** Run the rule-based checks from `agents/review.md` on the draft file: the
-   `critic` sub-agent when your tool has one (give it the file and `agents/review.md`, findings
-   only), otherwise a separate pass, re-reading the draft from the top. Provisional IDs
+   `critic` sub-agent when your tool has one (give it the draft's path and say "pre-check"; it then
+   applies `agents/review.md`'s rule-based checks instead of `_critic.md`), otherwise a separate
+   pass, re-reading the draft from the top. If you disagree with a finding, keep the text and show
+   the finding with your reason. Provisional IDs
    (`Q-new-1`, `BR-new-1`) are reported as "pending staging", not as missing.
    - Fix what is mechanical yourself: missing or duplicate IDs, a story not in the "As a … I want …
      so that …" form, a vague word the knowledge base gives a measure for, a citation to the wrong
@@ -81,9 +89,11 @@ bring the changes into those stories.
    their provisional IDs for now.
 7. **Show both together:** the document with the pre-check's remaining findings, and the staging
    file (pipeline step 5). The BA says yes or no to the document and decides each staged item.
-   - If the document is a no, delete the draft file; staged items can still be applied on their own.
+   - If the document is a no, delete the draft file; staged items can still be applied on their own,
+     with their links to the draft removed.
 8. **Apply and commit once.** Apply the accepted items (pipeline step 6, steps 1 to 8), replace the
-   provisional IDs in the document with the real ones, and commit everything in one commit:
+   provisional IDs in the document with the real ones, bring the document in line with any staged
+   item the BA edited, and commit everything in one commit:
    `req: draft <slug>` (this replaces the pipeline's own commit). Ask before pushing. Rows in
    `trace/map.csv` are added later by `/backlog`.
 
