@@ -36,6 +36,7 @@ for you to check, with item numbers. "No findings" if it found nothing.>
 | Sensitivity | <clean / redact: what> |
 | Quote | "<exact words>" (<location: file ¶, time, key and comment>) |
 | Critic | <ok / fixed: what changed / check: what to look at> |
+| Affects delivery | <none / REQ-<slug> ST-01 (PROJ-1234), ...> |
 | Proposed change | <create CAP-new-1 in domains/<area>/ / edit CAP-012 (diff below) / new Q-new-1 / new DEC-new-1 awaiting <role> / action for <role> by <date> / add T- term / ignore> |
 
 ```diff

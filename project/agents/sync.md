@@ -39,8 +39,16 @@ scope JQL is still a placeholder, tell them to run `/setup`.
    - **Terms:** new or changed.
    - **Status changes with business meaning:** an epic cancelled, a story moved to another release,
      an issue closed as "won't do".
+   - **Delivered work:** a story listed in `trace/map.csv` that reached Done. What it delivered is
+     now true of the product, so propose bringing it into the knowledge base: the story's functional
+     requirements and rules, from the requirement document, become edits to the pages its row lists
+     (`extends`, or a superseding edit where the new behaviour replaces what a page says; to-be
+     process steps become as-is). When every story of a requirement is Done or closed, also propose
+     setting the requirement's `delivered_on`. A story closed as "won't do" is reported, not
+     delivered.
 
-   Ignore routine workflow moves, estimates and assignee changes.
+   Ignore routine workflow moves, estimates and assignee changes. A traced story reaching Done is not
+   routine.
 
 ### Confluence
 

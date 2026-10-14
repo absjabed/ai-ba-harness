@@ -41,7 +41,7 @@ For transcripts, use timestamps as locations. For documents, use page and sectio
 2. **For meetings and transcripts,** also put three things in the staging summary:
    - the attendees by role;
    - the decisions made, each marked "can decide" or "needs owner";
-   - the actions with owner and date.
+   - the actions with owner and date (each becomes an `ACT-` row).
    Then draft the play-back message. Do this before the critique, so the critic checks it too.
 3. Show the staging file and wait for the BA's decisions (pipeline step 5).
 4. Apply (pipeline step 6).

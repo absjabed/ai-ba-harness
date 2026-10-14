@@ -20,6 +20,7 @@ these. Change a decision here first, then update the notes that depend on it.
 | 13 | Data handling | Covered by the organisation's AI-use policy (confirmed). `inbox/` is gitignored; intake offers to strip personal data before anything is stored |
 | 14 | Teammates | Anyone with a clone can use `/ask`, which is read-only. Contributions arrive through the BA (or as a staging file in a pull request) and are accepted by the BA |
 | 15 | Internal critics (added in 0.2.0) | A critic re-checks every staging file against its source and the knowledge base before the BA sees it (fresh-context sub-agent where available); `/requirements` pre-checks its draft with `/review`'s rule checks; `/ask` checks each claim against the page it cites. `/backlog` keeps its preview and read-back, and `/review kb` is itself the critic for the knowledge base |
+| 16 | After delivery (added in 0.4.0) | `/backlog` also creates single tasks, spikes and UAT bugs, and updates stories it created when the requirement changes, never transitioning or deleting. Staged changes show their delivery impact from `trace/map.csv`. `/sync` brings Done stories back into the knowledge base. Actions get an `ACT-` register |
 
 ## Naming
 

@@ -39,6 +39,7 @@ Either way, run it once per staging file. Don't loop: one critique, then the BA.
 | 6 | Clarity | Vague words from profile section 7 without a measure are flagged as `vague` |
 | 7 | Nothing sensitive left | Names where a role would do, contact details, health or customer data and credentials don't appear in the proposed changes, the summary or the play-back message |
 | 8 | Proposed changes are well formed | Target folders and file names follow the conventions; cited IDs exist; edits quote the current text exactly; each new rule is listed in its page's `rules` |
+| 9 | Delivery impact is complete | Every item that edits, supersedes or contradicts an existing page has its `Affects delivery` row, matching `trace/map.csv` and the requirement documents that cite it |
 
 ## Findings
 

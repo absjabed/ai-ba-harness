@@ -90,6 +90,11 @@ Check the knowledge base and report:
 9. Glossary terms used in pages with a different meaning.
 10. Business areas from profile section 4 with no capability or process page yet: gaps to fill
     through `/kb-seed` or elicitation.
+11. Actions in `raid.md` still `open` after their due date.
+
+Then draft the **questions to chase**: open questions grouped by the role in `asked_of`, overdue
+first. For each role, one short message they can answer: each question in a sentence, what it
+blocks, and the due date. Show the drafts in the chat for the BA to send; never send anything.
 
 Then rebuild `index.md`, `business-rules.md`, `decisions.md` and `open-questions.md` from the pages'
 properties (conventions, section 12). Show the counts and the rebuilt files' diff. Commit only the

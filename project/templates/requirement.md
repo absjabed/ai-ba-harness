@@ -7,6 +7,9 @@ area: <area from the profile>
 owner: <role>
 jira_epic: <PROJ-0000, filled by /backlog>
 fix_version: <release, or unscheduled>
+approved_by:
+approved_on:
+delivered_on:
 sources: []
 created: YYYY-MM-DD
 updated: YYYY-MM-DD

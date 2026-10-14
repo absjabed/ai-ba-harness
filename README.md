@@ -43,7 +43,7 @@ Then follow [SETUP.md](SETUP.md): create the shared remote, sign in to Atlassian
 | [`scripts/new-project.sh`](scripts/new-project.sh) | Copies `project/` into a new project repository and records the harness version |
 | [`examples/fleetkeep-ba-knowledge/`](examples/fleetkeep-ba-knowledge) | A complete, filled-in project repository to learn from |
 | [`docs/index.html`](docs/index.html) | The BA handbook |
-| [`docs/walkthrough.html`](docs/walkthrough.html) | A month on FleetKeep: one project from `/setup` to stories in Jira, command by command |
+| [`docs/walkthrough.html`](docs/walkthrough.html) | FleetKeep, from setup to release: one project command by command, including changes after the stories reach Jira |
 | [`SETUP.md`](SETUP.md) | Step-by-step setup of a project repository |
 | [`design/`](design) | The agreed design: decisions, command definitions, workflow, knowledge-base conventions, Jira templates, layout |
 | [`research/`](research) | The research behind the design |

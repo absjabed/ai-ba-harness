@@ -19,7 +19,8 @@ description as the starting request.
 
 The slug is lowercase and hyphenated, from the epic name. If `requirements/<slug>/requirement.md`
 already exists, this is an update: read it, keep everything already confirmed, and show changes as a
-diff.
+diff. If its stories already have Jira keys, say so: after the update, `/review` and then `/backlog`
+bring the changes into those stories.
 
 ## Steps
 

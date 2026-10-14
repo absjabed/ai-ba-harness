@@ -1,6 +1,6 @@
 ---
-description: Create the epic and stories in Jira from a reviewed requirement document, after duplicate checks and your approval
-argument-hint: "<requirements/<slug>/requirement.md>"
+description: Put approved work into Jira after duplicate checks and your approval - stories from a reviewed requirement (and later changes to them), or a single task, spike or UAT bug
+argument-hint: "<requirements/<slug>/requirement.md | task ACT-<n> | spike Q-<n> | bug <SRC-id> <item>>"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git status *), Bash(git log *), Bash(git diff *), Bash(git fetch *), Bash(git pull --ff-only *), Bash(git add *), Bash(git commit *), Bash(git remote -v), Bash(git rev-parse *), mcp__atlassian__getAccessibleAtlassianResources, mcp__atlassian__getJiraIssue, mcp__atlassian__searchJiraIssuesUsingJql, mcp__atlassian__lookupJiraAccountId, mcp__atlassian__discover, mcp__atlassian__executeRead
 ---
 

@@ -1,7 +1,7 @@
 ---
 type: register
 id: RAID
-title: Risks, assumptions, issues and dependencies
+title: Risks, assumptions, issues, dependencies and actions
 status: confirmed
 owner: Lead BA
 sources:
@@ -13,10 +13,10 @@ created: 2026-09-17
 updated: 2026-10-09
 ---
 
-# Risks, assumptions, issues and dependencies
+# Risks, assumptions, issues, dependencies and actions
 
-The project's risks (R-), assumptions (A-), issues (I-) and dependencies (D-), one table each, with
-the source each came from.
+The project's risks (R-), assumptions (A-), issues (I-), dependencies (D-) and actions (ACT-), one
+table each, with the source each came from.
 
 ## Risks
 
@@ -44,3 +44,13 @@ the source each came from.
 | ID | We depend on | For | Needed by | Owner | Status | Source |
 |---|---|---|---|---|---|---|
 | D-001 | The pilot depots' shift patterns, from the Pilot workshop supervisor | Answering [Q-002](questions/Q-002-escalation-clock-outside-working-hours.md) and checking A-002 | 2026-10-21 | Lead BA | Open | SRC-004 |
+
+## Actions
+
+Status is `open`, `done` or `dropped`. `/review kb` reports open actions past their due date.
+
+No actions yet. The triage call's two actions are waiting in
+[the staging file](_staging/2026-10-14-intake-defect-triage-call.md) as ACT-new-1 and ACT-new-2.
+
+| ID | Action | Owner | Due | Status | Jira | Source |
+|---|---|---|---|---|---|---|

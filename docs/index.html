@@ -122,10 +122,10 @@ main a{color:var(--accent);text-underline-offset:2px}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.3.0</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.4.0</span></div>
   </div>
   <h2>Start here</h2>
-  <a href="walkthrough.html">Walkthrough: a month on FleetKeep</a>
+  <a href="walkthrough.html">Walkthrough: FleetKeep, setup to release</a>
   <a href="#what">What it is</a>
   <a href="#why">Why use it</a>
   <a href="#map">Harness map</a>
@@ -219,7 +219,7 @@ miss things. A critic pass checks every staging file before you see it, but it i
 model, so everything AI-drafted stays visible as a proposal until you decide.</li>
 <li>Scale. Every question starts from <code>knowledge/index.md</code>. Once it no longer fits in one
 read (roughly 300 or more pages), a local search server will be needed.</li>
-<li>This is version 0.3.0. It has not been used on a real project yet.</li>
+<li>This is version 0.4.0. It has not been used on a real project yet.</li>
 </ul>
 
 <h2 id="map">Harness map</h2>
@@ -491,7 +491,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.3.0"
+git commit -m "Start from AI BA Harness 0.4.0"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -634,7 +634,9 @@ With no argument it captures what was learned in the current conversation.</p>
 <h3><code>/sync [jira | confluence]</code> <span class="pill">daily</span> <span class="pill">reads Atlassian only</span></h3>
 <p>Brings what happened in Jira (and Confluence, if used) since the last sync into the knowledge base:
 answers to open questions, decisions in comments, rule or scope changes, new terms, and status
-changes with business meaning. Routine workflow moves, estimates and assignee changes are ignored.</p>
+changes with business meaning. When a story created by <code>/backlog</code> reaches Done, it proposes
+updating the knowledge pages with what the story delivered, because that is now how the product
+works. Routine workflow moves, estimates and assignee changes are ignored.</p>
 <table><tbody>
 <tr><td><strong>When</strong></td><td>Daily, and before writing requirements for an area</td></tr>
 <tr><td><strong>Needs</strong></td><td><code>/setup</code> done, Atlassian signed in, the scope JQL (and spaces) in the profile. The first run asks how far back to go (default 14 days)</td></tr>
@@ -658,7 +660,8 @@ says about the area.</p>
 <div class="card">
 <h3><code>/review &lt;requirement.md | JIRA-KEY | kb&gt;</code> <span class="pill">report</span></h3>
 <p>A quality report graded critical, major and minor, with a ready or not-ready verdict. It changes
-the target only when you ask it to apply fixes.</p>
+the target only when you ask it to apply fixes. <code>/review kb</code> also reports overdue actions,
+and drafts a message per stakeholder with the open questions waiting on them, for you to send.</p>
 <table><tbody>
 <tr><td><strong>When</strong></td><td>On a requirement document before <code>/backlog</code>; on a Jira issue someone else wrote; weekly on the knowledge base (<code>/review kb</code>)</td></tr>
 <tr><td><strong>Needs</strong></td><td>The knowledge base; Atlassian for Jira keys and the duplicate search</td></tr>
@@ -668,9 +671,14 @@ the target only when you ask it to apply fixes.</p>
 </div>
 
 <div class="card">
-<h3><code>/backlog &lt;requirements/&lt;slug&gt;/requirement.md&gt;</code> <span class="pill">per epic</span> <span class="pill block">writes to Jira</span></h3>
+<h3><code>/backlog &lt;requirement.md | task ACT-n | spike Q-n | bug SRC-n item&gt;</code> <span class="pill">per epic</span> <span class="pill block">writes to Jira</span></h3>
 <p>Creates the epic and one story per <code>ST-</code> from the Jira templates, with duplicate
-checks, after you approve the batch. The only command in version 1 that writes to Jira.</p>
+checks, after you approve the batch. Run it again after the requirement changes: stories that already
+have keys are compared with the document and updated (shown as a diff), new stories are created, and
+stories dropped from the document are listed for you to close by hand. It also creates single items:
+a task from an action (<code>task ACT-002</code>), a spike for an open question
+(<code>spike Q-003</code>), or a bug from UAT (<code>bug SRC-006 2</code>). The only command that
+writes to Jira.</p>
 <table><tbody>
 <tr><td><strong>When</strong></td><td>After <code>/review</code> gives a ready verdict, or you accept its remaining findings. If the review is missing or older than the document, it asks you to run <code>/review</code> first. If the verdict is not ready, it offers to create only the stories listed as ready</td></tr>
 <tr><td><strong>Needs</strong></td><td>Atlassian signed in; the field rules <code>/setup</code> recorded; a fix version (or an explicit "unscheduled")</td></tr>
@@ -708,6 +716,8 @@ weekly. <code>/ask</code> can be used at any time by anyone.</p>
 <tr><td>After a meeting or workshop</td><td>Save the notes or transcript to <code>inbox/</code>, then <code>/intake inbox/&lt;file&gt;</code></td><td>Decisions, questions and requirements captured while fresh, with a play-back message for participants</td></tr>
 <tr><td>A document or email arrives</td><td><code>/intake inbox/&lt;file&gt;</code>, or paste the text after <code>/intake</code></td><td>The same, for documents</td></tr>
 <tr><td>A stakeholder answers a question</td><td><code>/intake</code> with the answer</td><td>Closes the <code>Q-</code> item and updates the pages it affects</td></tr>
+<tr><td>A stakeholder signs off a requirement</td><td><code>/intake</code> with the email, or <code>/sync</code> if it was a Jira comment</td><td>Sets the requirement to <code>approved</code>, with who and when</td></tr>
+<tr><td>An action needs tracking in Jira</td><td><code>/backlog task ACT-&lt;n&gt;</code></td><td>One task from the action, linked back to its row in <code>raid.md</code></td></tr>
 <tr><td>End of a working session with Claude</td><td><code>/intake</code> (no argument)</td><td>Captures what was worked out in the conversation</td></tr>
 <tr><td>Someone asks you something</td><td><code>/ask &lt;question&gt;</code></td><td>A cited answer, and an open question if the knowledge base doesn't know</td></tr>
 </tbody>
@@ -726,6 +736,9 @@ files overnight; <code>/review kb</code> lists any older than a day.</p></div>
 <tr><td>4</td><td>Fix, and repeat 2 and 3 as needed</td><td>The verdict changes to ready</td></tr>
 <tr><td>5</td><td><code>/backlog requirements/&lt;epic&gt;/requirement.md</code></td><td>Epic and stories created in Jira, keys written back</td></tr>
 <tr><td>6</td><td>Developers and testers pick up the Jira keys</td><td>Handed over</td></tr>
+<tr><td>7</td><td>If the requirement changes: <code>/requirements &lt;epic&gt;</code>, <code>/review</code>, <code>/backlog</code> again</td><td>Existing stories updated, new ones created, dropped ones listed for you</td></tr>
+<tr><td>8</td><td>UAT: <code>/intake</code> the session notes, then <code>/backlog bug SRC-&lt;n&gt; &lt;item&gt;</code> per problem</td><td>Bugs raised with the criterion or rule they break</td></tr>
+<tr><td>9</td><td>As stories reach Done, <code>/sync</code> proposes the knowledge updates</td><td>The pages describe the product as delivered</td></tr>
 </tbody>
 </table>
 
@@ -733,8 +746,8 @@ files overnight; <code>/review kb</code> lists any older than a day.</p></div>
 <table>
 <thead><tr><th>Run</th><th>Why</th></tr></thead>
 <tbody>
-<tr><td><code>/review kb</code></td><td>Broken links, old drafts, overdue questions, leftover staging files, contradictions, business areas with no pages yet; rebuilds the index and registers</td></tr>
-<tr><td>Go through <code>knowledge/open-questions.md</code></td><td>Plan who to ask; overdue questions go into the next stakeholder meeting</td></tr>
+<tr><td><code>/review kb</code></td><td>Broken links, old drafts, overdue questions and actions, leftover staging files, contradictions, business areas with no pages yet; rebuilds the index and registers</td></tr>
+<tr><td>Send the drafted questions</td><td><code>/review kb</code> drafts one message per stakeholder with the open questions waiting on them; send them, or take them to the next meeting</td></tr>
 </tbody>
 </table>
 
@@ -758,6 +771,8 @@ files overnight; <code>/review kb</code> lists any older than a day.</p></div>
 <tr><td>Need requirements for an epic</td><td><code>/requirements &lt;epic&gt;</code></td></tr>
 <tr><td>Is this ready for the backlog?</td><td><code>/review &lt;document&gt;</code></td></tr>
 <tr><td>Put it in Jira</td><td><code>/backlog &lt;document&gt;</code></td></tr>
+<tr><td>The requirement changed after its stories were created</td><td><code>/requirements</code>, <code>/review</code>, <code>/backlog</code> again</td></tr>
+<tr><td>An action, a question to investigate, or a UAT problem needs a Jira issue</td><td><code>/backlog task ACT-n</code>, <code>spike Q-n</code> or <code>bug SRC-n item</code></td></tr>
 <tr><td>Is someone else's ticket any good?</td><td><code>/review &lt;JIRA-KEY&gt;</code></td></tr>
 <tr><td>How does X work? What did we decide about Y?</td><td><code>/ask</code></td></tr>
 <tr><td>Is the knowledge base healthy?</td><td><code>/review kb</code></td></tr>
@@ -820,6 +835,7 @@ which Jira issue and knowledge page) and <code>inbox/</code> (raw material, neve
 <tr><td><code>SRC-</code></td><td>Source record</td><td><code>sources/</code></td></tr>
 <tr><td><code>BR-</code></td><td>Business rule</td><td>Inside a capability or process page, listed in its <code>rules</code> property</td></tr>
 <tr><td><code>R-</code> <code>A-</code> <code>I-</code> <code>D-</code></td><td>Risk, assumption, issue, dependency</td><td><code>raid.md</code></td></tr>
+<tr><td><code>ACT-</code></td><td>Action, with owner, due date and status</td><td><code>raid.md</code>, Actions table</td></tr>
 <tr><td><code>T-</code></td><td>Glossary term</td><td><code>glossary.md</code></td></tr>
 </tbody>
 </table>
@@ -870,6 +886,7 @@ with a summary table at the top and one block per item:</p>
 <tr><td>Sensitivity</td><td>clean, or what should be redacted</td></tr>
 <tr><td>Quote</td><td>The exact words and where they came from</td></tr>
 <tr><td>Critic</td><td>ok, what the critic fixed, or what it wants you to check</td></tr>
+<tr><td>Affects delivery</td><td>For a change to an existing page or rule: the requirements, stories and Jira keys that rely on it (from <code>trace/map.csv</code>), or none</td></tr>
 <tr><td>Proposed change</td><td>The exact change: a new page, a diff of an existing page, a new question, a glossary entry, a RAID row, or ignore with the reason</td></tr>
 </tbody>
 </table>
@@ -888,7 +905,9 @@ the chat, for example:</p>
 IDs, writes the accepted items (as <code>confirmed</code>, or <code>draft</code> if you say "keep as
 draft"), writes the source record with the rejected items and their reasons (so they aren't proposed
 again), rebuilds the index and registers, appends to <code>log.md</code>, deletes the staging file,
-commits, and asks whether to push. Items you leave undecided stay in the staging file for later,
+commits, and asks whether to push. If any accepted change affects delivery, the report ends with the
+affected stories and the next step: <code>/requirements</code> to update the document, then
+<code>/review</code> and <code>/backlog</code>, which updates the stories in Jira. Items you leave undecided stay in the staging file for later,
 and only a BA who maintains the repository applies; a teammate's run stops at the staging file. An
 input with more than 40 items is split into several staging files so you can decide them in
 sittings.</p>
@@ -1116,6 +1135,7 @@ They can't stop a wrong item you approve, so a yes is your decision.</p></div>
 <tr><td><code>/intake</code> can't read a Word, Excel or PowerPoint file</td><td><code>converter</code> is <code>pdf</code>, or <code>markitdown</code> isn't installed</td><td>Save the file as PDF in <code>inbox/</code>, or install <code>markitdown</code> and set <code>converter: markitdown</code></td></tr>
 <tr><td><code>/intake</code> asks you to move a file</td><td>The file is outside <code>inbox/</code></td><td>Move or copy it into <code>inbox/</code>, so the original is never committed</td></tr>
 <tr><td>Git conflict in <code>index.md</code> or a register</td><td>Two BAs changed the knowledge base on the same day</td><td>Take either side, then run <code>/review kb</code> to rebuild them</td></tr>
+<tr><td>The push after applying is rejected</td><td>Another BA pushed first</td><td>The command pulls with rebase (it asks first), rebuilds the generated files, renumbers any new IDs that clash with the other BA's, and pushes again. If you both changed the text of the same page, it stops and shows you both versions</td></tr>
 <tr><td><code>new-project.sh</code> copied nothing</td><td>Files already exist in the target, or the template has uncommitted changes</td><td>Use an empty target folder; commit the template changes or pass <code>--allow-dirty</code></td></tr>
 </tbody>
 </table>
@@ -1131,6 +1151,8 @@ They can't stop a wrong item you approve, so a yes is your decision.</p></div>
 <tr><td>A stakeholder answered</td><td><code>/intake</code> with the answer</td></tr>
 <tr><td>End of a session with Claude</td><td><code>/intake</code></td></tr>
 <tr><td>New epic</td><td><code>/requirements &lt;epic&gt;</code> → <code>/review requirements/&lt;slug&gt;/requirement.md</code> → <code>/backlog requirements/&lt;slug&gt;/requirement.md</code></td></tr>
+<tr><td>Requirement changed after <code>/backlog</code></td><td>The same three again; <code>/backlog</code> updates the existing stories</td></tr>
+<tr><td>Action, spike or UAT bug for Jira</td><td><code>/backlog task ACT-n</code> · <code>/backlog spike Q-n</code> · <code>/backlog bug SRC-n item</code></td></tr>
 <tr><td>Someone else's Jira issue</td><td><code>/review &lt;JIRA-KEY&gt;</code></td></tr>
 <tr><td>Weekly health check</td><td><code>/review kb</code></td></tr>
 <tr><td>Any question about the project</td><td><code>/ask &lt;question&gt;</code></td></tr>
@@ -1153,7 +1175,7 @@ They can't stop a wrong item you approve, so a yes is your decision.</p></div>
 
 <footer>
 <p>To follow one project from <code>/setup</code> to stories in Jira, read the
-<a href="walkthrough.html">walkthrough: a month on FleetKeep</a>.</p>
+<a href="walkthrough.html">walkthrough: FleetKeep, from setup to release</a>.</p>
 <p>To see a filled-in project repository, open <code>examples/fleetkeep-ba-knowledge/</code> in the template: start with <code>EXAMPLE.md</code>, then <code>knowledge/index.md</code>, the pending staging file, and the requirement with its review.</p>
 <p>More detail: <code>SETUP.md</code> (setting up a project), <code>design/</code> (the agreed
 decisions, command definitions, workflow guide, knowledge base conventions, Jira templates and

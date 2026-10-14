@@ -1,7 +1,7 @@
 ---
 type: register
 id: RAID
-title: Risks, assumptions, issues and dependencies
+title: Risks, assumptions, issues, dependencies and actions
 status: draft
 owner: Lead BA
 sources: []
@@ -9,7 +9,7 @@ created: YYYY-MM-DD
 updated: YYYY-MM-DD
 ---
 
-# Risks, assumptions, issues and dependencies
+# Risks, assumptions, issues, dependencies and actions
 
 ## Risks
 
@@ -29,4 +29,11 @@ updated: YYYY-MM-DD
 ## Dependencies
 
 | ID | We depend on | For | Needed by | Owner | Status | Source |
+|---|---|---|---|---|---|---|
+
+## Actions
+
+Status is `open`, `done` or `dropped`. `/review kb` reports open actions past their due date.
+
+| ID | Action | Owner | Due | Status | Jira | Source |
 |---|---|---|---|---|---|---|

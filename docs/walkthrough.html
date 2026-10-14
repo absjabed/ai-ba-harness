@@ -111,7 +111,7 @@ main a{color:var(--accent);text-underline-offset:2px}
 }
 
 .tl{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:1.1rem 0}
-.tl-row{display:grid;grid-template-columns:84px 130px minmax(0,1fr);gap:12px;padding:9px 14px;border-bottom:1px solid var(--border);font-size:.9rem;align-items:baseline}
+.tl-row{display:grid;grid-template-columns:84px 190px minmax(0,1fr);gap:12px;padding:9px 14px;border-bottom:1px solid var(--border);font-size:.9rem;align-items:baseline}
 .tl-row:last-child{border-bottom:none}
 .tl-row:nth-child(odd){background:var(--surface)}
 .tl-date{color:var(--muted);font-size:.8rem;font-weight:600}
@@ -157,11 +157,11 @@ main a{color:var(--accent);text-underline-offset:2px}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>Walkthrough · v0.3.0</span></div>
+    <div><strong>AI BA Harness</strong><span>Walkthrough · v0.4.0</span></div>
   </div>
   <h2>The story</h2>
   <a href="#cast">The project and the cast</a>
-  <a href="#timeline">The first month</a>
+  <a href="#timeline">At a glance</a>
   <h2>Day 0</h2>
   <a href="#before">Before /setup</a>
   <a href="#setup">/setup, round by round</a>
@@ -181,14 +181,23 @@ main a{color:var(--accent);text-underline-offset:2px}
   <a href="#triage">A meeting: /intake + critic</a>
   <a href="#ask">A developer asks: /ask</a>
   <a href="#weekly">Friday: /review kb</a>
+  <h2>Weeks 5 to 11</h2>
+  <a href="#apply-impact">Deciding, and delivery impact</a>
+  <a href="#task">An action: /backlog task</a>
+  <a href="#chase">Questions to chase</a>
+  <a href="#change">A rule changes after Jira</a>
+  <a href="#signoff">Sign-off</a>
+  <a href="#uat">UAT: /backlog bug</a>
+  <a href="#delivered">Shipped: /sync</a>
   <h2>Reference</h2>
   <a href="#which">Which command, when</a>
   <a href="index.html">The BA handbook</a>
 </nav>
 <main>
-<h1>A month on FleetKeep</h1>
-<p class="lede">One project, from an empty template to a working knowledge base, a reviewed requirement
-and stories in Jira. Every command appears at the moment a BA would reach for it, with what it reads,
+<h1>FleetKeep, from setup to release</h1>
+<p class="lede">One project, from an empty template to a working knowledge base, a reviewed requirement,
+stories in Jira, a rule that changes after they exist, and a release that updates what the knowledge
+base says. Every command appears at the moment a BA would reach for it, with what it reads,
 what it asks you and what you end up with.</p>
 
 <div class="callout">
@@ -215,7 +224,7 @@ escalated defects, and the Product owner wants that fixed in the November releas
 </tbody>
 </table>
 
-<h2 id="timeline">The first month at a glance</h2>
+<h2 id="timeline">At a glance</h2>
 <div class="tl">
 <div class="tl-row"><span class="tl-date">Sep 15</span><span class="tl-cmd">/setup</span><span>Profile, Jira and Confluence settings, stakeholders with a RACI, five business areas</span></div>
 <div class="tl-row"><span class="tl-date">Sep 17</span><span class="tl-cmd">/intake</span><span>Discovery workshop notes become the first glossary, capabilities, process and questions</span></div>
@@ -226,7 +235,13 @@ escalated defects, and the Product owner wants that fixed in the November releas
 <div class="tl-row"><span class="tl-date">Oct 13</span><span class="tl-cmd">/backlog</span><span>Epic FK-1301 and stories FK-1302 to FK-1305 created after your approval</span></div>
 <div class="tl-row"><span class="tl-date">Oct 14</span><span class="tl-cmd">/intake</span><span>Triage call staged, checked by the critic, waiting for your decisions</span></div>
 <div class="tl-row"><span class="tl-date">Any day</span><span class="tl-cmd">/ask</span><span>A developer asks how escalation works and gets a cited answer</span></div>
-<div class="tl-row"><span class="tl-date">Fridays</span><span class="tl-cmd">/review kb</span><span>Health check: links, stale drafts, overdue questions, forgotten staging files</span></div>
+<div class="tl-row"><span class="tl-date">Fridays</span><span class="tl-cmd">/review kb</span><span>Health check, and a drafted message per stakeholder with the questions waiting on them</span></div>
+<div class="tl-row"><span class="tl-date">Oct 15</span><span class="tl-cmd">/intake</span><span>Triage call decided; the report lists the stories the change touches; a clashing push recovered</span></div>
+<div class="tl-row"><span class="tl-date">Oct 15</span><span class="tl-cmd">/backlog task</span><span>An action becomes Jira task FK-1310</span></div>
+<div class="tl-row"><span class="tl-date">Oct 20</span><span class="tl-cmd">/intake, /requirements, /review, /backlog</span><span>A rule changes; three existing stories are updated, nothing is created twice</span></div>
+<div class="tl-row"><span class="tl-date">Oct 22</span><span class="tl-cmd">/intake</span><span>The Product owner's sign-off sets the requirement to approved</span></div>
+<div class="tl-row"><span class="tl-date">Nov 9</span><span class="tl-cmd">/backlog bug</span><span>A UAT finding becomes bug FK-1321</span></div>
+<div class="tl-row"><span class="tl-date">Nov 30</span><span class="tl-cmd">/sync</span><span>The stories are done; the pages are updated to describe the delivered behaviour</span></div>
 </div>
 
 <h2 id="before">Day 0: before <code>/setup</code></h2>
@@ -242,7 +257,7 @@ commit. Nothing else is filled yet.</p></li>
 <pre><code>cd ../fleetkeep-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.3.0"
+git commit -m "Start from AI BA Harness 0.4.0"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main</code></pre></li>
 <li><h3>Open Claude Code and answer two prompts</h3>
@@ -598,6 +613,125 @@ from the glossary. On Friday Oct 16 it would flag the triage-call staging file i
 it yet, and remind you that two areas, inspections and tenancy-and-access, have no pages at all. It
 rebuilds the index and registers, commits only those, and asks before pushing.</p>
 
+<h2 id="after-delivery">Weeks 5 to 11: after the stories reach Jira</h2>
+<div class="callout warn">
+<p><strong>Beyond the example.</strong> The example repository stops on Oct 14, with the triage call
+still staged. Everything from here on shows what the harness does next; these files are not in the
+example.</p>
+</div>
+
+<h3 id="apply-impact">Oct 15: you decide the triage call, and see what it touches</h3>
+<div class="cmd"><code>/intake knowledge/_staging/2026-10-14-intake-defect-triage-call.md</code></div>
+<p>You check the critic's open point with the Product owner first: overnight escalations still go to
+the transport manager, and there is no on-call role. Then "accept all". The command gives real IDs and
+applies: Q-002 answered, DEC-004 (the clock runs continuously), BR-021 on CAP-004, Q-005 (should
+category B escalate at 24 hours?), ACT-001 and ACT-002 in the new Actions table of
+<code>raid.md</code>, the term T-013 and a new risk. The report ends with what this touches in
+delivery, taken from each item's <code>Affects delivery</code> row:</p>
+<div class="chat">
+<div class="msg ai"><b>Claude</b>
+<p><b>Affects delivery.</b> CAP-004 changed. REQ-defect-escalation-to-workshop relies on it through
+ST-01 (FK-1302) and ST-02 (FK-1303). The stories don't need to change: the requirement keeps the
+clock out of scope. Its "Current state" still lists Q-002 as open, so update it with
+<code>/requirements defect escalation to workshop</code> when convenient.</p>
+<p>Push now?</p></div>
+<div class="msg you"><b>You</b><p>Yes.</p></div>
+<div class="msg ai"><b>Claude</b>
+<p>The push was rejected: the BA pushed an intake of the UAT planning meeting ten minutes ago. I'll
+pull with rebase (Claude Code will ask). Their intake also created a risk numbered R-003, so I've
+renumbered ours to R-004 and updated its links, rebuilt the index and registers, and kept both lines
+in <code>log.md</code>. No page was changed by both of you. Pushing again.</p></div>
+</div>
+
+<h3 id="task">Oct 15: an action becomes a Jira task</h3>
+<div class="cmd"><code>/backlog task ACT-002</code></div>
+<p>The Engineering lead's count of overnight category-B escalations needs time in their sprint, so it
+should be in Jira. <code>/backlog</code> builds one Task from <code>templates/jira/task.md</code> and
+the <code>ACT-002</code> row, searches FK for duplicates, shows you the one issue, and creates it after
+your yes: FK-1310, with no assignee (that's the team's call). The key goes into the row's Jira column;
+the action stays <code>open</code> until someone reports it done.</p>
+
+<h3 id="chase">Oct 16: Friday, and the questions to chase</h3>
+<div class="cmd"><code>/review kb</code></div>
+<p>Besides the usual checks (nothing overdue yet; two areas still have no pages), it drafts one
+message per stakeholder with the open questions waiting on them:</p>
+<div class="chat">
+<div class="msg ai"><b>Claude</b>
+<p><b>To the Product owner</b> (three questions):</p>
+<ol>
+<li>What state does a deferred defect take when its job card closes? Blocks CAP-005 and ENT-001. Due Oct 23.</li>
+<li>Should category-B defects escalate at 24 hours instead of 36? Blocks CAP-004 and the escalation
+requirement. Due Oct 28.</li>
+<li>What should happen when a driver submits a check with no signal? Blocks CAP-001. Due Oct 30.</li>
+</ol>
+<p>Nothing is sent. Copy it into an email, or take it to Tuesday's meeting.</p></div>
+</div>
+
+<h3 id="change">Oct 20: a rule changes after the stories exist</h3>
+<div class="cmd"><code>/intake inbox/2026-10-20-product-owner-email.md</code></div>
+<p>The Product owner answers Q-005: category B escalates at 24 hours. They can decide it, so it
+becomes DEC-005, approved. BR-016 is confirmed text, so it isn't rewritten: the staging file proposes
+BR-022 (24 hours) and retires BR-016 on the page, struck through with "superseded by BR-022". Its <code>Affects delivery</code> row lists ST-01
+(FK-1302) and ST-02 (FK-1303), which this time really do change. You accept, and the report says
+what to do next.</p>
+<div class="cmd"><code>/requirements defect escalation to workshop</code></div>
+<p>The document exists, so this is an update shown as a diff: the current state, FR-001 citing
+BR-022, and every "36 hours" in the acceptance criteria. Re-reading the whole document also finds one
+the trace map couldn't: ST-04's criterion "the threshold passed (4 or 36 hours)". The trace map links
+stories to pages, so the document itself is the final check. It says the stories are already in
+Jira, so the next steps are <code>/review</code> and <code>/backlog</code>.</p>
+<div class="cmd"><code>/backlog requirements/defect-escalation-to-workshop/requirement.md</code></div>
+<table>
+<thead><tr><th>#</th><th>Action</th><th>Issue</th><th>What changes</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>no change</td><td>FK-1301 epic</td><td></td></tr>
+<tr><td>2</td><td>update</td><td>FK-1302 ST-01</td><td>An acceptance criterion: 36 hours becomes 24; rules: BR-016 becomes BR-022</td></tr>
+<tr><td>3</td><td>update</td><td>FK-1303 ST-02</td><td>An acceptance criterion: the 36-hour threshold becomes 24-hour</td></tr>
+<tr><td>4</td><td>no change</td><td>FK-1304 ST-03</td><td></td></tr>
+<tr><td>5</td><td>update</td><td>FK-1305 ST-04</td><td>An acceptance criterion: "4 or 36 hours" becomes "4 or 24 hours"</td></tr>
+</tbody>
+</table>
+<p>Each update is shown as a diff. After your yes, Claude Code asks before each of the three edits;
+each issue is read back afterwards. Nothing is created twice, and nothing is transitioned or
+deleted.</p>
+
+<h3 id="signoff">Oct 22: the Product owner signs it off</h3>
+<div class="cmd"><code>/intake inbox/2026-10-22-sign-off.md</code></div>
+<p>"Approved for 2026.11." The Product owner can approve release content, so the staging file proposes
+setting the requirement to <code>approved</code>, with <code>approved_by: Product owner</code> and
+<code>approved_on: 2026-10-22</code>. Sign-off and delivery dates are the only things the pipeline
+changes outside <code>knowledge/</code>. Had the same words come as a Jira comment, <code>/sync</code> would have
+proposed it.</p>
+
+<h3 id="uat">Nov 9: UAT finds a problem</h3>
+<div class="cmd"><code>/intake inbox/2026-11-09-uat-session.md</code></div>
+<p>The Pilot transport manager tested the release. One finding: a flagged defect stays on the old
+depot's queue after the vehicle moves depot. That breaks FR-001 ("the workshop queue of the vehicle's
+depot"). The session is staged and applied as SRC-008, with the finding as item 2.</p>
+<div class="cmd"><code>/backlog bug SRC-008 2</code></div>
+<p>One Bug from <code>templates/jira/bug.md</code>: what happened, what should happen (citing ST-01's
+acceptance criterion and FR-001), steps, the UAT environment, the business impact. It asks for the
+fix version under test (2026.11) and the parent epic (FK-1301), checks for duplicates, and creates
+FK-1321 after your yes. The key goes into SRC-008. Defects found by the testers themselves stay with
+the QA harness.</p>
+
+<h3 id="delivered">Nov 30: the release ships</h3>
+<div class="cmd"><code>/sync jira</code></div>
+<p>FK-1302 to FK-1305 reached Done. They are in <code>trace/map.csv</code>, so this isn't routine:
+what they delivered is now how FleetKeep works. The staging file proposes bringing it into the pages
+each story's row lists:</p>
+<ul>
+<li>CAP-004 gains the rules for flagging escalated defects on the depot's workshop queue and emailing
+the depot's technicians for category A;</li>
+<li>CAP-002 gains triaging and raising a job card in one action;</li>
+<li>PROC-001's to-be steps for escalation become as-is;</li>
+<li>ENT-001's history gains the escalation entry;</li>
+<li>the requirement gets <code>delivered_on: 2026-11-30</code>, since every story is done.</li>
+</ul>
+<p>FK-1321 is a bug, not a traced story, so it changes nothing until it is fixed and the fix is
+described somewhere the knowledge base reads. From here, <code>/ask</code> answers "what happens when
+a defect escalates?" with the delivered behaviour, cited to the pages.</p>
+
 <h2 id="which">Which command, when</h2>
 <table>
 <thead><tr><th>Situation</th><th>Run</th><th>Asks you</th></tr></thead>
@@ -612,8 +746,12 @@ rebuilds the index and registers, commits only those, and asks before pushing.</
 <tr><td>New epic or significant change</td><td><code>/requirements &lt;epic&gt;</code></td><td>A few clarifying questions; a yes to write</td></tr>
 <tr><td>Before anything goes to Jira</td><td><code>/review &lt;requirement.md&gt;</code></td><td>Whether to fix findings; whether to set it confirmed</td></tr>
 <tr><td>Requirement ready</td><td><code>/backlog &lt;requirement.md&gt;</code></td><td>Each preview row, the batch, and every single create</td></tr>
+<tr><td>A change touches stories already in Jira</td><td><code>/requirements</code>, <code>/review</code>, then <code>/backlog</code> again</td><td>The document diff; each story update as a diff; every edit</td></tr>
+<tr><td>A stakeholder signs off a requirement</td><td><code>/intake</code> with the email (or <code>/sync</code> for a Jira comment)</td><td>Accept the sign-off item</td></tr>
+<tr><td>An action, a question to investigate, a UAT problem</td><td><code>/backlog task ACT-n</code>, <code>spike Q-n</code>, <code>bug SRC-n item</code></td><td>The one-issue preview, then the create</td></tr>
+<tr><td>Stories reach Done</td><td><code>/sync</code></td><td>Each proposed page update</td></tr>
 <tr><td>Someone else's Jira issue looks thin</td><td><code>/review &lt;JIRA-KEY&gt;</code></td><td>Nothing; the report is in the chat</td></tr>
-<tr><td>Friday</td><td><code>/review kb</code></td><td>A yes to push the rebuilt index</td></tr>
+<tr><td>Friday</td><td><code>/review kb</code></td><td>A yes to push the rebuilt index; send the drafted questions yourself</td></tr>
 <tr><td>Anyone, any question</td><td><code>/ask &lt;question&gt;</code></td><td>Nothing</td></tr>
 </tbody>
 </table>

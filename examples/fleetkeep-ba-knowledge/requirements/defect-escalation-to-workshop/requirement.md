@@ -7,6 +7,9 @@ area: defects
 owner: Lead BA
 jira_epic: FK-1301
 fix_version: 2026.11
+approved_by:
+approved_on:
+delivered_on:
 sources:
   - SRC-003
   - SRC-004

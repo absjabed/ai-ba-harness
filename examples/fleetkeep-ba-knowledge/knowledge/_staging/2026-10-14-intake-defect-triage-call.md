@@ -64,6 +64,7 @@ Ran as a sub-agent with a fresh context, re-reading the notes and searching the 
 | Sensitivity | clean |
 | Quote | "The clock keeps running overnight. If it's category A the vehicle can't move, and we want someone told whatever the hour." (notes ¶3) |
 | Critic | fixed: `state: answered` and `answered_on` added; check: who is told overnight (see Critic) |
+| Affects delivery | REQ-defect-escalation-to-workshop: ST-01 (FK-1302) and ST-02 (FK-1303) list CAP-004. The requirement treats the clock as out of scope (Q-002 non-blocking), so its stories need no change; update its Current state |
 | Proposed change | Fill Q-002's Answer with this, set `state: answered`, `answered_on: 2026-10-14`, `answer_source: SRC-new` and status `approved` (`approved_by: Product owner`, `approved_on: 2026-10-14`); new DEC-new-1 "Escalation clock runs continuously", approved, decided by the Product owner; edit CAP-004: add BR-new-1 and remove the caution callout (diff below) |
 
 ```diff
@@ -97,6 +98,7 @@ Ran as a sub-agent with a fresh context, re-reading the notes and searching the 
 | Sensitivity | clean |
 | Quote | "Thirty-six hours is too long for a B. By then it's three quarters of the way to its 48. Make it 24." (notes ¶5) |
 | Critic | fixed: `blocks` added to Q-new-1 (CAP-004, REQ-defect-escalation-to-workshop) |
+| Affects delivery | REQ-defect-escalation-to-workshop: ST-01 (FK-1302) and ST-02 (FK-1303) list CAP-004, and FR-001 cites BR-016. Nothing changes now; if the Product owner moves BR-016 to 24 hours, at least these two stories change |
 | Proposed change | New Q-new-1 "Should category-B defects escalate at 24 hours instead of 36?", asked of the Product owner, due 2026-10-28, `blocks` CAP-004 and REQ-defect-escalation-to-workshop, recording the Pilot workshop supervisor's view. Add a caution callout on CAP-004 linking it. BR-016 stays as it is |
 
 ```diff
@@ -122,6 +124,7 @@ Ran as a sub-agent with a fresh context, re-reading the notes and searching the 
 | Sensitivity | clean |
 | Quote | "Most of what comes in is nil-defect checks. We only look at the ones with something on them." (notes ¶2) |
 | Critic | ok |
+| Affects delivery | none |
 | Proposed change | Add T-new-1 "Nil-defect check": a walkaround check submitted with no defects reported. Also called: clear check, nil return. See: [CAP-001](../domains/defects/CAP-001-reporting-a-defect-from-a-walkaround-check.md) |
 
 - [ ] accept
@@ -139,6 +142,7 @@ Ran as a sub-agent with a fresh context, re-reading the notes and searching the 
 | Sensitivity | redact: the driver's name and the vehicle's registration, replaced in the quote |
 | Quote | "When [driver] reported the brake fault on [registration] on Monday it went VOR straight away, before I'd even seen it." (Pilot transport manager, notes ¶4) |
 | Critic | ok |
+| Affects delivery | none |
 | Proposed change | Edit CAP-001: add SRC-new to its sources (strengthens BR-003). No change to the text |
 
 ```diff
@@ -164,6 +168,7 @@ Ran as a sub-agent with a fresh context, re-reading the notes and searching the 
 | Sensitivity | clean |
 | Quote | "If we defer something on a job card, where does it go? Does it come back on the queue?" (Pilot workshop supervisor, notes ¶6) |
 | Critic | ok |
+| Affects delivery | REQ-defect-escalation-to-workshop cites Q-004 as non-blocking; adding a source changes nothing for its stories |
 | Proposed change | No new question. Edit Q-004: add SRC-new to its sources, as the same question raised again by the workshop |
 
 ```diff
@@ -187,6 +192,7 @@ Ran as a sub-agent with a fresh context, re-reading the notes and searching the 
 | Sensitivity | clean |
 | Quote | "My technicians don't look at email on the floor. If it's not on the queue screen they won't see it." (Pilot workshop supervisor, notes ¶7) |
 | Critic | ok |
+| Affects delivery | none |
 | Proposed change | New R-new-1 in raid.md: "Technicians don't read email during a shift, so escalation emails alone don't reach the workshop". Likelihood high, impact medium, mitigation: the queue flag in [Defect escalation to workshop](../../requirements/defect-escalation-to-workshop/requirement.md) (ST-01), owner Product owner. Also bears on A-003 |
 
 - [ ] accept
@@ -204,7 +210,8 @@ Ran as a sub-agent with a fresh context, re-reading the notes and searching the 
 | Sensitivity | clean |
 | Quote | "I'll send over the shift rota for both depots by Friday." (Pilot workshop supervisor, notes ¶8) |
 | Critic | ok |
-| Proposed change | Action for the Pilot workshop supervisor by 2026-10-16, listed in the source record; it fulfils D-001. Offer a Jira task through `/backlog` only if the BA wants one |
+| Affects delivery | none |
+| Proposed change | New ACT-new-1 in the Actions table of raid.md: "Send the shift patterns for both pilot depots", owner Pilot workshop supervisor, due 2026-10-16, status open. It fulfils D-001. `/backlog task` can make it a Jira task if the BA wants one |
 
 - [ ] accept
 - [ ] edit:
@@ -221,7 +228,8 @@ Ran as a sub-agent with a fresh context, re-reading the notes and searching the 
 | Sensitivity | clean |
 | Quote | "I can pull how many B escalations would have fired overnight in September. Give me a week." (Engineering lead, notes ¶5) |
 | Critic | fixed: item added; it was in the summary but missing from the items |
-| Proposed change | Action for the Engineering lead by 2026-10-21, listed in the source record; it informs Q-new-1 (item 2). Offer a Jira task through `/backlog` only if the BA wants one |
+| Affects delivery | none |
+| Proposed change | New ACT-new-2 in the Actions table of raid.md: "Count category-B escalations at the pilot depots between 22:00 and 06:00 in September", owner Engineering lead, due 2026-10-21, status open. It informs Q-new-1 (item 2). `/backlog task` can make it a Jira task if the BA wants one |
 
 - [ ] accept
 - [ ] edit:

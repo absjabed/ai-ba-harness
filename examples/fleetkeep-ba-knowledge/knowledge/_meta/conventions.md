@@ -20,7 +20,7 @@ Claude Code, GitHub and any text editor read it as plain markdown.
 | `log.md` | One line per accepted change | Appended by commands |
 | `glossary.md` | One section per term | Commands, after acceptance |
 | `stakeholders.md` | People and roles, what they own, what they can decide | Commands, after acceptance |
-| `raid.md` | Risks `R-`, assumptions `A-`, issues `I-`, dependencies `D-` | Commands, after acceptance |
+| `raid.md` | Risks `R-`, assumptions `A-`, issues `I-`, dependencies `D-`, actions `ACT-` | Commands, after acceptance |
 | `business-rules.md` | Register: every `BR-` with the page that defines it | Generated |
 | `decisions.md` | Register of `decisions/` | Generated |
 | `open-questions.md` | Register of `questions/` | Generated |
@@ -49,6 +49,7 @@ Claude Code, GitHub and any text editor read it as plain markdown.
 | `SRC-` | Source record | `sources/` |
 | `BR-` | Business rule | Defined inside a capability or process page, listed in its `rules` property |
 | `R-` `A-` `I-` `D-` | Risk, assumption, issue, dependency | `raid.md` |
+| `ACT-` | Action, with owner, due date and status (`open`, `done`, `dropped`) | `raid.md`, Actions table |
 | `T-` | Glossary term | `glossary.md` |
 | `REQ-` | Requirement document, `REQ-<epic-slug>` | `requirements/<epic-slug>/requirement.md` |
 | `REVIEW-` | Review report, `REVIEW-<epic-slug>` | `requirements/<epic-slug>/review.md` |
@@ -99,7 +100,7 @@ Type-specific properties:
 | `source` | `kind` (`meeting`, `transcript`, `document`, `email`, `conversation`, `jira`, `confluence`), `input_date` |
 | `entity` | `kind` (`role`, `system`, `data`, `integration`) |
 | `process` | `variant` (`as-is`, `to-be`, `both`) |
-| `requirement` | `jira_epic`, `fix_version` |
+| `requirement` | `jira_epic`, `fix_version`, `approved_by` / `approved_on` once signed off, `delivered_on` once every story is done |
 | `review` | `verdict` (`ready`, `not-ready`), `reviewed_on` |
 
 `status` says how far an item is trusted; a question's `state` says whether it is still open. An
@@ -143,7 +144,7 @@ Requirement documents (`requirements/<slug>/requirement.md`) use the same four s
 |---|---|
 | `draft` | Written by `/requirements`; still being clarified or reviewed |
 | `confirmed` | `/review` says ready (or the BA accepted the remaining findings) and the BA agrees the content. `/backlog` needs at least this |
-| `approved` | A named stakeholder signed it off; `approved_by` and `approved_on` set |
+| `approved` | A named stakeholder signed it off; `approved_by` and `approved_on` set. The pipeline records it when a sign-off arrives through `/intake` or `/sync` |
 | `superseded` | Replaced by another requirement document |
 
 Each `review.md` starts with `type: review`, `id: REVIEW-<slug>`, `title`, `verdict` (`ready` or
@@ -168,7 +169,10 @@ Each `review.md` starts with `type: review`, `id: REVIEW-<slug>`, `title`, `verd
    pointers in the source record if they matter.
 8. **Log and index every change.** Each accepted change appends a line to `log.md` and regenerates
    `index.md` and the registers.
-9. **Never delete.** Retire an item by setting `superseded` and `superseded_by`.
+9. **Never delete.** Retire an item by setting `superseded` and `superseded_by`. A single business
+   rule is retired on its page: its line stays, struck through and followed by "superseded by
+   BR-022 (DEC-005)", the replacement rule gets a new ID, and the old ID moves out of the page's
+   `rules` list, so the register lists only rules in force.
 
 People may fix typos and wording on a page by hand, as long as the meaning doesn't change; add a
 `log.md` line with the command `EDIT`. Anything that changes meaning goes through `/intake`.
@@ -207,6 +211,19 @@ Each line is a list item, so it renders one per line on GitHub and in Obsidian.
 - They ask before every push, because a push shares the change with everyone.
 - Conflicts in the generated files (`index.md`, the registers): take either side, then run
   `/review kb`, which rebuilds them.
+
+**When a push is rejected because another BA pushed first:**
+
+1. `git pull --rebase` (Claude Code asks first).
+2. If it stops on conflicts only in generated files or `log.md`: keep both sides' lines in
+   `log.md`, rebuild `index.md` and the registers from the pages, `git add` them and
+   `git rebase --continue`.
+3. If the other BA created the same new IDs (same number, different item): renumber this side's
+   items to the next free numbers, update every link, `rules`, `sources` and `blocks` entry that
+   uses them, rebuild the generated files, and continue the rebase.
+4. If both sides changed the text of the same page: `git rebase --abort` and tell the BA. Two people
+   changed one page at once, and that needs a person to decide.
+5. Push again (Claude Code asks).
 
 ## 12. Generated files
 

@@ -21,7 +21,8 @@ key and comment number, Confluence page and section.
 | requirement | Something the product must do or be |
 | rule | A condition, threshold, ordering, permission or calculation the product applies |
 | decision | A choice made by someone, with or without authority |
-| action | Someone will do something, ideally by a date |
+| action | Someone will do something, ideally by a date; or reports that an action is done |
+| approval | A stakeholder signs off a requirement document |
 | question | Something nobody could answer, or that people disagreed on |
 | answer | A reply to an existing open question |
 | term | A word with a project-specific meaning, or a synonym for an existing term |
@@ -51,7 +52,7 @@ for the subject, with at least two different wordings.
 - `vague: "<word>"`, using the words in `PROJECT-PROFILE.md` section 7;
 - `incomplete: <what's missing>`, such as the error case, who, or a number.
 
-**Authority** (decisions and answers only). Look the speaker's role up in `stakeholders.md`.
+**Authority** (decisions, answers and approvals). Look the speaker's role up in `stakeholders.md`.
 - `can decide (<role>)`;
 - `cannot (<role>; owner is <role>)`;
 - `unknown`, when the speaker or the owner isn't in the register.
@@ -77,11 +78,19 @@ Write one file, `knowledge/_staging/<yyyy-mm-dd>-<command>-<slug>.md`, from
 | An answer to `Q-xxx` | Fill the question's Answer section; set `state: answered`, `answered_on` and `answer_source`, and `status: approved` if the person could decide it; update the pages it unblocks and remove their caution callouts |
 | A term | Add a `T-new-n` glossary entry, or add the word to an existing term's "Also called" and to the page's `aliases` |
 | A risk, assumption, issue or dependency | A new row in `raid.md` |
-| An action | Listed in the staging summary and the source record; offer to turn it into a Jira task later via `/backlog` |
+| An action | A new `ACT-new-n` row in the Actions table of `raid.md`, with owner, due date and source. `/backlog task ACT-<n>` can turn it into a Jira task later |
+| An action reported done | Set its `ACT-` row's status to `done` |
+| A sign-off of a requirement by someone who can approve it | Set the requirement's `status: approved`, `approved_by` and `approved_on`, and add the source to its `sources`. Outside `knowledge/`, the pipeline changes only these sign-off properties and `delivered_on` (from `/sync`) |
 | Nothing useful | `ignore`, with the reason |
 
 Add the summary table at the top (item counts by verdict) and, for meetings, a short play-back
 message the BA can send to participants.
+
+**Delivery impact.** For every item that edits, supersedes or contradicts an existing page, rule or
+decision, find the work that relies on it: the rows of `trace/map.csv` whose `knowledge_pages` list
+the page, and the requirement documents that cite the page or its `BR-` IDs. Record the requirement,
+stories and Jira keys in the item's `Affects delivery` row, or `none`. The BA then sees what a change
+would touch before deciding it.
 
 If there are more than 40 items, split them into several staging files of related items, so the BA
 can decide them in sittings.
@@ -127,7 +136,12 @@ staging file is their contribution, sent to the BA or opened as a pull request.
    - every link you wrote resolves;
    - every new file name follows the naming rule;
    - every page has `type`, `id`, `title` and `status`.
-9. Commit: `kb: <command> <SRC-id> <short description>`. Then ask whether to push.
+9. Commit: `kb: <command> <SRC-id> <short description>`. Then ask whether to push. If the push is
+   rejected because someone else pushed first, recover as conventions section 11 describes.
+10. If any accepted item had delivery impact, end the report with it: the requirements, stories and
+    Jira keys affected, and the next step. Usually that is `/requirements <slug>` to update the
+    document, then `/review`, then `/backlog`, which updates the existing stories. Never change Jira
+    from here.
 
 ## Never
 

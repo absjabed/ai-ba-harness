@@ -4,6 +4,33 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.4.0 (2026-10-14)
+
+Closes the gaps after `/backlog`, where work is in Jira but still changing.
+
+- `/backlog` creates single items: `task ACT-<n>` from an action, `spike Q-<n>` for an open
+  question, `bug <SRC-id> <item>` for a UAT finding. Re-running it on a requirement updates the
+  stories that already have keys (shown as diffs), creates new ones, and lists dropped ones for the
+  BA to close by hand.
+- Delivery impact: every staged change to an existing page lists the requirements, stories and Jira
+  keys that rely on it (from `trace/map.csv` and the requirement documents), and the apply report
+  ends with the next step. The critic checks it.
+- `/sync` brings delivered work into the knowledge base: when a traced story reaches Done, it
+  proposes page updates from the requirement, and sets the requirement's `delivered_on` when every
+  story is done.
+- Actions register: an Actions table (`ACT-`) in `raid.md`; `/review kb` reports overdue actions.
+- Sign-off: a requirement's approval arriving through `/intake` or `/sync` sets it to `approved` with
+  `approved_by` and `approved_on`.
+- `/review kb` drafts one message per stakeholder with the open questions waiting on them.
+- Conventions: how to recover when a push is rejected because another BA pushed first, and how a
+  single business rule is retired.
+- The walkthrough gains weeks 5 to 11: deciding with delivery impact, a task, questions to chase, a
+  rule changing after the stories exist, sign-off, a UAT bug and the release.
+
+To update a project from 0.3.0, copy `agents/`, `.claude/commands/backlog.md`,
+`knowledge/_meta/conventions.md`, `knowledge/_meta/templates/` and `templates/requirement.md`, and
+add the Actions section from the template's `knowledge/raid.md` to the project's `raid.md`.
+
 ## 0.3.0 (2026-10-14)
 
 From walking a full project through the harness, starting at `/setup`:

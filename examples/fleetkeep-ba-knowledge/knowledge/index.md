@@ -63,7 +63,7 @@ Last rebuilt 2026-10-09: 21 pages. Superseded pages are listed for history; don'
 
 - [Glossary](glossary.md) · confirmed · One section per term, alphabetical.
 - [Stakeholders](stakeholders.md) · confirmed · Who is involved, what they own, and what they can decide.
-- [Risks, assumptions, issues and dependencies](raid.md) · confirmed · The project's risks (R-), assumptions (A-), issues (I-) and dependencies (D-), one table each, with the source each came from.
+- [Risks, assumptions, issues, dependencies and actions](raid.md) · confirmed · The project's risks (R-), assumptions (A-), issues (I-), dependencies (D-) and actions (ACT-), one table each, with the source each came from.
 - [Business rules](business-rules.md) · generated · Generated from the `rules` property of every capability and process page.
 - [Decisions](decisions.md) · generated · Generated from `decisions/`.
 - [Open questions](open-questions.md) · generated · Generated from `questions/`.
