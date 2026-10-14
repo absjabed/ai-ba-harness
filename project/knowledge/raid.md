@@ -11,6 +11,9 @@ updated: YYYY-MM-DD
 
 # Risks, assumptions, issues, dependencies and actions
 
+Statuses: risks `open` or `closed`; assumptions `open`, `confirmed` or `wrong`; issues `open` or
+`resolved`; dependencies `open` or `met`; actions `open`, `done` or `dropped`.
+
 ## Risks
 
 | ID | Risk | Likelihood | Impact | Mitigation | Owner | Status | Source |

@@ -2,7 +2,6 @@
 type: review
 id: REVIEW-defect-escalation-to-workshop
 title: Review of Defect escalation to workshop
-status: confirmed
 owner: Lead BA
 sources:
   - REQ-defect-escalation-to-workshop

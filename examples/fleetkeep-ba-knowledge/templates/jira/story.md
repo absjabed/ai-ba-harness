@@ -5,9 +5,10 @@
        - user story form, and at least two acceptance criteria including a failure or permission path
          where one exists;
        - every business rule it relies on exists in the knowledge base;
-       - open questions are "None", or each is marked non-blocking by the BA;
+       - open questions are "None", or each is marked non-blocking by the BA. A question that blocks
+         only some criteria: the story can go to Jira without those criteria, if the BA agrees;
        - INVEST: independent, negotiable, valuable, estimable, small, testable;
-       - a fix version and a parent epic. -->
+       - a fix version, and a parent epic (for a requirement's stories, /backlog creates it). -->
 
 ## User story
 As a <role>, I want <capability>, so that <benefit>.

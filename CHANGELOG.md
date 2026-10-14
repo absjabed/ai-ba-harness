@@ -4,6 +4,59 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.5.0 (2026-10-15)
+
+Tested on a demo project ("FleetKeep Demo"): each command was run, in a fresh context, exactly as
+its definition says, and every point where it was unclear, contradictory or impossible was logged
+and fixed (about 200 in all; see `research/08-demo-test.md`). Plus a command for improving the
+harness itself.
+
+- **`/improve-harness`** (new, the ninth command): works out what isn't working, decides whether the
+  fix is a project setting, knowledge or a harness change, writes a proposal to `harness-feedback/`
+  from `templates/harness-feedback.md`, and applies safe changes locally after a yes, recording
+  them in the new profile section 8. Safety changes are never applied locally.
+- **`tools/kb.py`** (new): `rebuild` writes the index and registers deterministically, `check`
+  validates properties, file names, IDs, rules, links and anchors, cited IDs, overdue questions and
+  actions, and whether the generated files are current; `next` gives the next free ID. Commands use
+  it when Python is available. `.github/workflows/kb-check.yml` runs the check on every push.
+- **Safety:** the permission rules now also cover the Atlassian plugin's tool names
+  (`mcp__plugin_atlassian_atlassian__`), which previously let Jira writes skip the per-write prompt;
+  `/setup` warns about any other Atlassian connection. The critic is a read-only sub-agent
+  (`.claude/agents/critic.md`).
+- **Knowledge pipeline:** new pages, questions and decisions are proposed in full, so the BA accepts
+  exactly what is written; chat decisions are written into the staging file; resuming re-checks
+  what changed since staging; one rule for statuses, due dates, redacted quotes, provisional IDs and
+  dependent items; vague or incomplete items must carry a question or an Open items note; meeting
+  sections and the play-back are part of staging; clearer critic findings.
+- **`/setup`:** an offline mode that records values as "not verified" and a later verify run;
+  re-runs detected from `log.md`; one preview of everything it writes; maintainers, "Can decide" and
+  the RACI must agree; every stakeholder column asked; the harness repository recorded.
+- **`/ask`:** never reads `inbox/`; clearer citations; says when Jira wasn't checked; points to an
+  existing question instead of drafting a duplicate; a single rule set in `agents/ask.md`, which
+  `CLAUDE.md` and `AGENTS.md` now defer to.
+- **Conventions:** how to choose a page and area, the heading-anchor rule, file names of at most 64
+  characters, statuses and what they cover, the log line's fields, RAID statuses, staging files
+  committed to finish later, and the generated files' exact format.
+- **`/requirements`:** the BA's answers on product behaviour become proposals: a question to the
+  owner, the FR marked "pending", and the owner's sign-off of the requirement answers them all. The
+  draft is written first, pre-checked, then shown together with its staged knowledge; one commit.
+  FR Status column, per-criterion blocking (`Q-x (blocks AC-2)`), assumptions staged as `A-` rows.
+- **`/review`:** a clear definition of blocked criteria and stories, which no longer count against the
+  verdict; checks for assumptions, FR statuses and NFR coverage; finding IDs; a commit for the
+  review; what to do without Atlassian.
+- **`/backlog`:** local checks before the Jira check; create metadata, Cloud ID and fix versions
+  checked; epic compared and updated too; NFRs in the epic; partial stories only if they still meet
+  the definition of ready; keys written back without making the review stale; a log line; trace map
+  column `fr_ids`; task fields (owner, due date) and re-parenting tasks under a later epic.
+- **Profile:** "Other maintainers" replaces "Other BAs"; `none` instead of deleting rows; section 6
+  gets a status column; section 8 lists local harness changes.
+
+To update a project from 0.4.x: copy `agents/`, `.claude/`, `templates/`, `tools/`, `.github/`,
+`knowledge/_meta/`, `CLAUDE.md` and `AGENTS.md`; add `harness-feedback/`; in `PROJECT-PROFILE.md`
+rename "Other BAs" to "Other maintainers", add the "Harness repository" row, the status column in
+section 6 and section 8; rename `trace/map.csv`'s first column to `fr_ids`; add a Status column to
+each requirement's FR table; then run `python tools/kb.py rebuild` and `check`.
+
 ## 0.4.2 (2026-10-14)
 
 - `docs/walkthrough.html` is back, as in the QA harness: the handbook's worked example as a page of

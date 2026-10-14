@@ -93,6 +93,11 @@ sed -i.bak \
   -e "s#^| Harness version this copy started from | .*|\$#| Harness version this copy started from | \`$version\` |#" \
   -e "s#^| Harness commit this copy started from | .*|\$#| Harness commit this copy started from | \`$commit\` |#" \
   "$profile"
+# Where the harness came from, for /improve-harness proposals. Credentials in the URL are dropped.
+origin="$(git -C "$root" remote get-url origin 2>/dev/null | sed -E 's#://[^/@]+@#://#' || true)"
+if [ -n "$origin" ]; then
+  sed -i.bak -e "s#^| Harness repository | .*|\$#| Harness repository | \`$origin\` |#" "$profile"
+fi
 if [ -n "$name" ]; then
   sed -i.bak -e "s#^| Project name | .*|\$#| Project name | $name |#" \
              -e "s#^| BA repository | .*|\$#| BA repository | \`$slug-ba-knowledge\` |#" "$profile"

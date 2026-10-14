@@ -1,8 +1,9 @@
 # Project profile
 
 **This is the one file a project fills in.** Every command reads it before doing anything. `/setup`
-fills it by interview; you can also edit it by hand. Replace every placeholder and delete rows
-that don't apply. Keep the section headings: the commands look them up by name.
+fills it by interview; you can also edit it by hand. Replace every `<...>` placeholder. Where a row
+doesn't apply, write `none` rather than deleting it. Keep the section headings: the commands look
+them up by name.
 
 ---
 
@@ -14,9 +15,14 @@ that don't apply. Keep the section headings: the commands look them up by name.
 | One-line purpose | `Keeps commercial vehicle fleets road-legal and roadworthy: statutory due dates, driver walkaround checks, defects, workshop job cards and parts, for transport managers, technicians, drivers and compliance officers at haulage and coach operators` |
 | BA repository | `fleetkeep-ba-knowledge` |
 | Lead BA (role) | `Lead BA` |
-| Other BAs (roles) | `BA, Product owner` |
+| Other maintainers (roles) | `BA` |
+| Harness repository | `https://github.com/absjabed/ai-ba-harness` |
 | Harness version this copy started from | `0.1.0` |
 | Harness commit this copy started from | `example` |
+
+The Lead BA and the other maintainers are the only roles that apply changes to the knowledge base
+and to the harness files here. Keep this list the same as the "Accepting a knowledge base change"
+row in `knowledge/stakeholders.md`.
 
 ## 2. Atlassian
 
@@ -96,11 +102,14 @@ draft_age_days: 30       # /review kb flags drafts older than this
 
 What already exists that the first knowledge base should be built from. Files go in `inbox/`.
 
-| Source | Where | Notes |
-|---|---|---|
-| `Product rules page tree` | `FK / FleetKeep product rules` | Written by the Product owner; the main statement of category, escalation and return-to-service rules. Not seeded yet: the Product owner is rewriting it. Run `/kb-seed confluence` once it is republished |
-| `Regulator roadworthiness guidance (PDF)` | `inbox/regulator-roadworthiness-guidance.pdf` | Processed with `/intake` on 2026-09-24 as SRC-002; raw file removed from `inbox/` afterwards |
-| `Existing epics` | `project = FK AND issuetype = Epic AND statusCategory != Done` | Read during `/sync` rather than seeded |
+Status is `ready` (there to read), `expected` (promised, not received) or `done` (seeded).
+`/kb-seed` with no argument reads only the `ready` rows.
+
+| Source | Where | Status | Notes |
+|---|---|---|---|
+| `Product rules page tree` | `FK / FleetKeep product rules` | `expected` | Written by the Product owner; the main statement of category, escalation and return-to-service rules. Not seeded yet: the Product owner is rewriting it. Run `/kb-seed confluence` once it is republished |
+| `Regulator roadworthiness guidance (PDF)` | `inbox/regulator-roadworthiness-guidance.pdf` | `done` | Processed with `/intake` on 2026-09-24 as SRC-002; raw file removed from `inbox/` afterwards |
+| `Existing epics` | `project = FK AND issuetype = Epic AND statusCategory != Done` | `done` | Read during `/sync` rather than seeded |
 
 ## 7. Writing rules
 
@@ -127,3 +136,13 @@ definitions; this table only records preferences.
 | `category-A defect` | `critical defect, dangerous defect, showstopper` |
 | `return to service` | `release, back on the road, RTS` |
 | `transport manager` | `fleet manager, TM` |
+
+## 8. Local harness changes
+
+Changes made to this repository's copy of the harness (`agents/`, `templates/`, the conventions, a
+wrapper's description) through `/improve-harness`, one row per changed file. Re-apply them after
+updating the harness, unless the new version already includes them. The version in use now is in
+`HARNESS_VERSION`.
+
+| Date | File | Change | Proposal |
+|---|---|---|---|

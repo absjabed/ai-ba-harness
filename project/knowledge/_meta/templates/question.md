@@ -9,6 +9,8 @@ asked_of: <role who can answer>
 due: YYYY-MM-DD
 answered_on:
 answer_source:
+approved_by:
+approved_on:
 blocks: []
 owner: <role>
 sources: []

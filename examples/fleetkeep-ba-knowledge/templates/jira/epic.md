@@ -15,6 +15,9 @@
 ## Success measures
 - <SC-001: a measurable outcome>
 
+## Non-functional requirements
+- <NFR-001: the requirement and its measure. The stories it constrains list it too>
+
 ## Stakeholders
 | Role | Interest | Decides |
 |---|---|---|

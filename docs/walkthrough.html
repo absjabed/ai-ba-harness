@@ -147,7 +147,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>Walkthrough · v0.4.2</span></div>
+    <div><strong>AI BA Harness</strong><span>Walkthrough · v0.5.0</span></div>
   </div>
   <h2>The walkthrough</h2>
   <a href="#ex-project">The example</a>
@@ -157,7 +157,8 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
   <a class="sub" href="#ex-daily">3 · Every day (Oct 6 to 16)</a>
   <a class="sub" href="#ex-epic">4 · An epic, into Jira (Oct 9 to 13)</a>
   <a class="sub" href="#ex-after">5 · Changes and release (Oct 15 to Nov 30)</a>
-  <a class="sub" href="#ex-ask">6 · Anyone asks</a>
+  <a class="sub" href="#ex-improve">6 · Improving the harness (Nov 3)</a>
+  <a class="sub" href="#ex-ask">7 · Anyone asks</a>
   <a href="#ex-who">Who does what</a>
   <h2>More</h2>
   <a href="index.html">The BA handbook</a>
@@ -166,7 +167,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
 <h1>FleetKeep, from setup to ask</h1>
 <p class="lede">One example, start to finish: setting up a project, building its knowledge base,
 writing an epic, putting it into Jira, changing it afterwards, shipping it, and answering a
-teammate's question. Every command appears at least once, with what you type, what it reads, what it
+teammate's question, with a detour into improving the harness itself. Every command appears at least once, with what you type, what it reads, what it
 asks you and what you end up with. Written for someone who has never worked this way.</p>
 
 <div class="callout warn">
@@ -240,7 +241,9 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <div class="tl-row"><span class="tl-date">Oct 26</span><span class="tl-cmd">/kb-seed confluence</span><span>The rewritten product rules are seeded; the inspections area gets its first pages</span></div>
 <div class="tl-row"><span class="tl-date">Nov 9</span><span class="tl-cmd">/backlog bug</span><span>A UAT finding becomes a bug</span></div>
 <div class="tl-row"><span class="tl-date">Nov 30</span><span class="tl-cmd">/sync</span><span>The stories are done; the pages now describe what shipped</span></div>
-<div class="tl-part">Part 6 · Anyone asks</div>
+<div class="tl-part">Part 6 · Improving the harness (beyond the example files)</div>
+<div class="tl-row"><span class="tl-date">Nov 3</span><span class="tl-cmd">/improve-harness</span><span>One fix is a profile setting; the other becomes a proposal, applied locally and sent to the harness maintainers</span></div>
+<div class="tl-part">Part 7 · Anyone asks</div>
 <div class="tl-row"><span class="tl-date">Any day</span><span class="tl-cmd">/ask</span><span>A developer gets a cited answer, and a drafted question when the knowledge base doesn't know</span></div>
 </div>
 
@@ -250,7 +253,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <a href="index.html#setup">Set up a project</a>:</p>
 <pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
 cd ../fleetkeep-ba-knowledge
-git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.4.2"
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.5.0"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main
 claude</code></pre>
@@ -458,6 +461,11 @@ emailed?</p>
 C. The technicians, for category A and B.</p></div>
 <div class="msg you"><b>You</b><p>B.</p></div>
 </div>
+<p>Who gets emailed is product behaviour, which only the Product owner decides, so your B is a
+proposal: it's staged as a question to the Product owner with B as the proposed answer, and FR-004 is
+marked "pending" until they answer. Their sign-off of the requirement in Part 5 answers it, along with
+any other proposal in the document. (The example's files were written before this rule, so FR-004
+there simply cites FK-1192 and the working session.)</p>
 <p>Before showing the draft it runs <code>/review</code>'s rule checks on it in a fresh context and
 fixes what is mechanical (a missing ID, a vague word the knowledge base gives a number for). The rest
 is listed with the draft. Afterwards you run <code>/intake</code> with no argument to capture the
@@ -558,7 +566,9 @@ Nothing is created twice, and nothing is moved or deleted.</p>
 <div class="cmd"><code>/intake inbox/2026-10-22-sign-off.md</code></div>
 <p>"Approved for 2026.11." The Product owner can approve release content, so the item sets the
 requirement to <code>approved</code>, with <code>approved_by: Product owner</code> and
-<code>approved_on: 2026-10-22</code>. As a Jira comment, <code>/sync</code> would have proposed the
+<code>approved_on: 2026-10-22</code>. Had the requirement carried proposals marked "pending" (your
+answers on product behaviour that only the Product owner can decide), the same sign-off would have
+answered all of them and turned them into agreed rules. As a Jira comment, <code>/sync</code> would have proposed the
 same.</p>
 
 <h4 id="ex-seed">Oct 26: the product rules come back</h4>
@@ -597,8 +607,53 @@ technicians; CAP-002 gains triage and job card in one action; PROC-001's to-be e
 as-is; ENT-001's history gains the escalation entry; and the requirement gets
 <code>delivered_on: 2026-11-30</code>.</p>
 
-<!-- ============ PART 6 ============ -->
-<h3 id="ex-ask">Part 6 · Anyone asks</h3>
+<!-- ============ PART 6 IMPROVE ============ -->
+<h3 id="ex-improve">Part 6 · Improving the harness (Nov 3)</h3>
+<div class="callout warn"><p><strong>Beyond the example files</strong>, like Part 5.</p></div>
+<p>A month in, two things bother you. The first is small:</p>
+<div class="cmd"><code>/improve-harness reviews don't flag "asap" in requirements</code></div>
+<div class="chat">
+<div class="msg ai"><b>Claude</b><p>That's a project setting, not a harness change: <code>/review</code> flags
+the words in profile section 7. I'd add "asap" there:</p>
+<pre><code> promptly, urgent, soon, real time
++asap</code></pre>
+<p>Write it?</p></div>
+<div class="msg you"><b>You</b><p>Yes.</p></div>
+</div>
+<p>It changes the profile, adds a log line and commits <code>kb: profile vague word asap</code>. No
+proposal is needed. The second one is about the harness itself:</p>
+<div class="cmd"><code>/improve-harness developers keep asking what data each story needs</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul><li>the profile (who maintains the repository, where the harness lives, local changes so far)</li><li>the example you point to, and the harness files involved</li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul><li>up to three questions, with an example</li><li>a yes before applying anything locally</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul><li>a proposal in <code>harness-feedback/</code> with the problem, evidence, diff and risk</li><li>optionally, the change applied here and recorded in profile section 8</li></ul></div>
+</div>
+<div class="chat">
+<div class="msg ai"><b>Claude</b><p>Which requirement shows it best, and what did the developer ask?</p></div>
+<div class="msg you"><b>You</b><p>The escalation one. FK-1302's developer asked which defect fields the queue
+flag needs; the story doesn't say.</p></div>
+<div class="msg ai"><b>Claude</b><p>That's a harness change: the requirement template's stories have no place
+for data. I'd add one optional line to each story, and one step to <code>/requirements</code>:</p>
+<pre><code>templates/requirement.md, under each story
++**Data:** &lt;the information the story reads or changes, by entity (ENT-), or "none"&gt;
+
+agents/requirements.md, step 3
++   - **Data per story:** the entities and fields it reads or changes, from the entity pages.</code></pre>
+<p>Kind: behaviour change. Risk: low; it touches no permission or approval step. Version: minor. It
+also affects <code>/review</code>, which could check the line later; I've noted that in the proposal.
+Apply it here as well?</p></div>
+<div class="msg you"><b>You</b><p>Yes.</p></div>
+</div>
+<p>It writes <code>harness-feedback/2026-11-03-story-data-line.md</code> with
+<code>status: applied-locally</code>, applies the two changes, adds a row to profile section 8, and
+commits <code>harness: local story-data-line</code>. The report ends with what to do next: send the
+proposal to whoever maintains the harness (the repository in profile section 1), as an issue or a
+message with the file. When a later harness version includes it, the proposal is marked
+<code>accepted</code> and the section 8 row can go. Had the change touched a permission rule or an
+approval step, it would only have been proposed, never applied here.</p>
+
+<!-- ============ PART 7 ============ -->
+<h3 id="ex-ask">Part 7 · Anyone asks</h3>
 <p>The team was invited once the main areas had pages. A developer clones the repository once, opens
 Claude Code in it, and their copy updates itself every time they do.</p>
 <div class="cmd"><code>/ask when does a category-B defect escalate, and does it count overnight?</code></div>
@@ -647,6 +702,7 @@ check form. <b>Who might know:</b> the Product owner, who decides product behavi
 <tr><td>The requirement changes</td><td><code>/requirements</code>, <code>/review</code>, <code>/backlog</code></td><td>Each story update</td><td>Stories updated, never duplicated</td></tr>
 <tr><td>Action, spike or UAT bug</td><td><code>/backlog task | spike | bug</code></td><td>The one-issue preview</td><td>One Jira issue, key written back</td></tr>
 <tr><td>Sign-off and release</td><td><code>/intake</code>, <code>/sync</code></td><td>Each item</td><td>Requirement approved, then pages updated to what shipped</td></tr>
+<tr><td>The harness should work differently</td><td><code>/improve-harness</code></td><td>Where the fix goes; applying it locally</td><td>A profile change, or a proposal (and a local change if safe)</td></tr>
 <tr><td>Any question, anyone</td><td><code>/ask &lt;question&gt;</code></td><td>Nothing</td><td>A cited answer, or a drafted question</td></tr>
 </tbody>
 </table>

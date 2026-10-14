@@ -12,7 +12,8 @@ seeding.
 
 ## Input
 
-- No argument: everything in profile section 6.
+- No argument: every `ready` row in profile section 6 (not `expected` ones, and not other files that
+  happen to be in `inbox/`). Set a row to `done` once its staging files are applied.
 - An argument narrows it: `confluence`, `jira`, `inbox`, or one path or page.
 
 ## Steps

@@ -55,16 +55,19 @@ Claude Code, GitHub and any text editor read it as plain markdown.
 | `REVIEW-` | Review report, `REVIEW-<epic-slug>` | `requirements/<epic-slug>/review.md` |
 | `FR-` `NFR-` `ST-` `AC-` | Functional and non-functional requirements, stories, acceptance criteria | Inside a requirement document; unique within it |
 
-- Numbers have three digits and grow without gaps: the next ID is the highest existing number for
+- Numbers have three digits (stories and criteria inside a requirement use `ST-01` and `AC-1`) and
+  grow without gaps: the next ID is the highest existing number for
   that prefix plus one. Look at both the files and the registers before choosing.
 - An ID is never reused, even after its item is superseded.
-- IDs in staging files are provisional (`CAP-new-1`). The real number is given when the item is
-  accepted.
+- IDs in staging files are provisional (`CAP-new-1`). Real numbers are given when the items are
+  applied, in item order, and every provisional ID in the accepted text is replaced.
+  `python tools/kb.py next CAP` prints the next free number.
 
 ## 3. File names
 
-`<ID>-<slug>.md`: lowercase, hyphenated, ASCII, no spaces, at most about 60 characters. None of the
-characters `* " \ / < > : | ? # ^ [ ]`. For example `CAP-012-raising-a-job-card.md`.
+`<ID>-<slug>.md`: the slug lowercase, hyphenated, ASCII, no spaces; the whole file name at most 64
+characters, ID and `.md` included. For example `CAP-012-raising-a-job-card.md`. Source
+records add the date: `SRC-031-2026-10-14-scheduling-workshop.md`.
 
 ## 4. Properties
 
@@ -77,7 +80,7 @@ Dates are `YYYY-MM-DD`.
 | `type` | All | `capability`, `entity`, `process`, `decision`, `question`, `source`, `glossary`, `register`, `index`, `guide`; and outside `knowledge/`, `requirement` and `review` |
 | `id` | All | The page's ID |
 | `title` | All | Human title |
-| `status` | All except registers | `draft`, `confirmed`, `approved`, `superseded` |
+| `status` | All pages, including the glossary, stakeholders and RAID pages; not the generated files, `log.md` or review reports | `draft`, `confirmed`, `approved`, `superseded` |
 | `area` | Capability, process | An area from the profile |
 | `owner` | All except sources | A role, not a person's name |
 | `sources` | All except sources | List of `SRC-` IDs, Jira keys and `DEC-` IDs |
@@ -100,7 +103,7 @@ Type-specific properties:
 | `source` | `kind` (`meeting`, `transcript`, `document`, `email`, `conversation`, `jira`, `confluence`), `input_date` |
 | `entity` | `kind` (`role`, `system`, `data`, `integration`) |
 | `process` | `variant` (`as-is`, `to-be`, `both`) |
-| `requirement` | `jira_epic`, `fix_version`, `approved_by` / `approved_on` once signed off, `delivered_on` once every story is done |
+| `requirement` | `area` (one area or a list), `jira_epic` (blank until `/backlog`), `fix_version`, `approved_by` / `approved_on` once signed off, `delivered_on` once every story is done |
 | `review` | `verdict` (`ready`, `not-ready`), `reviewed_on` |
 
 `status` says how far an item is trusted; a question's `state` says whether it is still open. An
@@ -108,9 +111,11 @@ open question can be `confirmed` (the BA agrees it is a real question).
 
 ## 5. Links and citations
 
-- Standard markdown links with relative paths: `[Raising a job card](../workshop/CAP-012-raising-a-job-card.md)`.
+- Standard markdown links with paths relative to the page: `[Approving a list](../<area>/CAP-012-approving-a-list.md)`.
   No `[[wikilinks]]`, no `![[embeds]]`.
-- Link to a section with `page.md#heading-text`.
+- Link to a section with `page.md#heading-anchor`, where the anchor is the heading in lowercase,
+  with punctuation removed and spaces turned into hyphens (GitHub's rule, which Obsidian also
+  follows): `## 10. log.md lines` becomes `#10-logmd-lines`.
 - Cite a claim with its ID in brackets right after it: `(SRC-031)`, `(PROJ-1234)`, `(DEC-007)`. Link the
   ID the first time it appears on a page.
 - Images: `![What it shows](../../assets/CAP-012-approve-button.png)`.
@@ -121,7 +126,7 @@ Only the five types GitHub and Obsidian both render:
 
 | Callout | Use |
 |---|---|
-| `> [!CAUTION]` | **Unresolved:** behaviour that is unclear; always links the `Q-` |
+| `> [!CAUTION]` | **Unresolved:** behaviour that is unclear; always links the `Q-`, and sits in the page's Open items section |
 | `> [!NOTE]` | **Assumption:** stated but not confirmed; links the `A-` |
 | `> [!WARNING]` | A trap readers often fall into |
 | `> [!IMPORTANT]` | A rule with legal, safety or contractual weight |
@@ -129,12 +134,19 @@ Only the five types GitHub and Obsidian both render:
 
 ## 7. Statuses
 
-| Status | Meaning | Set by |
+| Status | Meaning | Set when |
 |---|---|---|
-| `draft` | Extracted by AI, not yet checked | `/kb-seed`, `/intake`, `/sync` |
-| `confirmed` | A BA checked it against its source | The BA, when accepting |
-| `approved` | A named stakeholder agreed; `approved_by` and `approved_on` set, and a `DEC-` exists | The BA |
-| `superseded` | Replaced; `superseded_by` set | The BA |
+| `draft` | Not yet checked against its source | The BA accepts an item "as draft", or `/setup` creates the stakeholders page |
+| `confirmed` | A BA checked it against its source | The BA accepts an item (the default) |
+| `approved` | Someone with authority decided or signed it off; `approved_by` and `approved_on` set | The source shows the owner deciding it, or a sign-off arrives |
+| `superseded` | Replaced; `superseded_by` set | A later accepted item replaces it |
+
+A page's status covers what the page says, not what it leaves out: an empty section means "not known
+yet". Filling an empty section, adding a rule or a callout, or removing a callout whose question was
+answered, are ordinary staged edits; the page keeps its status. Changing what a confirmed or
+approved statement says is not: that goes through a question or a superseding item (rule 4). Glossary entries carry their own status after their ID, and it wins over the glossary page's.
+A question's `state` (open, answered) says whether it is settled; describe questions by `state`,
+never as "confirmed".
 
 Answers label draft content "unconfirmed" and never use superseded content.
 
@@ -147,8 +159,9 @@ Requirement documents (`requirements/<slug>/requirement.md`) use the same four s
 | `approved` | A named stakeholder signed it off; `approved_by` and `approved_on` set. The pipeline records it when a sign-off arrives through `/intake` or `/sync` |
 | `superseded` | Replaced by another requirement document |
 
-Each `review.md` starts with `type: review`, `id: REVIEW-<slug>`, `title`, `verdict` (`ready` or
-`not-ready`), `reviewed_on` and `sources` (the requirement's `REQ-` ID).
+Each `review.md` starts with `type: review`, `id: REVIEW-<slug>`, `title: Review of <requirement
+title>`, `owner`, `verdict` (`ready` or `not-ready`), `reviewed_on` and `sources` (the requirement's
+`REQ-` ID). It has no `status`.
 
 ## 8. The ten rules for changing the knowledge base
 
@@ -173,11 +186,17 @@ Each `review.md` starts with `type: review`, `id: REVIEW-<slug>`, `title`, `verd
    rule is retired on its page: its line stays, struck through and followed by "superseded by
    BR-022 (DEC-005)", the replacement rule gets a new ID, and the old ID moves out of the page's
    `rules` list, so the register lists only rules in force.
+10. **Raw input stays out of git.** `inbox/` is gitignored; only the redacted source record is
+    committed. Quotes in staging files replace names and contact details with the role in square
+    brackets, because staging files are shared too.
 
 People may fix typos and wording on a page by hand, as long as the meaning doesn't change; add a
 `log.md` line with the command `EDIT`. Anything that changes meaning goes through `/intake`.
-10. **Raw input stays out of git.** `inbox/` is gitignored; only the redacted source record is
-    committed.
+
+**Choosing the page.** A capability is one thing a person does with the product, or one thing the
+product does for them, small enough to describe in a page: "calculating the next inspection due
+date", not "inspections". It belongs to the area whose one-line description in profile section 4
+covers it. When two areas could fit, choose the one whose users do it, and link from the other.
 
 ## 9. Staging files
 
@@ -190,6 +209,10 @@ recorded in the file's `Critic` section. The BA ticks one box per item, or answe
 normally once every item is decided. It deletes the staging file then, or keeps it with only the
 undecided items left.
 
+Decisions given in the chat are written into the file before anything is applied. To finish later
+or on another machine, the staging file is committed (`kb: stage <file name>`) and pushed after a
+yes; a teammate's contribution arrives the same way, as a pull request.
+
 A staging file left in place for more than a day is reported by `/review kb`.
 
 ## 10. `log.md` lines
@@ -200,8 +223,14 @@ A staging file left in place for more than a day is reported by `/review kb`.
 
 Each line is a list item, so it renders one per line on GitHub and in Obsidian.
 
-`CHANGES` uses `+` for new, `~` for edited, `x` for superseded, `?` for questions closed:
-`+CAP-012 ~CAP-007 +Q-014 ?Q-009 +DEC-007`.
+`COMMAND` is the command's name in capitals: `SETUP`, `KB-SEED`, `INTAKE`, `SYNC`, `REQUIREMENTS`,
+`REVIEW`, `BACKLOG`, `IMPROVE-HARNESS`, or `EDIT` for a hand fix. For `IMPROVE-HARNESS`, SOURCE is
+`profile` or the proposal file, and CHANGES says what changed in words.
+`SOURCE` is the source record's ID, or for `SETUP` and `EDIT` a word saying what it was.
+
+`CHANGES` lists every ID created, edited, superseded or closed, including rules, terms and RAID and
+action rows, but not the source record itself: `+` new, `~` edited, `x` superseded, `?` question
+closed. For example `+CAP-012 +BR-031 ~CAP-007 +Q-014 ?Q-009 +DEC-007 +ACT-004`.
 
 ## 11. Git
 
@@ -227,12 +256,28 @@ Each line is a list item, so it renders one per line on GitHub and in Obsidian.
 
 ## 12. Generated files
 
-`index.md` and the three registers are rebuilt from the pages' properties. Never edit them by hand:
-a hand edit is lost at the next rebuild. Order:
+`index.md` and the three registers are rebuilt from the pages' properties by
+`python tools/kb.py rebuild` (`python3` on macOS and Linux), which the commands run after every
+change. Never edit them by hand: a
+hand edit is lost at the next rebuild. Where Python isn't available, a command writes them by hand in
+exactly the same format:
 
-- **`index.md`:** by type, then area, then ID; one line per page with title, status and a one-line
-  summary (the first sentence of the page).
-- **`business-rules.md`:** by `BR-` number, with the rule's one-line statement and its page.
+- **`index.md`:** a heading per type in this order: Capabilities, Entities, Processes, Decisions,
+  Questions, Sources. Capabilities and processes are grouped under `###` headings by area, in the
+  order of profile section 4. Within a group, by ID. One line per page:
+  `- [<ID> <title>](<path>) · <status> · <summary>`, where questions show `<status>, <state>`, and
+  the summary is the page's `summary` property or else the first sentence after its title, with
+  links reduced to their text. Then "Registers and guides": the glossary, stakeholders, RAID, the
+  three registers, the log, the README and these conventions, each with a fixed one-line
+  description.
+- **`business-rules.md`:** one row per rule in a page's `rules`, by `BR-` number: the rule, its
+  statement without the trailing citation, and its page. Retired rules follow in their own table,
+  with what replaced them.
 - **`decisions.md`:** by `DEC-` number, with date, decider and status.
-- **`open-questions.md`:** questions with `state: open` first, by `due` (oldest first), with
-  `asked_of` and `blocks`; then answered ones with `answered_on` and `answer_source`; `wontfix` last.
+- **`open-questions.md`:** Open (by `due`, then ID, with `asked_of` and `blocks`), Answered (by ID,
+  with `answered_on` and `answer_source`), then Won't fix.
+
+`python tools/kb.py check` checks the whole knowledge base: properties, file names, IDs, rules,
+links and anchors, cited IDs, overdue questions and actions, old staging files and drafts, and
+whether the generated files are up to date. The workflow in `.github/workflows/kb-check.yml` runs it
+on every push and pull request.

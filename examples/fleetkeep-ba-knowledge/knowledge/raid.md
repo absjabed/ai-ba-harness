@@ -18,6 +18,9 @@ updated: 2026-10-09
 The project's risks (R-), assumptions (A-), issues (I-), dependencies (D-) and actions (ACT-), one
 table each, with the source each came from.
 
+Statuses: risks `open` or `closed`; assumptions `open`, `confirmed` or `wrong`; issues `open` or
+`resolved`; dependencies `open` or `met`; actions `open`, `done` or `dropped`.
+
 ## Risks
 
 | ID | Risk | Likelihood | Impact | Mitigation | Owner | Status | Source |
@@ -50,7 +53,7 @@ table each, with the source each came from.
 Status is `open`, `done` or `dropped`. `/review kb` reports open actions past their due date.
 
 No actions yet. The triage call's two actions are waiting in
-[the staging file](_staging/2026-10-14-intake-defect-triage-call.md) as ACT-new-1 and ACT-new-2.
+[the staging file](_staging/2026-10-14-intake-defect-triage-call.md).
 
 | ID | Action | Owner | Due | Status | Jira | Source |
 |---|---|---|---|---|---|---|

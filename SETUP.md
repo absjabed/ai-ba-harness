@@ -10,6 +10,7 @@ an hour for steps 1 to 5, plus however long the first `/kb-seed` review takes.
 | Claude Code (CLI, desktop app or IDE extension), signed in | Runs the commands |
 | Git, with Git Bash on Windows | The repository, the copy script and the automatic sync. Git for Windows includes Git Bash |
 | Access to the project's Jira (and Confluence, if used) on Atlassian Cloud | The commands read from them, and `/backlog` creates issues |
+| *(recommended)* Python 3.8 or later | Runs `tools/kb.py`, which rebuilds the index and registers exactly and checks the knowledge base. Without it the commands do the same by hand |
 | *(optional)* `markitdown` (`pip install markitdown`) | Lets `/intake` read Word, Excel and PowerPoint directly. Without it, save those files as PDF |
 | *(optional)* Obsidian | A nicer way to read the knowledge base. Nothing depends on it |
 
@@ -143,10 +144,29 @@ as long as the meaning stays the same; add a `log.md` line with the command `EDI
 
 Set `kb_auto_sync: off` in `PROJECT-PROFILE.md` section 5.
 
+## Improving the harness
+
+When something in the harness should work differently for your project, run `/improve-harness` with
+what isn't working. A project setting is changed in the profile; anything else becomes a proposal in
+`harness-feedback/`, which you send to whoever maintains the harness (the repository in profile
+section 1). Safe changes can also be applied in your project straight away; they are listed in
+profile section 8.
+
+**For the harness maintainers:** take the proposal file into the template, apply its change under
+`project/`, bring the example and the handbook up to date, bump `HARNESS_VERSION`, add a
+`CHANGELOG.md` entry naming the proposal, and tag the release. Tell the project which version
+includes it, so they can mark the proposal `accepted`.
+
 ## Updating the harness in a project
 
 `PROJECT-PROFILE.md` records the harness version and commit the repository started from. To see what
-has changed since, run `git log --oneline v<version>..` in the template. Copy over the files you
-want: usually `agents/`, `.claude/`, `templates/`, `knowledge/_meta/conventions.md` and
-`knowledge/_meta/templates/`. Never copy `knowledge/_meta/sync.json` (it holds the project's last sync
-time), `knowledge/` pages or `PROJECT-PROFILE.md`. Then update `HARNESS_VERSION` in the project.
+has changed since, read `CHANGELOG.md` in the template, or run `git log --oneline v<version>..`
+there. Copy over the files you want: usually `agents/`, `.claude/`, `templates/`, `tools/`,
+`.github/`, `knowledge/_meta/conventions.md` and `knowledge/_meta/templates/`. Never copy
+`knowledge/_meta/sync.json` (it holds the project's last sync time), `knowledge/` pages or
+`PROJECT-PROFILE.md`. Then:
+
+1. re-apply the local changes listed in profile section 8 that the new version doesn't already
+   include;
+2. update `HARNESS_VERSION` in the project;
+3. run `python tools/kb.py rebuild` and `python tools/kb.py check`.

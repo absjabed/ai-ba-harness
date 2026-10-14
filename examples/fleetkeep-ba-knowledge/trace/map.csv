@@ -1,4 +1,4 @@
-requirement_id,story_id,jira_key,knowledge_pages,confluence_page,requirement_doc
+fr_ids,story_id,jira_key,knowledge_pages,confluence_page,requirement_doc
 FR-001;FR-002;FR-003,ST-01,FK-1302,CAP-004;CAP-002;DEC-002,,requirements/defect-escalation-to-workshop/requirement.md
 FR-004,ST-02,FK-1303,CAP-004;ENT-003,,requirements/defect-escalation-to-workshop/requirement.md
 FR-005,ST-03,FK-1304,CAP-002;ENT-001,,requirements/defect-escalation-to-workshop/requirement.md

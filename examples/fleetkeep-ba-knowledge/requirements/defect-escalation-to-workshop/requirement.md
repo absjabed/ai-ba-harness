@@ -76,14 +76,14 @@ From the knowledge base on 2026-10-09:
 
 ## Functional requirements
 
-| ID | Requirement | Source | Rules |
-|---|---|---|---|
-| FR-001 | When a defect escalates, FleetKeep flags it on the workshop queue of the vehicle's depot. | DEC-002 | BR-015, BR-016 |
-| FR-002 | Flagged defects are listed above every other item in the workshop queue, oldest escalation first. | DEC-002 | None |
-| FR-003 | A defect's flag is removed when its job card is raised or it is rejected. | SRC-004 | BR-005, BR-006 |
-| FR-004 | When a category-A defect escalates, FleetKeep emails the technicians assigned to the vehicle's depot, as well as the transport manager. | FK-1192, SRC-004 | BR-015 |
-| FR-005 | A transport manager can triage an escalated defect and raise its job card in one action, which records both state changes. | Q-001 answer, SRC-004 | BR-014, BR-005 |
-| FR-006 | Each escalation is recorded in the defect's history with the time, the threshold passed and the roles notified. | SRC-004 | BR-012 |
+| ID | Requirement | Source | Rules | Status |
+|---|---|---|---|---|
+| FR-001 | When a defect escalates, FleetKeep flags it on the workshop queue of the vehicle's depot. | DEC-002 | BR-015, BR-016 | agreed |
+| FR-002 | Flagged defects are listed above every other item in the workshop queue, oldest escalation first. | DEC-002 | None | agreed |
+| FR-003 | A defect's flag is removed when its job card is raised or it is rejected. | SRC-004 | BR-005, BR-006 | agreed |
+| FR-004 | When a category-A defect escalates, FleetKeep emails the technicians assigned to the vehicle's depot, as well as the transport manager. | FK-1192, SRC-004 | BR-015 | agreed |
+| FR-005 | A transport manager can triage an escalated defect and raise its job card in one action, which records both state changes. | Q-001 answer, SRC-004 | BR-014, BR-005 | agreed |
+| FR-006 | Each escalation is recorded in the defect's history with the time, the threshold passed and the roles notified. | SRC-004 | BR-012 | agreed |
 
 ## Non-functional requirements
 
@@ -132,7 +132,9 @@ queue, so that I can prepare for the most overdue repairs first.
 - Then the flag is removed from the queue
 
 **Business rules:** BR-015, BR-016, BR-005, BR-006
+
 **Out of scope:** changing the thresholds; category-C defects
+
 **Open questions:** Q-002 (non-blocking: it changes when a threshold is reached, not how the flag behaves)
 
 ### ST-02 Email depot technicians when a category-A defect escalates
@@ -156,7 +158,9 @@ immobilised vehicle isn't left waiting while the transport manager is away from 
 - Then that technician receives it, and nobody who already had it receives it again
 
 **Business rules:** BR-015, BR-016
+
 **Out of scope:** text messages; emails for category-C defects
+
 **Open questions:** Q-002 (non-blocking, as for ST-01)
 
 ### ST-03 Raise a job card from an escalated defect
@@ -180,7 +184,9 @@ so that the workshop can start without me stepping through triage separately.
 - Then only the change to Job card raised is recorded
 
 **Business rules:** BR-014, BR-005, BR-012
+
 **Out of scope:** rejecting from the flag (rejection works as today, from Triaged with a reason)
+
 **Open questions:** None
 
 ### ST-04 See the escalations in a defect's history
@@ -199,7 +205,9 @@ auditor when an unactioned defect was chased and who was told.
 - Then I can't change or delete it
 
 **Business rules:** BR-012, BR-013
+
 **Out of scope:** adding escalations to the audit pack export
+
 **Open questions:** None
 
 ## Assumptions

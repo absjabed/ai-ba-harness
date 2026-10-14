@@ -3,9 +3,9 @@ type: requirement
 id: REQ-<epic-slug>
 title: <Epic or topic name>
 status: draft
-area: <area from the profile>
-owner: <role>
-jira_epic: <PROJ-0000, filled by /backlog>
+area: <area from the profile; a list when it spans several>
+owner: <role, usually the Lead BA>
+jira_epic:
 fix_version: <release, or unscheduled>
 approved_by:
 approved_on:
@@ -42,9 +42,12 @@ facts.>
 
 ## Functional requirements
 
-| ID | Requirement | Source | Rules |
-|---|---|---|---|
-| FR-001 | <One testable statement> | <SRC- / DEC- / Q- answer> | <BR-000> |
+| ID | Requirement | Source | Rules | Status |
+|---|---|---|---|---|
+| FR-001 | <One testable statement> | <SRC- / DEC- / Q- answer> | <BR-000, or None> | <agreed / pending Q-000> |
+
+Cite knowledge pages with links relative to this file, for example
+`([CAP-004](../../knowledge/domains/<area>/CAP-004-<slug>.md), BR-016)`.
 
 ## Non-functional requirements
 
@@ -75,13 +78,15 @@ As a <role>, I want <capability>, so that <benefit>.
 - When <action>
 - Then <observable outcome>
 
-**Business rules:** <BR-000>
+**Business rules:** <BR-000, or None>
+
 **Out of scope:** <item>
-**Open questions:** <Q-000, or None>
+
+**Open questions:** <None, or Q-000 (blocks the story), Q-000 (blocks AC-2), or Q-000 (non-blocking)>
 
 ## Assumptions
 
-- <A-000: assumption, why it's assumed, how to confirm>
+- <A-000: assumption, why it's assumed, how to confirm. Staged as a row in `knowledge/raid.md`>
 
 ## Open questions
 
@@ -95,7 +100,7 @@ the question raised for it. "None" if none.>
 
 ## Success measures
 
-- <SC-001: measurable outcome>
+- <SC-001: measurable outcome, or "None agreed yet">
 
 ## Clarifications
 

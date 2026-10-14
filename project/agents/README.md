@@ -18,6 +18,7 @@ second copy waiting to drift.
 | [`backlog.md`](backlog.md) | `/backlog` | Creates the epic and stories in Jira after approval | **Yes**, after approval |
 | [`ask.md`](ask.md) | `/ask` | Answers questions from the knowledge base with citations | No; it has no write, shell or sub-agent tools |
 | [`_knowledge-pipeline.md`](_knowledge-pipeline.md) | (shared) | Extract, judge, stage, critique, confirm, apply: used by `/kb-seed`, `/intake`, `/sync`, `/requirements` | No |
+| [`improve-harness.md`](improve-harness.md) | `/improve-harness` | Works out what isn't working, decides whether it's a setting, knowledge or a harness change, writes a proposal, and applies safe changes locally after a yes | No |
 | [`_critic.md`](_critic.md) | (shared) | The second look at a staging file before the BA decides: pipeline step 4 | No; it writes nothing |
 
 ## Safety, in layers
@@ -28,12 +29,20 @@ second copy waiting to drift.
 3. **`.claude/settings.json`** puts every Atlassian write tool (matched by verb, such as `create*`,
    `edit*`, `update*`) and `git push` on the "ask" list, so Claude Code prompts before each one even
    inside an approved batch. It denies Atlassian delete tools, `executeDestructive`, force pushes, hard
-   resets and `git clean` outright. Ask and deny always win over a command's `allowed-tools`.
+   resets and `git clean` outright. Ask and deny always win over a command's `allowed-tools`. The
+   rules cover the repository's own `atlassian` server and the Atlassian plugin
+   (`mcp__plugin_atlassian_atlassian__`). Any other Atlassian connection isn't covered, which is why
+   `/setup` asks you to use the repository's server.
 
    These rules match commands as Claude normally writes them; a deliberately unusual form (such as
    `git -C . push`) isn't matched. That's why each command also pre-approves only the narrow git
    commands it needs (`git pull --ff-only`, `git add`, `git commit`, and read-only ones), so anything
-   else prompts.
+   else prompts. Deleting a file (a staging file after applying, an inbox file after your yes) isn't
+   pre-approved either, so Claude Code asks; that prompt is expected.
+4. **The critic** (`.claude/agents/critic.md`) can only read: it checks every staging file and
+   reports, and the command decides what to change.
+5. **`tools/kb.py check`** and the GitHub workflow catch broken links, bad properties, unknown IDs
+   and out-of-date registers on every push.
 
 ## Using another assistant
 

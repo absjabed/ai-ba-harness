@@ -18,11 +18,13 @@ section 7.
 <!-- Entry format:
 
 ## <Term>
-**T-000** · status: draft · (SRC-000)
+**T-000** · status: confirmed · (SRC-000)
 
 <One-sentence definition, in business language.>
 
-**Also called:** <synonyms people use>
+**Also called:** <synonyms people use, including the "instead of" words from profile section 7>
+
 **Not to be confused with:** <similar term, linked>
+
 **See:** <the page that explains it in context>
 -->

@@ -6,19 +6,10 @@ analysts use to keep both current.
 
 ## For every question about the project
 
-1. Start from [`knowledge/index.md`](knowledge/index.md). It lists every page with one line each.
-2. Search `knowledge/` for the question's terms and for their synonyms, which pages list as `aliases`
-   and the glossary lists under each term.
-3. Answer only from what the pages say, and cite the page and ID for every claim.
-4. Say how certain each source is:
-   - **draft:** unconfirmed;
-   - **confirmed:** checked by a BA;
-   - **approved:** agreed by a named stakeholder.
-   Never use **superseded** pages.
-5. If the knowledge base doesn't answer it, say so. Don't fill the gap from general knowledge; offer
-   to draft an open question for the BA instead.
-
-`/ask` does exactly this, with no tools that write files, run commands or change Jira.
+Answer exactly as [`agents/ask.md`](agents/ask.md) describes, whether or not the person typed
+`/ask`: start from [`knowledge/index.md`](knowledge/index.md), answer only from the pages, cite every
+claim, say how sure each source is, and say plainly when the knowledge base doesn't know.
+`/ask` does the same with no tools that write files, run commands or change Jira.
 
 ## Before changing anything
 
@@ -27,8 +18,9 @@ analysts use to keep both current.
 - Knowledge changes go through `/intake`, `/sync` or `/kb-seed`: proposals in `knowledge/_staging/`,
   then the BA accepts each item. Never edit knowledge pages directly in response to a request; stage
   the change instead. (People may fix typos by hand; you always stage.)
-- Never edit the generated files: `knowledge/index.md`, `knowledge/business-rules.md`,
-  `knowledge/decisions.md`, `knowledge/open-questions.md`. `/review kb` rebuilds them.
+- Never edit the generated files by hand: `knowledge/index.md`, `knowledge/business-rules.md`,
+  `knowledge/decisions.md`, `knowledge/open-questions.md`. Commands rebuild them with
+  `python tools/kb.py rebuild` (or by hand to conventions section 12 when Python isn't available).
 - Never commit anything in `inbox/`.
 - Writes to Jira happen only through `/backlog`, after a preview and an explicit yes. No command in
   this version writes to Confluence.
@@ -43,7 +35,8 @@ analysts use to keep both current.
 | `/sync` | Turn new Jira and Confluence activity into proposed knowledge |
 | `/requirements` | Write a requirement document for an epic or topic |
 | `/review` | Check a requirement document, a Jira issue, or the knowledge base (`/review kb`) |
-| `/backlog` | Create the epic and stories in Jira from a reviewed requirement |
+| `/backlog` | Put approved work into Jira: stories from a reviewed requirement (and later changes to them), or a single task, spike or UAT bug |
 | `/ask` | Answer a question from the knowledge base, with citations |
+| `/improve-harness` | Change how the harness works: a setting, or a proposal for the harness itself |
 
 The definition of each command is in [`agents/`](agents).

@@ -20,7 +20,7 @@ updated: YYYY-MM-DD
 | Kind | <meeting, document, …> |
 | Date | YYYY-MM-DD |
 | Participants or author | <roles, not names, unless a name is needed> |
-| Original | <where the original is kept: shared drive path, Confluence page, Jira key; or "not kept"> |
+| Original | <where the original is kept: shared drive path, Confluence page, Jira key; "the BA's own copy" if it stays only on their machine; or "not kept"> |
 | Processed by | <command> on YYYY-MM-DD |
 
 ## Summary
@@ -34,7 +34,11 @@ updated: YYYY-MM-DD
 | CAP-000 | <created / edited: what> |
 | Q-000 | <opened / answered> |
 
-## Rejected items
+## Play-back
 
-<Items proposed from this source that the BA rejected, with the reason. Keeps them from being
-proposed again.>
+<The play-back message sent to the participants, if there was one.>
+
+## Rejected, ignored and declined
+
+<Items proposed from this source that the BA rejected or that were ignored, and critic suggestions
+the BA declined, each with the reason. Keeps them from being proposed again.>

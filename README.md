@@ -1,7 +1,7 @@
 # AI BA Harness
 
 A business-analysis workflow for Claude Code. Each project gets a BA knowledge repository: a
-knowledge base that grows every day from meetings, documents, Jira and Confluence, and eight
+knowledge base that grows every day from meetings, documents, Jira and Confluence, and nine
 commands that turn it into reviewed requirements and a clean Jira backlog. Anyone on the project can
 clone that repository and ask it questions.
 
@@ -21,7 +21,8 @@ with `scripts/new-project.sh`, then follow [SETUP.md](SETUP.md).
 | | |
 |---|---|
 | A knowledge base (`knowledge/`) | Capabilities, processes, entities, glossary, stakeholders, business rules, decisions, open questions; plain markdown that opens as an Obsidian vault |
-| Eight commands | `/setup`, `/kb-seed`, `/intake`, `/sync`, `/requirements`, `/review`, `/backlog`, `/ask` |
+| Nine commands | `/setup`, `/kb-seed`, `/intake`, `/sync`, `/requirements`, `/review`, `/backlog`, `/ask`, `/improve-harness` |
+| A knowledge base tool | `tools/kb.py`: rebuilds the index and registers, checks links, properties and IDs; a GitHub workflow runs the check on every push |
 | Templates | Jira epic, story, task, spike and bug; requirement document; knowledge pages |
 | Safety | Nothing reaches the knowledge base, Jira or Confluence without a preview and the BA's yes |
 | Automatic sync | Every clone pulls new knowledge when someone opens Claude Code in it |

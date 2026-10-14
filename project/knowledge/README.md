@@ -31,7 +31,8 @@ view, backlinks and the Properties panel all work.
 
 ## Contributing
 
-Don't change what a page says directly. Give new material to a BA, or run `/intake` on it and open a
-pull request with the staging file it writes to `_staging/`. Fixing a typo or awkward wording by
-hand is fine, as long as the meaning stays the same. The rules are in
+Don't change what a page says directly. Either give the new material to a BA (the usual route), or,
+if you're comfortable with git, run `/intake` on it, commit the staging file it writes to `_staging/`
+on a branch, and open a pull request: a BA decides each item. Fixing a typo or awkward wording by
+hand is fine, as long as the meaning stays the same; add a `log.md` line with the command `EDIT`. The rules are in
 [_meta/conventions.md](_meta/conventions.md).

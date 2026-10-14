@@ -147,7 +147,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.4.2</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.5.0</span></div>
   </div>
   <h2>Start here</h2>
   <a href="#what">What it is</a>
@@ -162,11 +162,12 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
   <a class="sub" href="#ex-daily">3 · Every day</a>
   <a class="sub" href="#ex-epic">4 · An epic, into Jira</a>
   <a class="sub" href="#ex-after">5 · Changes and release</a>
-  <a class="sub" href="#ex-ask">6 · Anyone asks</a>
+  <a class="sub" href="#ex-improve">6 · Improving the harness</a>
+  <a class="sub" href="#ex-ask">7 · Anyone asks</a>
   <a class="sub" href="#ex-who">Who does what</a>
   <a class="sub" href="walkthrough.html">As a separate page</a>
   <h2>Daily use</h2>
-  <a href="#commands">The eight commands</a>
+  <a href="#commands">The nine commands</a>
   <a href="#when">When to run what</a>
   <a href="#kb">The knowledge base</a>
   <a class="sub" href="#kb-staging">Staging and accepting</a>
@@ -189,11 +190,11 @@ seen and approved them.</p>
 
 <h2 id="what">What it is</h2>
 <p>AI BA Harness is a development-workflow layer for business analysts. It runs inside Claude Code
-and adds eight commands, a knowledge base stored as plain markdown files, and fixed steps for
+and adds nine commands, a knowledge base stored as plain markdown files, and fixed steps for
 anything that changes that knowledge or touches Jira. It works at project level: each project has one
 BA repository, which the BAs maintain and everyone else can clone and ask questions of.</p>
 <div class="grid">
-  <div class="tile"><h4>8 commands</h4><p><code>/setup</code>, <code>/kb-seed</code>, <code>/intake</code>, <code>/sync</code>, <code>/requirements</code>, <code>/review</code>, <code>/backlog</code> and <code>/ask</code>.</p></div>
+  <div class="tile"><h4>9 commands</h4><p><code>/setup</code>, <code>/kb-seed</code>, <code>/intake</code>, <code>/sync</code>, <code>/requirements</code>, <code>/review</code>, <code>/backlog</code>, <code>/ask</code> and <code>/improve-harness</code>.</p></div>
   <div class="tile"><h4>One knowledge base</h4><p>Capabilities, business rules, decisions, open questions, glossary and stakeholders in <code>knowledge/</code>. Every statement carries its source and a status.</p></div>
   <div class="tile"><h4>You accept every change</h4><p>Commands write proposals to <code>knowledge/_staging/</code>. Pages change only after you accept each item.</p></div>
   <div class="tile"><h4>Jira writes after approval</h4><p>Only <code>/backlog</code> writes to Jira: after a duplicate check, a preview of the batch, your yes, and Claude Code's own prompt on each write.</p></div>
@@ -253,7 +254,7 @@ miss things. A critic pass checks every staging file before you see it, but it i
 model, so everything AI-drafted stays visible as a proposal until you decide.</li>
 <li>Scale. Every question starts from <code>knowledge/index.md</code>. Once it no longer fits in one
 read (roughly 300 or more pages), a local search server will be needed.</li>
-<li>This is version 0.4.2. It has not been used on a real project yet.</li>
+<li>This is version 0.5.0. Every command has been run on a demo project and the problems found were fixed, but it hasn't yet run against a real Jira site or on a live project.</li>
 </ul>
 
 <h2 id="map">Harness map</h2>
@@ -497,6 +498,7 @@ diagram sideways.</p>
 <tr><td><strong>A shared remote</strong> (GitHub, Azure DevOps, Bitbucket)</td><td>Where the team clones from. The automatic sync needs it</td></tr>
 <tr><td><strong>An Atlassian Cloud account</strong> with access to the project's Jira, and Confluence if the project uses it</td><td>The commands read from them, and <code>/backlog</code> creates issues with your own permissions</td></tr>
 <tr><td><strong>OAuth sign-in</strong> through <code>/mcp</code></td><td>The repository's <code>.mcp.json</code> points at <code>https://mcp.atlassian.com/v2/mcp</code>. You sign in once in the browser; no token is stored in the repository. If your Atlassian admin restricts connected apps, they may need to allow it first</td></tr>
+<tr><td><em>recommended</em> Python 3.8 or later</td><td>Runs <code>tools/kb.py</code>, which rebuilds the index and registers exactly and checks the knowledge base. Without it the commands do the same by hand</td></tr>
 <tr><td><em>optional</em> <code>markitdown</code> (<code>pip install markitdown</code>)</td><td>Lets <code>/intake</code> read Word, Excel and PowerPoint. Set <code>converter: markitdown</code> in the profile. Without it, save those files as PDF</td></tr>
 <tr><td><em>optional</em> Obsidian</td><td>A more comfortable way to read and browse the knowledge base. Nothing depends on it</td></tr>
 </tbody>
@@ -525,7 +527,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.4.2"
+git commit -m "Start from AI BA Harness 0.5.0"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -608,7 +610,7 @@ user-friendly that need a measure) and its preferred terms. Add your own.</p>
 <h2 id="example">Follow a whole project</h2>
 <p class="lede">One example, start to finish: setting up a project, building its knowledge base,
 writing an epic, putting it into Jira, changing it afterwards, shipping it, and answering a
-teammate's question. Every command appears at least once, with what you type, what it reads, what it
+teammate's question, with a detour into improving the harness itself. Every command appears at least once, with what you type, what it reads, what it
 asks you and what you end up with. Written for someone who has never worked this way. The same example, as a page of its own to share with a team: <a href="walkthrough.html">the FleetKeep walkthrough</a>.</p>
 
 <div class="callout warn">
@@ -682,7 +684,9 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <div class="tl-row"><span class="tl-date">Oct 26</span><span class="tl-cmd">/kb-seed confluence</span><span>The rewritten product rules are seeded; the inspections area gets its first pages</span></div>
 <div class="tl-row"><span class="tl-date">Nov 9</span><span class="tl-cmd">/backlog bug</span><span>A UAT finding becomes a bug</span></div>
 <div class="tl-row"><span class="tl-date">Nov 30</span><span class="tl-cmd">/sync</span><span>The stories are done; the pages now describe what shipped</span></div>
-<div class="tl-part">Part 6 · Anyone asks</div>
+<div class="tl-part">Part 6 · Improving the harness (beyond the example files)</div>
+<div class="tl-row"><span class="tl-date">Nov 3</span><span class="tl-cmd">/improve-harness</span><span>One fix is a profile setting; the other becomes a proposal, applied locally and sent to the harness maintainers</span></div>
+<div class="tl-part">Part 7 · Anyone asks</div>
 <div class="tl-row"><span class="tl-date">Any day</span><span class="tl-cmd">/ask</span><span>A developer gets a cited answer, and a drafted question when the knowledge base doesn't know</span></div>
 </div>
 
@@ -692,7 +696,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <a href="#setup">Set up a project</a>:</p>
 <pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
 cd ../fleetkeep-ba-knowledge
-git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.4.2"
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.5.0"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main
 claude</code></pre>
@@ -900,6 +904,11 @@ emailed?</p>
 C. The technicians, for category A and B.</p></div>
 <div class="msg you"><b>You</b><p>B.</p></div>
 </div>
+<p>Who gets emailed is product behaviour, which only the Product owner decides, so your B is a
+proposal: it's staged as a question to the Product owner with B as the proposed answer, and FR-004 is
+marked "pending" until they answer. Their sign-off of the requirement in Part 5 answers it, along with
+any other proposal in the document. (The example's files were written before this rule, so FR-004
+there simply cites FK-1192 and the working session.)</p>
 <p>Before showing the draft it runs <code>/review</code>'s rule checks on it in a fresh context and
 fixes what is mechanical (a missing ID, a vague word the knowledge base gives a number for). The rest
 is listed with the draft. Afterwards you run <code>/intake</code> with no argument to capture the
@@ -1000,7 +1009,9 @@ Nothing is created twice, and nothing is moved or deleted.</p>
 <div class="cmd"><code>/intake inbox/2026-10-22-sign-off.md</code></div>
 <p>"Approved for 2026.11." The Product owner can approve release content, so the item sets the
 requirement to <code>approved</code>, with <code>approved_by: Product owner</code> and
-<code>approved_on: 2026-10-22</code>. As a Jira comment, <code>/sync</code> would have proposed the
+<code>approved_on: 2026-10-22</code>. Had the requirement carried proposals marked "pending" (your
+answers on product behaviour that only the Product owner can decide), the same sign-off would have
+answered all of them and turned them into agreed rules. As a Jira comment, <code>/sync</code> would have proposed the
 same.</p>
 
 <h4 id="ex-seed">Oct 26: the product rules come back</h4>
@@ -1039,8 +1050,53 @@ technicians; CAP-002 gains triage and job card in one action; PROC-001's to-be e
 as-is; ENT-001's history gains the escalation entry; and the requirement gets
 <code>delivered_on: 2026-11-30</code>.</p>
 
-<!-- ============ PART 6 ============ -->
-<h3 id="ex-ask">Part 6 · Anyone asks</h3>
+<!-- ============ PART 6 IMPROVE ============ -->
+<h3 id="ex-improve">Part 6 · Improving the harness (Nov 3)</h3>
+<div class="callout warn"><p><strong>Beyond the example files</strong>, like Part 5.</p></div>
+<p>A month in, two things bother you. The first is small:</p>
+<div class="cmd"><code>/improve-harness reviews don't flag "asap" in requirements</code></div>
+<div class="chat">
+<div class="msg ai"><b>Claude</b><p>That's a project setting, not a harness change: <code>/review</code> flags
+the words in profile section 7. I'd add "asap" there:</p>
+<pre><code> promptly, urgent, soon, real time
++asap</code></pre>
+<p>Write it?</p></div>
+<div class="msg you"><b>You</b><p>Yes.</p></div>
+</div>
+<p>It changes the profile, adds a log line and commits <code>kb: profile vague word asap</code>. No
+proposal is needed. The second one is about the harness itself:</p>
+<div class="cmd"><code>/improve-harness developers keep asking what data each story needs</code></div>
+<div class="io">
+<div class="io-col"><h4>It reads</h4><ul><li>the profile (who maintains the repository, where the harness lives, local changes so far)</li><li>the example you point to, and the harness files involved</li></ul></div>
+<div class="io-col"><h4>It asks you</h4><ul><li>up to three questions, with an example</li><li>a yes before applying anything locally</li></ul></div>
+<div class="io-col"><h4>You get</h4><ul><li>a proposal in <code>harness-feedback/</code> with the problem, evidence, diff and risk</li><li>optionally, the change applied here and recorded in profile section 8</li></ul></div>
+</div>
+<div class="chat">
+<div class="msg ai"><b>Claude</b><p>Which requirement shows it best, and what did the developer ask?</p></div>
+<div class="msg you"><b>You</b><p>The escalation one. FK-1302's developer asked which defect fields the queue
+flag needs; the story doesn't say.</p></div>
+<div class="msg ai"><b>Claude</b><p>That's a harness change: the requirement template's stories have no place
+for data. I'd add one optional line to each story, and one step to <code>/requirements</code>:</p>
+<pre><code>templates/requirement.md, under each story
++**Data:** &lt;the information the story reads or changes, by entity (ENT-), or "none"&gt;
+
+agents/requirements.md, step 3
++   - **Data per story:** the entities and fields it reads or changes, from the entity pages.</code></pre>
+<p>Kind: behaviour change. Risk: low; it touches no permission or approval step. Version: minor. It
+also affects <code>/review</code>, which could check the line later; I've noted that in the proposal.
+Apply it here as well?</p></div>
+<div class="msg you"><b>You</b><p>Yes.</p></div>
+</div>
+<p>It writes <code>harness-feedback/2026-11-03-story-data-line.md</code> with
+<code>status: applied-locally</code>, applies the two changes, adds a row to profile section 8, and
+commits <code>harness: local story-data-line</code>. The report ends with what to do next: send the
+proposal to whoever maintains the harness (the repository in profile section 1), as an issue or a
+message with the file. When a later harness version includes it, the proposal is marked
+<code>accepted</code> and the section 8 row can go. Had the change touched a permission rule or an
+approval step, it would only have been proposed, never applied here.</p>
+
+<!-- ============ PART 7 ============ -->
+<h3 id="ex-ask">Part 7 · Anyone asks</h3>
 <p>The team was invited once the main areas had pages. A developer clones the repository once, opens
 Claude Code in it, and their copy updates itself every time they do.</p>
 <div class="cmd"><code>/ask when does a category-B defect escalate, and does it count overnight?</code></div>
@@ -1089,11 +1145,12 @@ check form. <b>Who might know:</b> the Product owner, who decides product behavi
 <tr><td>The requirement changes</td><td><code>/requirements</code>, <code>/review</code>, <code>/backlog</code></td><td>Each story update</td><td>Stories updated, never duplicated</td></tr>
 <tr><td>Action, spike or UAT bug</td><td><code>/backlog task | spike | bug</code></td><td>The one-issue preview</td><td>One Jira issue, key written back</td></tr>
 <tr><td>Sign-off and release</td><td><code>/intake</code>, <code>/sync</code></td><td>Each item</td><td>Requirement approved, then pages updated to what shipped</td></tr>
+<tr><td>The harness should work differently</td><td><code>/improve-harness</code></td><td>Where the fix goes; applying it locally</td><td>A profile change, or a proposal (and a local change if safe)</td></tr>
 <tr><td>Any question, anyone</td><td><code>/ask &lt;question&gt;</code></td><td>Nothing</td><td>A cited answer, or a drafted question</td></tr>
 </tbody>
 </table>
 
-<h2 id="commands">The eight commands</h2>
+<h2 id="commands">The nine commands</h2>
 <p>Every command reads <code>PROJECT-PROFILE.md</code> first, pulls before it writes, never invents a
 fact, and ends with a short report: what it did, what is waiting for you, and the suggested next
 command. The full definition of each one is in the BA repository's <code>agents/</code> folder
@@ -1108,8 +1165,9 @@ there.</p>
 <tr><td><code>/sync</code></td><td>Turn new Jira and Confluence activity into proposed knowledge</td><td>BA, daily</td><td>No (reads only)</td></tr>
 <tr><td><code>/requirements</code></td><td>Write a requirement document for an epic or topic</td><td>BA, per epic</td><td>No</td></tr>
 <tr><td><code>/review</code></td><td>Check a requirement document, a Jira issue or the knowledge base</td><td>BA, before <code>/backlog</code>; weekly for <code>kb</code></td><td>No</td></tr>
-<tr><td><code>/backlog</code></td><td>Create the epic and stories in Jira from a reviewed requirement</td><td>BA, per epic</td><td>Yes, after approval</td></tr>
+<tr><td><code>/backlog</code></td><td>Put approved work into Jira: stories from a reviewed requirement (and later changes to them), or a single task, spike or UAT bug</td><td>BA, per epic</td><td>Yes, after approval</td></tr>
 <tr><td><code>/ask</code></td><td>Answer a question from the knowledge base, with citations</td><td>Anyone</td><td>No; it has no write, shell or sub-agent tools</td></tr>
+<tr><td><code>/improve-harness</code></td><td>Change how the harness works: a project setting, or a proposal for the harness itself</td><td>Anyone proposes; a maintainer applies</td><td>No</td></tr>
 </tbody>
 </table>
 
@@ -1121,7 +1179,7 @@ with a RACI, existing material, writing rules and options. <a href="#ex-setup">S
 full run on FleetKeep</a>.</p>
 <table><tbody>
 <tr><td><strong>When</strong></td><td>Right after creating the repository. Run it again to change settings: it shows what is filled, asks which sections to change, and never overwrites a filled section without a yes</td></tr>
-<tr><td><strong>Needs</strong></td><td>A git clone with a shared remote; Atlassian signed in through <code>/mcp</code></td></tr>
+<tr><td><strong>Needs</strong></td><td>A git clone with a shared remote; Atlassian signed in through <code>/mcp</code>. Without Atlassian it still runs: it records your answers marked "not verified", and running it again later offers to check them against Jira and Confluence</td></tr>
 <tr><td><strong>Writes</strong></td><td><code>PROJECT-PROFILE.md</code>, <code>knowledge/stakeholders.md</code> (draft, with the RACI), today's date on the glossary, stakeholders and RAID pages, <code>knowledge/domains/&lt;area&gt;/</code> folders, a <code>log.md</code> line. Commit <code>kb: setup &lt;project&gt;</code></td></tr>
 <tr><td><strong>Approval</strong></td><td>Profile shown as a diff, written after a yes; asks before pushing</td></tr>
 </tbody></table>
@@ -1175,7 +1233,7 @@ says about the area.</p>
 <tr><td><strong>When</strong></td><td>A new epic or a significant change needs defining; before <code>/backlog</code></td></tr>
 <tr><td><strong>Needs</strong></td><td>The relevant area seeded in the knowledge base. If there is nothing on the area, it suggests an <code>/intake</code> of existing material first</td></tr>
 <tr><td><strong>Writes</strong></td><td><code>requirements/&lt;epic-slug&gt;/requirement.md</code> (status draft): goal, scope, stakeholders, <code>FR-001</code>, <code>NFR-001</code> in EARS form, user stories (<code>ST-01</code>) with at least two Given/When/Then criteria, assumptions, open questions, success measures, and conflicts with the knowledge base. Before showing the draft it runs <code>/review</code>'s rule checks on it in a fresh context and fixes what is mechanical; the rest is listed with the draft. This pre-check gives no verdict, so <code>/review</code> is still the gate before <code>/backlog</code>. New terms, rules and decisions go to staging. Commit <code>req: draft &lt;slug&gt;</code></td></tr>
-<tr><td><strong>Approval</strong></td><td>Clarifying questions one at a time, multiple choice with a recommended answer, at most five per round. Document shown, written after a yes; asks before pushing</td></tr>
+<tr><td><strong>Approval</strong></td><td>Clarifying questions one at a time, multiple choice with a recommended answer, at most five per round. Your answers on scope, story split and fix version settle the document. Your answers on product behaviour (rules, permissions, what the product shows) are proposals when someone else owns that decision: each becomes a question to the owner, the requirement marks the FR "pending", and the owner's sign-off of the requirement answers them all at once. The document and its staged knowledge are shown together; one commit after your yes; asks before pushing</td></tr>
 </tbody></table>
 </div>
 
@@ -1222,8 +1280,23 @@ any claim the page doesn't support.</p>
 </tbody></table>
 </div>
 
+<div class="card">
+<h3><code>/improve-harness [what isn't working | list]</code> <span class="pill">anytime</span></h3>
+<p>For when a command, template or rule should work differently. It asks up to three questions to
+pin the problem down, with an example, and decides where the fix belongs: a project setting
+(changed in the profile after your yes), knowledge (sent to <code>/intake</code>), or the harness
+itself. A harness change is drafted as a diff and written up as a proposal in
+<code>harness-feedback/</code>, ready to send to whoever maintains the harness.</p>
+<table><tbody>
+<tr><td><strong>When</strong></td><td>A command keeps doing something unhelpful, a template misses something your team needs, or a rule doesn't fit your project</td></tr>
+<tr><td><strong>Needs</strong></td><td>An example of the problem: a staging file, a commit, the command's output</td></tr>
+<tr><td><strong>Writes</strong></td><td>The profile, for a setting. Otherwise <code>harness-feedback/&lt;date&gt;-&lt;slug&gt;.md</code>, and, if you agree and it's safe, the change itself in this repository's copy of the harness, recorded in profile section 8 so a harness update doesn't silently undo it. Commit <code>harness: proposed|local &lt;slug&gt;</code></td></tr>
+<tr><td><strong>Approval</strong></td><td>A yes for every change. Anything touching permissions, approval steps, redaction or Jira writes is never changed locally: it goes to the harness maintainers only. It never sends the proposal anywhere; you do. <code>/improve-harness list</code> shows every proposal and its status</td></tr>
+</tbody></table>
+</div>
+
 <h2 id="when">When to run what</h2>
-<p>The eight commands fall into four rhythms: once at the start, every day, once per epic, and
+<p>The nine commands fall into four rhythms: once at the start, every day, once per epic, and
 weekly. <code>/ask</code> can be used at any time by anyone.</p>
 
 <h3>Once, at project start (lead BA)</h3>
@@ -1278,6 +1351,7 @@ files overnight; <code>/review kb</code> lists any older than a day.</p></div>
 <thead><tr><th>Who</th><th>Run</th><th>Notes</th></tr></thead>
 <tbody>
 <tr><td>Developer, tester, product owner, new BA</td><td><code>/ask &lt;question&gt;</code></td><td>Read-only. Draft content is marked unconfirmed. If the knowledge base doesn't know, it drafts a question to send to the BA</td></tr>
+<tr><td>Anyone who thinks the harness should work differently</td><td><code>/improve-harness &lt;what isn't working&gt;</code></td><td>Writes a proposal; a maintainer can apply safe changes locally, and the proposal goes to the harness maintainers</td></tr>
 <tr><td>A teammate with material for the knowledge base</td><td>Send it to the BA, or run <code>/intake</code> and open a pull request with the staging file</td><td>The BA accepts or rejects; nothing changes until then</td></tr>
 </tbody>
 </table>
@@ -1403,13 +1477,15 @@ with a summary table at the top and one block per item:</p>
 <tbody>
 <tr><td>Kind</td><td>requirement, rule, decision, action, question, answer, term, risk or fact</td></tr>
 <tr><td>Verdict</td><td><code>new</code>, <code>confirms &lt;ID&gt;</code>, <code>extends &lt;ID&gt;</code>, <code>contradicts &lt;ID&gt;</code>, <code>duplicate of &lt;ID&gt;</code> or <code>answers &lt;Q-ID&gt;</code></td></tr>
+<tr><td>Searched for</td><td>For a new item: the wordings searched, so you can see it really is new</td></tr>
+<tr><td>Depends on</td><td>Other items in the file this one needs (for example a rule on a page another item creates). Decide them together</td></tr>
 <tr><td>Clarity</td><td>clear, vague (naming the word) or incomplete (naming what is missing)</td></tr>
 <tr><td>Authority</td><td>For decisions and answers: can decide, cannot (with the owner's role), or unknown</td></tr>
 <tr><td>Sensitivity</td><td>clean, or what should be redacted</td></tr>
-<tr><td>Quote</td><td>The exact words and where they came from</td></tr>
+<tr><td>Quote</td><td>The exact words and where they came from, with names and contact details replaced by the role in square brackets</td></tr>
 <tr><td>Critic</td><td>ok, what the critic fixed, or what it wants you to check</td></tr>
 <tr><td>Affects delivery</td><td>For a change to an existing page or rule: the requirements, stories and Jira keys that rely on it (from <code>trace/map.csv</code>), or none</td></tr>
-<tr><td>Proposed change</td><td>The exact change: a new page, a diff of an existing page, a new question, a glossary entry, a RAID row, or ignore with the reason</td></tr>
+<tr><td>Proposed change</td><td>The exact change: a diff of an existing page, a glossary entry, a RAID or action row, or ignore with the reason. A new page, question or decision is shown in full in a fold-out block, so what you accept is exactly what gets written</td></tr>
 </tbody>
 </table>
 <p>Before you see the file, a critic reads the source again and checks the staging file against it
@@ -1419,9 +1495,16 @@ been redacted. In Claude Code it runs as a sub-agent with a fresh context, so it
 first pass's blind spots. It writes nothing itself. The command fixes what the critic proved wrong,
 marks items it added as "added by the critic", and lists everything else in the file's
 <code>Critic</code> section for you. Start there.</p>
+<p>For meetings, the top of the file also lists the attendees by role, the decisions (and whether the
+speaker could make them) and the actions, and the file ends with a play-back message for the
+participants.</p>
 <p>Decide each item by ticking one of the three boxes under it (accept, edit, reject), or answer in
 the chat, for example:</p>
 <pre><code>accept 1-6, reject 7: wrong meeting, edit 8: it's 10 days not 14</code></pre>
+<p>Chat decisions are written into the file before anything is applied. Accepting an item accepts it
+as written; where the critic left a point to check, you're asked whether to take its suggestion. To
+finish another day or on another machine, the command commits the staging file; resuming it checks
+what changed in the knowledge base since.</p>
 <p>The command applies the decided items when you say so, normally once every item is decided
 (say "apply the decided ones" to go earlier). It pulls again, gives the real
 IDs, writes the accepted items (as <code>confirmed</code>, or <code>draft</code> if you say "keep as
@@ -1436,9 +1519,12 @@ sittings.</p>
 
 <h3 id="kb-generated">Generated files</h3>
 <p><code>index.md</code>, <code>business-rules.md</code>, <code>decisions.md</code> and
-<code>open-questions.md</code> are rebuilt from the pages' properties. Never edit them by hand. If git
-reports a conflict in one of them, take either side and run <code>/review kb</code>, which rebuilds
-them. <code>log.md</code> is appended, one line per accepted change:</p>
+<code>open-questions.md</code> are rebuilt from the pages' properties by
+<code>python tools/kb.py rebuild</code>, which the commands run after every change (without Python,
+they write them by hand to the same format). Never edit them by hand. If git reports a conflict in
+one of them, take either side and rebuild. <code>python tools/kb.py check</code> checks the whole
+knowledge base (links, properties, IDs, rules, overdue questions and actions, and whether the
+generated files are current), and a GitHub workflow runs it on every push and pull request. <code>log.md</code> is appended, one line per accepted change:</p>
 <pre><code>- 2026-10-14 | INTAKE | SRC-031 | +CAP-012 ~CAP-007 +Q-014 +DEC-007 | accepted by Lead BA</code></pre>
 <p>In the changes column, <code>+</code> is new, <code>~</code> edited, <code>x</code> superseded and
 <code>?</code> a question closed.</p>
@@ -1626,10 +1712,12 @@ rejects each item, and nothing changes until then.</p>
 <thead><tr><th>Layer</th><th>What it does</th></tr></thead>
 <tbody>
 <tr><td><strong>Command definitions</strong> (<code>agents/</code>)</td><td>Each command previews, stages and waits for a yes. Knowledge changes go through staging; Jira writes only through <code>/backlog</code>; a contradiction becomes a question; nothing is deleted from the knowledge base</td></tr>
-<tr><td><strong>Critic</strong> (<code>agents/_critic.md</code>)</td><td>A fresh-context second look at every staging file before you decide, a pre-check of every requirement draft, and a citation check on every <code>/ask</code> answer. It catches mistakes; it doesn't replace your decision</td></tr>
+<tr><td><strong>Critic</strong> (<code>agents/_critic.md</code>, <code>.claude/agents/critic.md</code>)</td><td>A read-only, fresh-context second look at every staging file before you decide, a pre-check of every requirement draft, and a citation check on every <code>/ask</code> answer. It catches mistakes; it doesn't replace your decision</td></tr>
 <tr><td><strong>Allowed and disallowed tools</strong> (<code>.claude/commands/</code>)</td><td>Each wrapper pre-approves only the reads and git commands that command needs. <code>/ask</code> also lists file writes, Bash, PowerShell, sub-agents and every Atlassian write tool as disallowed</td></tr>
-<tr><td><strong>Settings: ask</strong> (<code>.claude/settings.json</code>)</td><td>Claude Code asks before every Atlassian write tool, matched by verb (<code>create*</code>, <code>edit*</code>, <code>update*</code>, <code>transition*</code>, <code>add*</code> and the rest, plus <code>executeWrite</code>), and before every <code>git push</code>, checkout, restore and rebase, even inside an approved batch</td></tr>
+<tr><td><strong>Settings: ask</strong> (<code>.claude/settings.json</code>)</td><td>Claude Code asks before every Atlassian write tool, matched by verb (<code>create*</code>, <code>edit*</code>, <code>update*</code>, <code>transition*</code>, <code>add*</code> and the rest, plus <code>executeWrite</code>), and before every <code>git push</code>, checkout, restore and rebase, even inside an approved batch. The rules cover the repository's own <code>atlassian</code> server and the Atlassian plugin; <code>/setup</code> warns if Atlassian arrives through any other connection</td></tr>
 <tr><td><strong>Settings: deny</strong></td><td>Atlassian delete tools and <code>executeDestructive</code>, force pushes, <code>git reset --hard</code>, <code>git clean</code> and <code>git branch -D</code> are refused outright. These rules match commands as Claude normally writes them; an unusual form such as <code>git -C . push</code> isn't matched, which is why the wrappers pre-approve only narrow git commands and everything else prompts</td></tr>
+<tr><td><strong>Checks</strong> (<code>tools/kb.py check</code>)</td><td>Broken links, bad properties, unknown or duplicate IDs and out-of-date registers are caught before each commit, and by the GitHub workflow on every push</td></tr>
+<tr><td><strong>Harness changes</strong> (<code>/improve-harness</code>)</td><td>Never applied locally when they touch permissions, approval steps, redaction or when Jira is written; those go to the harness maintainers only. Claude Code also asks before any edit under <code>.claude/</code></td></tr>
 <tr><td><strong>inbox/ is gitignored</strong></td><td>Raw notes, transcripts and documents never enter git. Only the redacted source record is committed. Raw files are deleted from <code>inbox/</code> only with your yes</td></tr>
 <tr><td><strong>Redaction</strong></td><td>Intake marks each item's sensitivity and proposes removing names where a role would do, contact details, health or customer data, credentials and anything marked confidential</td></tr>
 <tr><td><strong>No secrets</strong></td><td>Atlassian is OAuth through <code>/mcp</code>. <code>.mcp.json</code> holds only the server URL, <code>/setup</code> never stores a token or password, and the per-user <code>.claude/settings.local.json</code> is gitignored</td></tr>
@@ -1647,6 +1735,9 @@ They can't stop a wrong item you approve, so a yes is your decision.</p></div>
 <tr><td><code>/sync</code> tells you to run <code>/setup</code></td><td>The scope JQL in the profile is still a placeholder</td><td>Run <code>/setup</code> and fill section 2</td></tr>
 <tr><td>The knowledge base didn't update when you opened Claude Code</td><td>No upstream yet; uncommitted edits; your copy and the shared copy both changed; offline; or <code>kb_auto_sync: off</code></td><td>Read the message the hook printed and run what it suggests (<code>git pull --ff-only</code>, or <code>git pull --rebase</code> then push). For a new repository, push with <code>git push -u origin main</code></td></tr>
 <tr><td>No hook message at all, ever</td><td>bash isn't available, or the session was already open</td><td>Install Git for Windows (Git Bash). The hook runs when a session starts or resumes; otherwise pull by hand</td></tr>
+<tr><td>A command says Python isn't available</td><td>The knowledge base tool needs Python 3.8 or later</td><td>Nothing breaks: the command rebuilds the index and registers by hand. Install Python to get the exact rebuild and the full check</td></tr>
+<tr><td>The "Knowledge base check" workflow fails on GitHub</td><td>A broken link, a bad property, an unknown ID or out-of-date registers</td><td>Run <code>python tools/kb.py check</code> locally; for out-of-date registers run <code>python tools/kb.py rebuild</code> and commit</td></tr>
+<tr><td>Atlassian tools appear under another name</td><td>Atlassian is connected through a plugin or claude.ai connector, not the repository's server</td><td>Run <code>/mcp</code>, approve the repository's <code>atlassian</code> server and sign in. The permission rules cover that server and the Atlassian plugin</td></tr>
 <tr><td>A command stops before staging with a pull error</td><td>Local changes or diverged history; it won't stage against an old copy</td><td>Commit or stash your changes, then <code>git pull --rebase</code> and push</td></tr>
 <tr><td>A staging file is left over</td><td>Some items were never decided</td><td>Run <code>/intake knowledge/_staging/&lt;file&gt;</code>. It shows the undecided items and applies them once you decide. <code>/review kb</code> lists staging files older than a day</td></tr>
 <tr><td><code>/backlog</code> refuses: a required field has no value</td><td>A required Jira field isn't in the profile's table, or has no default</td><td>Run <code>/setup</code> again to read Jira's field rules, or give the value when asked</td></tr>
@@ -1678,6 +1769,7 @@ They can't stop a wrong item you approve, so a yes is your decision.</p></div>
 <tr><td>Someone else's Jira issue</td><td><code>/review &lt;JIRA-KEY&gt;</code></td></tr>
 <tr><td>Weekly health check</td><td><code>/review kb</code></td></tr>
 <tr><td>Any question about the project</td><td><code>/ask &lt;question&gt;</code></td></tr>
+<tr><td>The harness should work differently</td><td><code>/improve-harness &lt;what isn't working&gt;</code></td></tr>
 </tbody>
 </table>
 <table>
@@ -1691,6 +1783,8 @@ They can't stop a wrong item you approve, so a yes is your decision.</p></div>
 <tr><td><code>trace/map.csv</code></td><td>Requirement → story → Jira key → knowledge page</td></tr>
 <tr><td><code>inbox/</code></td><td>Raw material, never committed</td></tr>
 <tr><td><code>agents/</code></td><td>The full definition of each command, the knowledge pipeline and the critic</td></tr>
+<tr><td><code>tools/kb.py</code></td><td>Rebuilds the index and registers, checks the knowledge base, gives the next free ID</td></tr>
+<tr><td><code>harness-feedback/</code></td><td>Proposals for changing the harness, from <code>/improve-harness</code></td></tr>
 </tbody>
 </table>
 </div>

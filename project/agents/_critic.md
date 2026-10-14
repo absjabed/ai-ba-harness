@@ -10,10 +10,10 @@ called it updates the staging file.
 
 ## How to run it
 
-- **With sub-agents** (Claude Code's `Agent` tool, or the equivalent in other tools): start one in a
-  fresh context. Give it this file, the staging file's path and the source: an `inbox/` path, the
-  pasted text or conversation excerpt itself, or the Jira keys and Confluence page IDs. Tell it to
-  read only and to return findings in the format below.
+- **With sub-agents:** in Claude Code, start the `critic` sub-agent (`.claude/agents/critic.md`),
+  which can only read. Other tools: start a fresh-context sub-agent and tell it to read only. Give it
+  the staging file's path and the source: an `inbox/` path, the pasted text or conversation excerpt
+  itself, or the Jira keys and Confluence page IDs.
 - **Without sub-agents:** do it yourself as a separate pass. Re-read the source from the beginning
   and search the knowledge base again; don't rely on what you remember from extracting.
 
@@ -40,15 +40,17 @@ Either way, run it once per staging file. Don't loop: one critique, then the BA.
 | 7 | Nothing sensitive left | Names where a role would do, contact details, health or customer data and credentials don't appear in the proposed changes, the summary or the play-back message |
 | 8 | Proposed changes are well formed | Target folders and file names follow the conventions; cited IDs exist; edits quote the current text exactly; each new rule is listed in its page's `rules` |
 | 9 | Delivery impact is complete | Every item that edits, supersedes or contradicts an existing page has its `Affects delivery` row, matching `trace/map.csv` and the requirement documents that cite it |
+| 10 | Business language | Proposed page text has no code paths, class or table names, or harness jargon (conventions rule 7) |
 
 ## Findings
 
 Return a list. Each finding has:
 
-- **Item:** the staging item number, or `missed` for check 1.
+- **Item:** the staging item number, `missed` for check 1, or `other` for the summary, the
+  play-back or anything that isn't an item.
 - **Severity:**
   - `fix`: the staging file is wrong (a misquote, a wrong verdict with the page to prove it, a
-    missed item, data to redact, a broken change);
+    missed item that clearly belongs in the knowledge base, data to redact, a broken change);
   - `check`: the BA should look at it (a possible duplicate, an authority you couldn't confirm).
 - **Finding:** one sentence, with the quote or the page ID that shows it.
 - **Suggested change:** what to change in the staging file.
@@ -59,7 +61,9 @@ If there is nothing to report, say so.
 
 1. **`fix` findings:** correct the staging file. A missed item becomes a new item marked `(added by
    the critic)`. A corrected verdict or quote keeps a short note of what changed.
-2. **`check` findings:** don't change the item; put the finding in its `Critic` row.
+2. **`check` findings:** don't change the item; put the finding in its `Critic` row. Findings marked
+   `other`, and `missed` points you didn't add as items, go under "Other findings" in the `Critic`
+   section, and the play-back's own `Critic` line.
 3. Fill the staging file's `Critic` section: how it ran (sub-agent or second pass), the number of
    findings, what was changed, and what is left for the BA.
 4. If you disagree with a finding, leave the item as it was and record the finding and your reason

@@ -18,7 +18,7 @@ The argument is one of:
 | A file in `inbox/` | That file |
 | A folder in `inbox/` | Every file in it, one staging file per file |
 | Pasted text after the command | The text; ask the BA what it is (meeting, email, document) and its date |
-| A staging file in `knowledge/_staging/` | Resume it: show the items still undecided, then continue from the pipeline's confirm step |
+| A staging file in `knowledge/_staging/` | Resume it: pipeline step 0, including the check for what changed since, then show the items still undecided and continue from the confirm step |
 | Nothing | The current conversation: what was learned, decided or found unclear while working with the BA in this session. The source kind is `conversation` |
 
 If the argument is a path outside `inbox/`, ask the BA to move or copy the file into `inbox/` first,
@@ -37,13 +37,12 @@ For transcripts, use timestamps as locations. For documents, use page and sectio
 
 ## Steps
 
-1. Run the pipeline from step 0 to step 4 (prepare, extract, judge, stage, critique).
-2. **For meetings and transcripts,** also put three things in the staging summary:
-   - the attendees by role;
-   - the decisions made, each marked "can decide" or "needs owner";
-   - the actions with owner and date (each becomes an `ACT-` row).
-   Then draft the play-back message. Do this before the critique, so the critic checks it too.
-3. Show the staging file and wait for the BA's decisions (pipeline step 5).
+1. Run pipeline steps 0 to 3 (prepare, extract, judge, stage). For meetings and transcripts, the
+   staging file's meeting sections (attendees, decisions, actions) and the play-back message are
+   part of step 3, so the critic checks them too.
+2. Run pipeline step 4 (critique).
+3. Show the staging file and wait for the BA's decisions (pipeline step 5). What to show is listed
+   there.
 4. Apply (pipeline step 6).
 5. **Clean up the inbox, only with permission.** List the raw files and any converted copies in
    `inbox/.converted/` that this run used, and ask: "Delete these N files from inbox/? The redacted
@@ -53,7 +52,7 @@ For transcripts, use timestamps as locations. For documents, use page and sectio
 ## Report
 
 - **The source record:** its ID and title.
-- **Counts:** accepted, edited and rejected items.
+- **Counts:** accepted (including accepted `ignore` items), edited, rejected and still undecided.
 - **Questions:** opened (with who to ask) and closed.
 - **Decisions:** recorded, and any waiting for an approver.
 - **Actions:** with owner and date.
@@ -63,6 +62,7 @@ For transcripts, use timestamps as locations. For documents, use page and sectio
 ## Never
 
 - Change a knowledge page before the BA accepts the item.
-- Commit or move anything out of `inbox/`.
-- Delete inbox files without an explicit yes, or any file outside `inbox/`.
+- Commit any file from `inbox/`, or move a file out of it.
+- Delete inbox files without an explicit yes, or any file outside `inbox/` and `knowledge/_staging/`.
+  Claude Code asks before each delete; that prompt is expected.
 - Treat a statement as a decision when the speaker can't decide it.
