@@ -4,6 +4,17 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.4.1 (2026-10-14)
+
+- One handbook. The walkthrough is now the handbook's "Follow a whole project" section, in the same
+  shape as the QA harness's worked example: the example, the words you will see, six parts from
+  `/setup` to `/ask`, and a "who does what" table. Every command has a worked example, with what you
+  type, what it reads, what it asks and what you get, including ones the walkthrough lacked:
+  `/kb-seed`, `/review` on someone else's Jira issue, and `/ask` when the knowledge base doesn't know.
+  `docs/walkthrough.html` is removed.
+
+No changes to `project/`; projects need nothing.
+
 ## 0.4.0 (2026-10-14)
 
 Closes the gaps after `/backlog`, where work is in Jira but still changing.

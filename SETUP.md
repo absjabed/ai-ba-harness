@@ -110,8 +110,8 @@ the same two prompts (trust the folder: yes; the `atlassian` server: yes if they
 access, otherwise no). Atlassian access is optional for them; without it, `/ask` answers from the
 knowledge base only.
 
-For a step-by-step story of the first month on a project, from `/setup` onwards, open
-[`docs/walkthrough.html`](docs/walkthrough.html).
+For every command worked through on one project, from `/setup` to `/ask`, read "Follow a whole
+project" in the handbook ([`docs/index.html`](docs/index.html#example)).
 
 ## 7. Daily rhythm
 
