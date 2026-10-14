@@ -122,9 +122,10 @@ main a{color:var(--accent);text-underline-offset:2px}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.2.0</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.3.0</span></div>
   </div>
   <h2>Start here</h2>
+  <a href="walkthrough.html">Walkthrough: a month on FleetKeep</a>
   <a href="#what">What it is</a>
   <a href="#why">Why use it</a>
   <a href="#map">Harness map</a>
@@ -218,7 +219,7 @@ miss things. A critic pass checks every staging file before you see it, but it i
 model, so everything AI-drafted stays visible as a proposal until you decide.</li>
 <li>Scale. Every question starts from <code>knowledge/index.md</code>. Once it no longer fits in one
 read (roughly 300 or more pages), a local search server will be needed.</li>
-<li>This is version 0.2.0. It has not been used on a real project yet.</li>
+<li>This is version 0.3.0. It has not been used on a real project yet.</li>
 </ul>
 
 <h2 id="map">Harness map</h2>
@@ -490,7 +491,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.2.0"
+git commit -m "Start from AI BA Harness 0.3.0"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -498,7 +499,9 @@ git push -u origin main</code></pre>
 </li>
 <li>
   <h3>Connect Atlassian</h3>
-  <p>Open Claude Code in the repository folder (<code>claude</code>), run <code>/mcp</code>, choose
+  <p>Open Claude Code in the repository folder (<code>claude</code>). The first time, it asks whether
+  you trust the folder (yes: the project's settings and sync hook need it) and whether to use the
+  <code>atlassian</code> server from <code>.mcp.json</code> (yes). Then run <code>/mcp</code>, choose
   <code>atlassian</code>, and sign in in the browser window that opens. It uses your own Atlassian
   account and permissions.</p>
 </li>
@@ -506,13 +509,15 @@ git push -u origin main</code></pre>
   <h3>Run <code>/setup</code></h3>
   <p>It interviews you in short rounds and fills <code>PROJECT-PROFILE.md</code>. Have these ready:</p>
   <ul>
-  <li>the Jira project key or keys, and how you tell your team's issues apart (it proposes a scope JQL
-  and shows how many issues it matches);</li>
+  <li>the Jira project key or keys, its issue types, and how you tell your team's issues apart (it
+  proposes a scope JQL and shows how many issues it matches);</li>
   <li>whether Confluence is used, which spaces, and the page published knowledge should go under
   later;</li>
   <li>the four to eight business areas the product divides into;</li>
-  <li>the main stakeholders by role, and what each one can decide;</li>
-  <li>the existing material <code>/kb-seed</code> should read.</li>
+  <li>the main stakeholders by role, what each one can decide, and who signs off recurring decisions
+  (a short RACI);</li>
+  <li>the existing material <code>/kb-seed</code> should read;</li>
+  <li>the project's preferred words, and the words to avoid.</li>
   </ul>
   <p>It reads Jira's required fields for each issue type and asks how each should be filled. It shows
   the profile as a diff, writes it after your yes, drafts <code>knowledge/stakeholders.md</code>,
@@ -522,14 +527,17 @@ git push -u origin main</code></pre>
 <li>
   <h3>Drop existing documents in <code>inbox/</code></h3>
   <p>The charter, specifications, process documents, glossaries. <code>inbox/</code> is gitignored, so
-  nothing in it is ever committed.</p>
+  nothing in it is ever committed. Give the BAs write access to the repository now, and everyone else
+  read access. If little is written down yet, skip the next step: hold a discovery workshop and
+  <code>/intake</code> its notes instead.</p>
 </li>
 <li>
   <h3>Run <code>/kb-seed</code></h3>
   <p>It lists what it will read (files, Confluence pages, Jira epics, with counts) and asks once. Then
   it writes one staging file per source to <code>knowledge/_staging/</code>. If more than 200 items
   would be staged in one run, it stops after planning and asks you to split the work, for example
-  one area at a time.</p>
+  one area at a time. If it read Jira or Confluence, it records where it stopped, so the first
+  <code>/sync</code> carries on from there.</p>
 </li>
 <li>
   <h3>Work through the staging files</h3>
@@ -540,8 +548,9 @@ git push -u origin main</code></pre>
 <li>
   <h3>Bring the team in</h3>
   <p>Send the repository URL to developers, testers and product owners: clone it once, open Claude Code
-  in it, run <code>/ask &lt;question&gt;</code>. Their copy updates itself whenever they open it. See
-  <a href="#team">For teammates</a>.</p>
+  in it, run <code>/ask &lt;question&gt;</code>. They answer the same two first-open prompts (the
+  <code>atlassian</code> server is optional for them). Their copy updates itself whenever they open
+  it. See <a href="#team">For teammates</a>.</p>
 </li>
 </ol>
 
@@ -584,11 +593,14 @@ there.</p>
 
 <div class="card">
 <h3><code>/setup</code> <span class="pill">once</span></h3>
-<p>Turns a fresh copy of the template into this project's BA repository, by interview.</p>
+<p>Turns a fresh copy of the template into this project's BA repository, by interview: the
+project, Jira (keys, issue types, scope, required fields), Confluence, business areas, stakeholders
+with a RACI, existing material, writing rules and options. <a href="walkthrough.html#setup">See a
+full run</a>.</p>
 <table><tbody>
 <tr><td><strong>When</strong></td><td>Right after creating the repository. Run it again to change settings: it shows what is filled, asks which sections to change, and never overwrites a filled section without a yes</td></tr>
 <tr><td><strong>Needs</strong></td><td>A git clone with a shared remote; Atlassian signed in through <code>/mcp</code></td></tr>
-<tr><td><strong>Writes</strong></td><td><code>PROJECT-PROFILE.md</code>, <code>knowledge/stakeholders.md</code> (draft), <code>knowledge/domains/&lt;area&gt;/</code> folders, a <code>log.md</code> line. Commit <code>kb: setup &lt;project&gt;</code></td></tr>
+<tr><td><strong>Writes</strong></td><td><code>PROJECT-PROFILE.md</code>, <code>knowledge/stakeholders.md</code> (draft, with the RACI), today's date on the glossary, stakeholders and RAID pages, <code>knowledge/domains/&lt;area&gt;/</code> folders, a <code>log.md</code> line. Commit <code>kb: setup &lt;project&gt;</code></td></tr>
 <tr><td><strong>Approval</strong></td><td>Profile shown as a diff, written after a yes; asks before pushing</td></tr>
 </tbody></table>
 </div>
@@ -721,7 +733,7 @@ files overnight; <code>/review kb</code> lists any older than a day.</p></div>
 <table>
 <thead><tr><th>Run</th><th>Why</th></tr></thead>
 <tbody>
-<tr><td><code>/review kb</code></td><td>Broken links, old drafts, overdue questions, leftover staging files, contradictions; rebuilds the index and registers</td></tr>
+<tr><td><code>/review kb</code></td><td>Broken links, old drafts, overdue questions, leftover staging files, contradictions, business areas with no pages yet; rebuilds the index and registers</td></tr>
 <tr><td>Go through <code>knowledge/open-questions.md</code></td><td>Plan who to ask; overdue questions go into the next stakeholder meeting</td></tr>
 </tbody>
 </table>
@@ -1140,6 +1152,8 @@ They can't stop a wrong item you approve, so a yes is your decision.</p></div>
 </div>
 
 <footer>
+<p>To follow one project from <code>/setup</code> to stories in Jira, read the
+<a href="walkthrough.html">walkthrough: a month on FleetKeep</a>.</p>
 <p>To see a filled-in project repository, open <code>examples/fleetkeep-ba-knowledge/</code> in the template: start with <code>EXAMPLE.md</code>, then <code>knowledge/index.md</code>, the pending staging file, and the requirement with its review.</p>
 <p>More detail: <code>SETUP.md</code> (setting up a project), <code>design/</code> (the agreed
 decisions, command definitions, workflow guide, knowledge base conventions, Jira templates and

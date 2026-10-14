@@ -98,7 +98,7 @@ What already exists that the first knowledge base should be built from. Files go
 
 | Source | Where | Notes |
 |---|---|---|
-| `Product rules page tree` | `FK / FleetKeep product rules` | Written by the Product owner; the main statement of category, escalation and return-to-service rules |
+| `Product rules page tree` | `FK / FleetKeep product rules` | Written by the Product owner; the main statement of category, escalation and return-to-service rules. Not seeded yet: the Product owner is rewriting it. Run `/kb-seed confluence` once it is republished |
 | `Regulator roadworthiness guidance (PDF)` | `inbox/regulator-roadworthiness-guidance.pdf` | Processed with `/intake` on 2026-09-24 as SRC-002; raw file removed from `inbox/` afterwards |
 | `Existing epics` | `project = FK AND issuetype = Epic AND statusCategory != Done` | Read during `/sync` rather than seeded |
 

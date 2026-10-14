@@ -88,6 +88,8 @@ Check the knowledge base and report:
    values for the same thing.
 8. `BR-` IDs cited in `requirements/` or in `trace/map.csv` that no page defines.
 9. Glossary terms used in pages with a different meaning.
+10. Business areas from profile section 4 with no capability or process page yet: gaps to fill
+    through `/kb-seed` or elicitation.
 
 Then rebuild `index.md`, `business-rules.md`, `decisions.md` and `open-questions.md` from the pages'
 properties (conventions, section 12). Show the counts and the rebuilt files' diff. Commit only the

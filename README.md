@@ -13,7 +13,8 @@ with `scripts/new-project.sh`, then follow [SETUP.md](SETUP.md).
 
 > **Start here:** [`docs/index.html`](docs/index.html) is the BA handbook on one page: what the harness
 > does, setting up a project, the eight commands, what to run when, the knowledge base, Jira templates
-> and troubleshooting. Open it in a browser.
+> and troubleshooting. Open it in a browser. To see one project from `/setup` to stories in Jira, read
+> [`docs/walkthrough.html`](docs/walkthrough.html).
 
 ## What a project gets
 
@@ -42,6 +43,7 @@ Then follow [SETUP.md](SETUP.md): create the shared remote, sign in to Atlassian
 | [`scripts/new-project.sh`](scripts/new-project.sh) | Copies `project/` into a new project repository and records the harness version |
 | [`examples/fleetkeep-ba-knowledge/`](examples/fleetkeep-ba-knowledge) | A complete, filled-in project repository to learn from |
 | [`docs/index.html`](docs/index.html) | The BA handbook |
+| [`docs/walkthrough.html`](docs/walkthrough.html) | A month on FleetKeep: one project from `/setup` to stories in Jira, command by command |
 | [`SETUP.md`](SETUP.md) | Step-by-step setup of a project repository |
 | [`design/`](design) | The agreed design: decisions, command definitions, workflow, knowledge-base conventions, Jira templates, layout |
 | [`research/`](research) | The research behind the design |
@@ -57,7 +59,7 @@ a `CHANGELOG.md` entry and tag the commit `v<version>`:
 - **minor** for new features projects can use without changes;
 - **major** when project repositories must change something.
 
-The handbook's sidebar shows the same version; update it in the same change.
+The sidebars of the handbook and the walkthrough show the same version; update both in the same change.
 
 ## Licence
 

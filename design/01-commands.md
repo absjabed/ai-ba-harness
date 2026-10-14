@@ -5,6 +5,12 @@ it reads and writes, the steps it follows, where it stops for approval, and when
 canonical text of each command will live in `agents/<command>.md`; the file in `.claude/commands/`
 only points at it.
 
+> [!NOTE]
+> This is the design as agreed before the build. The built definitions in `project/agents/` have
+> moved on since (see `CHANGELOG.md`): for example the Obsidian option was dropped, `/setup` also
+> asks for issue types, a RACI and writing rules, and the pipeline gained a critic. Where the two
+> differ, `project/agents/` is right.
+
 Rules every command follows:
 
 - **No writes outside the repository without a yes.** Jira and Confluence write tools are set to

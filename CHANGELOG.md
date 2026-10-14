@@ -4,6 +4,26 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.3.0 (2026-10-14)
+
+From walking a full project through the harness, starting at `/setup`:
+
+- `docs/walkthrough.html`: a month on FleetKeep, from `/setup` to stories in Jira, showing what each
+  command reads, asks and produces, with links into the worked example. Linked from the handbook.
+- `/setup` now maps Jira issue types to the harness templates, asks for a RACI of recurring
+  decisions and for the writing rules (house terms and vague words), copes with Jira searches that
+  return no total, asks which site to use when there are several, confirms what the copy script
+  already filled instead of asking again, dates the glossary, stakeholders and RAID pages, and ends
+  with a fuller list of next steps (repository access; `/kb-seed` or a discovery workshop).
+- `/kb-seed` hands over to `/sync`: after seeding from Jira or Confluence it records where it
+  stopped, so the first `/sync` carries on from there. Its wording on draft and confirmed now
+  matches the pipeline.
+- `/review kb` reports business areas with no pages yet.
+- `SETUP.md` and the handbook cover Claude Code's first-open prompts (trust the folder, enable the
+  `atlassian` server), repository access, and starting from a workshop when little is written down.
+
+To update a project from 0.2.0, copy `agents/setup.md`, `agents/kb-seed.md` and `agents/review.md`.
+
 ## 0.2.0 (2026-10-14)
 
 - Critic for the knowledge pipeline (`agents/_critic.md`, new step 4): before the BA decides, a

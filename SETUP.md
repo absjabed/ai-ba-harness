@@ -46,7 +46,9 @@ The automatic sync needs this shared remote.
 
 ## 3. Connect Atlassian
 
-Open Claude Code in the repository folder (`claude`), then:
+Open Claude Code in the repository folder (`claude`). The first time, it asks two things: whether
+you trust the folder (yes: that lets the project's settings and the sync hook run), and whether to
+use the `atlassian` server from the repository's `.mcp.json` (yes). Then:
 
 1. Run `/mcp`, choose `atlassian`, and sign in in the browser window that opens. This uses your own
    Atlassian account and permissions; no token is stored in the repository.
@@ -57,10 +59,11 @@ Open Claude Code in the repository folder (`claude`), then:
 
 `/setup` interviews you and fills `PROJECT-PROFILE.md`:
 
-- the Jira project and the issues that count as "ours";
+- the Jira project, its issue types and the issues that count as "ours";
 - Confluence spaces;
-- the business areas, stakeholders and who can decide what;
-- the fields Jira requires when creating issues.
+- the business areas, stakeholders and who can decide what (a short RACI);
+- the fields Jira requires when creating issues;
+- the project's preferred words.
 
 It reads Jira to find required fields and offers what it finds. Have these ready:
 
@@ -69,10 +72,21 @@ It reads Jira to find required fields and offers what it finds. Have these ready
 - **Confluence:** the spaces that hold project knowledge, and the page under which published
   knowledge should go.
 - **Business areas:** the four to eight areas the product divides into.
-- **Stakeholders:** the main stakeholders by role, and what each one can decide.
+- **Stakeholders:** the main stakeholders by role, what each one can decide, and who signs off
+  recurring decisions such as a change to a business rule or release content.
 - **Existing material:** what already exists (documents, page trees, epics).
+- **House terms:** words the project prefers and words to avoid ("job card", not "work order").
+
+It finishes by showing the whole profile as a diff, writing it after your yes, drafting
+`knowledge/stakeholders.md`, creating one folder per business area, committing, and asking before
+pushing.
 
 ## 5. Seed the knowledge base
+
+Give the BAs write access to the repository first, and everyone else read access.
+
+If little is written down yet, skip `/kb-seed`: hold a discovery workshop and run `/intake` on its
+notes. That is how the worked example in `examples/fleetkeep-ba-knowledge/` started.
 
 1. Put existing documents in `inbox/` (the charter, specs, process documents, glossaries). Office
    files need `markitdown`, or save them as PDF.
@@ -81,7 +95,8 @@ It reads Jira to find required fields and offers what it finds. Have these ready
 3. Work through each staging file: accept, edit or reject every item. Accepted items become pages,
    and each batch is committed. The command asks before pushing.
 
-This first pass is the longest review you'll do. After it, daily work is small batches.
+This first pass is the longest review you'll do. After it, daily work is small batches. If the
+seed read Jira or Confluence, it records where it stopped, so the first `/sync` carries on from there.
 
 ## 6. Bring the team in
 
@@ -90,8 +105,13 @@ Send the repository URL to developers, testers and product owners:
 > Clone this once, open Claude Code in it, and ask: `/ask <question>`. Your copy updates itself
 > whenever you open it.
 
-They need read access to the repository. Atlassian access is optional for them; without it, `/ask`
-answers from the knowledge base only.
+They need read access to the repository. The first time they open Claude Code there, they answer
+the same two prompts (trust the folder: yes; the `atlassian` server: yes if they have Atlassian
+access, otherwise no). Atlassian access is optional for them; without it, `/ask` answers from the
+knowledge base only.
+
+For a step-by-step story of the first month on a project, from `/setup` onwards, open
+[`docs/walkthrough.html`](docs/walkthrough.html).
 
 ## 7. Daily rhythm
 
