@@ -1,0 +1,19 @@
+# .gitignore for THIS TEMPLATE REPO. A project repository gets its own from project/.gitignore.
+
+# Raw material in the template's own inbox (never committed).
+project/inbox/*
+!project/inbox/.gitkeep
+
+# Obsidian per-user state, anywhere.
+**/.obsidian/workspace*.json
+**/.obsidian/cache
+**/.trash/
+
+# Claude Code per-user settings.
+.claude/settings.local.json
+project/.claude/settings.local.json
+
+# OS and editor files.
+.DS_Store
+Thumbs.db
+desktop.ini

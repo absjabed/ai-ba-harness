@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI BA Harness Guide</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230F8A72'/%3E%3Cpath d='M7 10.4c3-1.3 6-1.1 9 .8 3-1.9 6-2.1 9-.8v12.2c-3-1.3-6-1.1-9 .8-3-1.9-6-2.1-9-.8z' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linejoin='round'/%3E%3Cpath d='M16 11.2v12.2' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f7f9fb; --surface-2:#eef2f6; --text:#101a24; --muted:#5b6b7f;
+  --border:#dde4ec; --accent:#0b5d51; --accent-soft:#e6f4f1; --warn-bg:#fef3c7; --warn-text:#92400e;
+  --danger:#b91c1c; --ok:#166534; --code-bg:#f1f5f9; --shadow:0 1px 2px rgba(16,26,36,.06),0 8px 24px rgba(16,26,36,.06);
+  --mark-bg:#0F8A72; /* brand mark + favicon: one value for both themes (same as the Dev handbook) */
+  --dg-proc:#dae8fc; --dg-proc-s:#6c8ebf; --dg-gate:#fff2cc; --dg-gate-s:#d6b656; --dg-par:#d5e8d4; --dg-par-s:#82b366;
+  --dg-rv:#e1d5e7; --dg-rv-s:#9673a6; --dg-opt:#f5f5f5; --dg-opt-s:#999999; --dg-lane:#ffffff; --dg-lane-h:#f1f4f8;
+  --dg-badge:#9a7a12; --dg-edge:#5b6b7f;
+  --mono:ui-monospace,'Cascadia Mono','SF Mono',Consolas,monospace;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1120; --surface:#111c33; --surface-2:#16233d; --text:#e2e8f0; --muted:#94a3b8;
+    --border:#2b3a52; --accent:#45af9b; --accent-soft:#0f2b28; --warn-bg:#3b2f10; --warn-text:#fbbf24;
+    --danger:#f87171; --ok:#4ade80; --code-bg:#0f1a2e;
+    --dg-proc:#1b2c47; --dg-proc-s:#7b9fd4; --dg-gate:#3a3014; --dg-gate-s:#d6b656; --dg-par:#1a3324; --dg-par-s:#82b366;
+    --dg-rv:#2d2340; --dg-rv-s:#b195d1; --dg-opt:#151e30; --dg-opt-s:#7d8799; --dg-lane:#0e1729; --dg-lane-h:#16233d;
+    --dg-badge:#e2c35c; --dg-edge:#94a3b8; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:1rem}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;font-size:16px}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:0;max-width:1400px;margin:0 auto}
+nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:28px 20px;border-right:1px solid var(--border);background:var(--surface)}
+nav h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:22px 0 8px}
+nav h2:first-child{margin-top:0}
+nav a{display:block;padding:5px 10px;margin:1px -10px;color:var(--text);text-decoration:none;border-radius:6px;font-size:.88rem}
+nav a:hover{background:var(--surface-2);color:var(--accent)}
+nav a.sub{padding-left:22px;font-size:.84rem;color:var(--muted)}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.brand .mark{width:34px;height:34px;flex:none;display:block}
+.brand .mark svg{display:block}
+.brand strong{font-size:1rem;letter-spacing:-.01em}
+.brand span{display:block;font-size:.72rem;color:var(--muted);font-weight:400}
+main{padding:44px 48px 90px;min-width:0}
+h1{font-size:2.1rem;line-height:1.2;margin:0 0 .4rem;letter-spacing:-.02em}
+.lede{font-size:1.08rem;color:var(--muted);margin:0 0 2rem;max-width:68ch}
+h2{font-size:1.45rem;margin:3rem 0 .9rem;padding-top:.6rem;letter-spacing:-.015em;border-top:1px solid var(--border)}
+h3{font-size:1.08rem;margin:1.9rem 0 .6rem}
+p,li{max-width:80ch}
+p code,li code{overflow-wrap:anywhere}
+code{font-family:var(--mono);font-size:.855em;background:var(--code-bg);padding:.12em .38em;border-radius:4px;border:1px solid var(--border)}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.855rem;line-height:1.55}
+pre code{background:none;border:none;padding:0}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.9rem;display:block;overflow-x:auto}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+th{background:var(--surface-2);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap}
+tbody tr:hover{background:var(--surface)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin:1.1rem 0;box-shadow:var(--shadow)}
+.card h3{margin:0 0 .35rem;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.card>p{margin:.2rem 0 .4rem}
+.card table{margin:.5rem 0 0}
+.card td:first-child{white-space:nowrap;width:1%}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:14px 18px;margin:1.1rem 0}
+.callout.warn{border-left-color:var(--warn-text);background:var(--warn-bg);color:var(--warn-text)}
+.callout p{margin:.3rem 0}
+.callout strong{color:inherit}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:1.1rem 0}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.tile h4{margin:0 0 .3rem;font-size:.95rem}
+.tile p{margin:0;font-size:.87rem;color:var(--muted)}
+.pill{display:inline-block;font-size:.7rem;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--border);white-space:nowrap}
+.pill.block{background:var(--warn-bg);color:var(--warn-text)}
+.steps{counter-reset:s;list-style:none;padding:0;margin:1.2rem 0}
+.steps>li{counter-increment:s;position:relative;padding:0 0 1.5rem 3rem;border-left:2px solid var(--border);margin-left:14px}
+.steps>li:last-child{border-left-color:transparent;padding-bottom:0}
+.steps>li::before{content:counter(s);position:absolute;left:-15px;top:-2px;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.steps h3{margin:0 0 .4rem}
+footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--border);color:var(--muted);font-size:.84rem}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:1rem 0;font-family:var(--mono);font-size:.82rem}
+.flow span{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:7px 11px}
+.flow em{color:var(--muted);font-style:normal}
+main a{color:var(--accent);text-underline-offset:2px}
+.dg-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:10px;margin:1.1rem 0}
+.dg{display:block;width:100%;min-width:860px;height:auto;font-family:var(--sans)}
+.dg-lane{fill:var(--dg-lane);stroke:var(--border)}
+.dg-lane-h{fill:var(--dg-lane-h);stroke:var(--border)}
+.dg-n{stroke-width:1.3}
+.dg-proc{fill:var(--dg-proc);stroke:var(--dg-proc-s)}
+.dg-gate{fill:var(--dg-gate);stroke:var(--dg-gate-s);stroke-width:2}
+.dg-par{fill:var(--dg-par);stroke:var(--dg-par-s)}
+.dg-rv{fill:var(--dg-rv);stroke:var(--dg-rv-s);stroke-width:2}
+.dg-opt{fill:var(--dg-opt);stroke:var(--dg-opt-s)}
+.dg-note{fill:var(--dg-lane-h);stroke:var(--dg-opt-s);stroke-dasharray:4 3}
+.dg-guard{fill:var(--accent-soft);stroke:var(--accent)}
+.dg-e{stroke:var(--dg-edge);stroke-width:1.4;fill:none}
+.dg-dash{stroke-dasharray:3 3}
+.dg-ah{fill:var(--dg-edge)}
+.dg-h{font-size:15px;font-weight:700;fill:var(--text)}
+.dg-lg{font-size:11px;fill:var(--muted)}
+.dg-lt{font-size:12.5px;font-weight:700;fill:var(--text)}
+.dg-lc{font-size:9.5px;fill:var(--muted);font-family:var(--mono)}
+.dg-t{font-size:10.5px;font-weight:600;fill:var(--text)}
+.dg-s{font-size:9.5px;fill:var(--muted)}
+.dg-badge{font-size:7.5px;font-weight:800;letter-spacing:.06em;fill:var(--dg-badge)}
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}
+  main{padding:28px 16px 60px}
+  h1{font-size:1.65rem}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav>
+  <div class="brand">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" width="34" height="34" role="img">
+        <rect width="32" height="32" rx="7" fill="var(--mark-bg)"/>
+        <path d="M7 10.4c3-1.3 6-1.1 9 .8 3-1.9 6-2.1 9-.8v12.2c-3-1.3-6-1.1-9 .8-3-1.9-6-2.1-9-.8z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linejoin="round"/>
+        <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.1.0</span></div>
+  </div>
+  <h2>Start here</h2>
+  <a href="#what">What it is</a>
+  <a href="#why">Why use it</a>
+  <a href="#map">Harness map</a>
+  <a href="#prereq">Prerequisites</a>
+  <a href="#setup">Set up a project</a>
+  <h2>Daily use</h2>
+  <a href="#commands">The eight commands</a>
+  <a href="#when">When to run what</a>
+  <a href="#kb">The knowledge base</a>
+  <a class="sub" href="#kb-staging">Staging and accepting</a>
+  <a class="sub" href="#kb-sync">Automatic sync</a>
+  <a class="sub" href="#kb-obsidian">Obsidian (optional)</a>
+  <a href="#jira">Jira issues</a>
+  <a href="#team">For teammates</a>
+  <h2>Reference</h2>
+  <a href="#safety">Safety</a>
+  <a href="#trouble">Troubleshooting</a>
+  <a href="#cheat">Cheat sheet</a>
+</nav>
+
+<main>
+<h1>AI BA Harness</h1>
+<p class="lede">A working method for business analysts in Claude Code. It keeps one knowledge base
+per project, turns meetings, documents and Jira activity into proposed changes you accept item by
+item, writes requirement documents from what is known, and creates Jira issues only after you have
+seen and approved them.</p>
+
+<h2 id="what">What it is</h2>
+<p>AI BA Harness is a development-workflow layer for business analysts. It runs inside Claude Code
+and adds eight commands, a knowledge base stored as plain markdown files, and fixed steps for
+anything that changes that knowledge or touches Jira. It works at project level: each project has one
+BA repository, which the BAs maintain and everyone else can clone and ask questions of.</p>
+<div class="grid">
+  <div class="tile"><h4>8 commands</h4><p><code>/setup</code>, <code>/kb-seed</code>, <code>/intake</code>, <code>/sync</code>, <code>/requirements</code>, <code>/review</code>, <code>/backlog</code> and <code>/ask</code>.</p></div>
+  <div class="tile"><h4>One knowledge base</h4><p>Capabilities, business rules, decisions, open questions, glossary and stakeholders in <code>knowledge/</code>. Every statement carries its source and a status.</p></div>
+  <div class="tile"><h4>You accept every change</h4><p>Commands write proposals to <code>knowledge/_staging/</code>. Pages change only after you accept each item.</p></div>
+  <div class="tile"><h4>Jira writes after approval</h4><p>Only <code>/backlog</code> writes to Jira: after a duplicate check, a preview of the batch, your yes, and Claude Code's own prompt on each write.</p></div>
+</div>
+
+<h3>Two kinds of repository</h3>
+<table>
+<thead><tr><th>Repository</th><th>What it is</th><th>Who uses it</th></tr></thead>
+<tbody>
+<tr><td><code>ai-ba-harness</code></td><td>The template. It holds the harness files (under <code>project/</code>), this handbook, <code>SETUP.md</code>, the copy script, a worked example (<code>examples/fleetkeep-ba-knowledge/</code>), the design notes and the research. It is never used for project work</td><td>Whoever maintains the harness</td></tr>
+<tr><td><code>&lt;project&gt;-ba-knowledge</code></td><td>One per project, created from the template (for example <code>acme-ba-knowledge</code>). It holds the knowledge base, the requirement documents, the trace file and the commands</td><td>The project's BAs work in it; developers, testers and product owners clone it to ask questions</td></tr>
+</tbody>
+</table>
+
+<h3>Next to the Dev and QA harnesses</h3>
+<p>The three harnesses split the work and hand over through Jira keys.</p>
+<table>
+<thead><tr><th>Harness</th><th>Owns</th><th>Hands over</th></tr></thead>
+<tbody>
+<tr><td>AI BA Harness</td><td>The project knowledge base, requirement documents, and the epic and stories in Jira</td><td>Jira keys, each issue linked back to its requirement document and knowledge pages</td></tr>
+<tr><td>AI Dev Harness</td><td>Specs, code, review and release inside each code repository</td><td>A developer can start its <code>/ba</code> interview from a story key the BA harness created; it reads the issue and writes its own feature spec</td></tr>
+<tr><td>AI QA Harness</td><td>Test design, automated tests and defects found in testing</td><td>Reads the same Jira keys. The BA harness raises bugs only from UAT or business review</td></tr>
+</tbody>
+</table>
+
+<h2 id="why">Why use it</h2>
+<p>Most of a BA's time goes into collecting, checking and passing on what the project knows. Each row
+pairs a common problem with the part of the harness that handles it.</p>
+<table>
+<thead><tr><th>Without it</th><th>What the harness does</th></tr></thead>
+<tbody>
+<tr><td>What the project knows is spread over meeting notes, Confluence pages, Jira comments and people's memory</td><td>One knowledge base in the BA repository. Every page has an ID, its sources and a status (draft, confirmed, approved, superseded)</td></tr>
+<tr><td>New notes are copied in without checking them against what is already known</td><td><code>/intake</code> judges each item against the knowledge base (new, confirms, extends, contradicts, duplicate, answers a question). A contradiction of confirmed content becomes an open question; nothing is overwritten</td></tr>
+<tr><td>Someone's opinion gets recorded as a decision</td><td>A statement becomes a decision only if <code>stakeholders.md</code> says the speaker can decide that matter. Otherwise it is recorded as their view, with a question to the owner</td></tr>
+<tr><td>Answers and decisions in Jira comments are never written down anywhere else</td><td><code>/sync</code> reads issues, comments and status changes since the last run and proposes what matters</td></tr>
+<tr><td>Requirements look different depending on who wrote them, and use words like "fast" or "easy"</td><td>One requirement template, user stories with Given/When/Then criteria, EARS for system rules and NFRs, and <code>/review</code> checks them against a fixed list, including the project's vague words</td></tr>
+<tr><td>Duplicate Jira issues, missing required fields, stories nobody can trace to a source</td><td><code>/backlog</code> searches for duplicates, fills fields read from Jira by <code>/setup</code>, reads each created issue back, and writes the keys into <code>trace/map.csv</code></td></tr>
+<tr><td>AI fills gaps with plausible guesses</td><td>Nothing is invented. A fact without a source becomes an open question or a stated assumption</td></tr>
+<tr><td>Developers and testers ask the BA the same questions again and again</td><td><code>/ask</code> answers from the knowledge base with citations, marks draft content as unconfirmed, and says plainly when it doesn't know</td></tr>
+<tr><td>Raw notes with names and personal details end up in shared folders</td><td><code>inbox/</code> is gitignored, and intake proposes removing personal data before anything is stored</td></tr>
+</tbody>
+</table>
+
+<h3>What it costs, and what it doesn't do</h3>
+<ul>
+<li>Your time to accept proposals. Every staged item needs your accept, edit or reject. The first
+<code>/kb-seed</code> review is the longest; after that, daily batches are small.</li>
+<li>Some git. The commands commit and ask before pushing, but someone on the BA team should be able
+to resolve the occasional conflict.</li>
+<li>Atlassian Cloud only, through the Atlassian Rovo MCP server. Calls count against your site's rate
+limits and draw on Rovo credits.</li>
+<li>Version 1 has no Confluence publishing and no connection to meeting-transcript tools: paste notes
+or drop exported transcripts in <code>inbox/</code>. Word, Excel and PowerPoint files need
+<code>markitdown</code>, or save them as PDF.</li>
+<li>The knowledge base is only as good as what you accept. The model's extraction and judgement can
+miss things; that is why everything AI-drafted stays visible as a proposal until you decide.</li>
+<li>Scale. Every question starts from <code>knowledge/index.md</code>. Once it no longer fits in one
+read (roughly 300 or more pages), a local search server will be needed.</li>
+<li>This is version 0.1.0, the first build of the design. It has not been used on a real project
+yet.</li>
+</ul>
+
+<h2 id="map">Harness map</h2>
+<p>Each lane is one rhythm of work, read left to right. Yellow boxes are where a command stops and
+asks you. The purple box is the only place anything is written to Jira. On a narrow screen, scroll the
+diagram sideways.</p>
+<div class="dg-wrap">
+<svg viewBox="0 0 1040 620" role="img" aria-labelledby="dg-title dg-desc" class="dg" xmlns="http://www.w3.org/2000/svg">
+<title id="dg-title">Harness map: when each command runs</title>
+<desc id="dg-desc">Swimlane diagram of the five rhythms of the AI BA Harness: start of a project, daily, per epic, weekly, and anyone at any time. Approval points (STOP), read-only steps and the one step that writes to Jira are marked.</desc>
+<defs><marker id="dg-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-ah"/></marker></defs>
+<text x="10" y="26" class="dg-h">Five rhythms, at a glance</text>
+<rect x="300" y="14" width="18" height="14" rx="3" class="dg-n dg-proc"/>
+<text x="324" y="25.5" class="dg-lg">Step</text>
+<rect x="366" y="14" width="18" height="14" rx="3" class="dg-n dg-gate"/>
+<text x="390" y="25.5" class="dg-lg">STOP: asks you</text>
+<rect x="500" y="14" width="18" height="14" rx="3" class="dg-n dg-par"/>
+<text x="524" y="25.5" class="dg-lg">Read-only</text>
+<rect x="594" y="14" width="18" height="14" rx="3" class="dg-n dg-rv"/>
+<text x="618" y="25.5" class="dg-lg">Writes to Jira</text>
+<rect x="724" y="14" width="18" height="14" rx="3" class="dg-n dg-opt" stroke-dasharray="5 3"/>
+<text x="748" y="25.5" class="dg-lg">Optional or by choice</text>
+<rect x="4" y="64" width="1032" height="78" rx="6" class="dg-lane"/>
+<rect x="4" y="64" width="118" height="78" rx="6" class="dg-lane-h"/>
+<text x="63" y="101.0" class="dg-lt" text-anchor="middle">Start</text>
+<text x="63" y="116.0" class="dg-lc" text-anchor="middle">once per project</text>
+<rect x="130" y="79" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="174.0" y="100" class="dg-t" text-anchor="middle">Copy template</text>
+<text x="174.0" y="114" class="dg-s" text-anchor="middle">new-project.sh</text>
+<line x1="218" y1="103" x2="229" y2="103" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="230" y="79" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="274.0" y="100" class="dg-t" text-anchor="middle">Shared remote</text>
+<text x="274.0" y="114" class="dg-s" text-anchor="middle">git init + push</text>
+<line x1="318" y1="103" x2="329" y2="103" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="330" y="79" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="374.0" y="100" class="dg-t" text-anchor="middle">/mcp</text>
+<text x="374.0" y="114" class="dg-s" text-anchor="middle">OAuth sign-in</text>
+<line x1="418" y1="103" x2="429" y2="103" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="430" y="79" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="474.0" y="100" class="dg-t" text-anchor="middle">/setup</text>
+<text x="474.0" y="114" class="dg-s" text-anchor="middle">interview</text>
+<line x1="518" y1="103" x2="529" y2="103" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="530" y="79" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="613" y="89" class="dg-badge" text-anchor="end">STOP</text>
+<text x="574.0" y="100" class="dg-t" text-anchor="middle">Profile diff</text>
+<text x="574.0" y="114" class="dg-s" text-anchor="middle">write after yes</text>
+<line x1="618" y1="103" x2="629" y2="103" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="630" y="79" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="674.0" y="100" class="dg-t" text-anchor="middle">Docs to inbox/</text>
+<text x="674.0" y="114" class="dg-s" text-anchor="middle">never committed</text>
+<line x1="718" y1="103" x2="729" y2="103" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="730" y="79" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="774.0" y="100" class="dg-t" text-anchor="middle">/kb-seed</text>
+<text x="774.0" y="114" class="dg-s" text-anchor="middle">to _staging/</text>
+<line x1="818" y1="103" x2="829" y2="103" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="830" y="79" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="913" y="89" class="dg-badge" text-anchor="end">STOP</text>
+<text x="874.0" y="100" class="dg-t" text-anchor="middle">Accept staging</text>
+<text x="874.0" y="114" class="dg-s" text-anchor="middle">item by item</text>
+<line x1="918" y1="103" x2="929" y2="103" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="930" y="79" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="1013" y="89" class="dg-badge" text-anchor="end">STOP</text>
+<text x="974.0" y="100" class="dg-t" text-anchor="middle">Push</text>
+<text x="974.0" y="114" class="dg-s" text-anchor="middle">asks first</text>
+<rect x="4" y="142" width="1032" height="136" rx="6" class="dg-lane"/>
+<rect x="4" y="142" width="118" height="136" rx="6" class="dg-lane-h"/>
+<text x="63" y="202.0" class="dg-lt" text-anchor="middle">Daily</text>
+<text x="63" y="217.0" class="dg-lc" text-anchor="middle">every day</text>
+<text x="63" y="229.0" class="dg-lc" text-anchor="middle">/sync · /intake</text>
+<rect x="130" y="154" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="174.0" y="175" class="dg-t" text-anchor="middle">Open session</text>
+<text x="174.0" y="189" class="dg-s" text-anchor="middle">hook pulls KB</text>
+<line x1="218" y1="178" x2="229" y2="178" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="230" y="154" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="274.0" y="175" class="dg-t" text-anchor="middle">/sync</text>
+<text x="274.0" y="189" class="dg-s" text-anchor="middle">reads Atlassian</text>
+<line x1="318" y1="178" x2="329" y2="178" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="330" y="154" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="413" y="164" class="dg-badge" text-anchor="end">STOP</text>
+<text x="374.0" y="175" class="dg-t" text-anchor="middle">Accept staging</text>
+<text x="374.0" y="189" class="dg-s" text-anchor="middle">item by item</text>
+<line x1="418" y1="178" x2="429" y2="178" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="430" y="154" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="474.0" y="175" class="dg-t" text-anchor="middle">Apply + commit</text>
+<text x="474.0" y="189" class="dg-s" text-anchor="middle">sync time moves</text>
+<line x1="518" y1="178" x2="529" y2="178" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="530" y="154" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="613" y="164" class="dg-badge" text-anchor="end">STOP</text>
+<text x="574.0" y="175" class="dg-t" text-anchor="middle">Push</text>
+<text x="574.0" y="189" class="dg-s" text-anchor="middle">asks first</text>
+<rect x="130" y="218" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="174.0" y="239" class="dg-t" text-anchor="middle">New material</text>
+<text x="174.0" y="253" class="dg-s" text-anchor="middle">notes or a doc</text>
+<line x1="218" y1="242" x2="229" y2="242" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="230" y="218" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="274.0" y="239" class="dg-t" text-anchor="middle">Save to inbox/</text>
+<text x="274.0" y="253" class="dg-s" text-anchor="middle">gitignored</text>
+<line x1="318" y1="242" x2="329" y2="242" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="330" y="218" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="374.0" y="239" class="dg-t" text-anchor="middle">/intake</text>
+<text x="374.0" y="253" class="dg-s" text-anchor="middle">extract + judge</text>
+<line x1="418" y1="242" x2="429" y2="242" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="430" y="218" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="513" y="228" class="dg-badge" text-anchor="end">STOP</text>
+<text x="474.0" y="239" class="dg-t" text-anchor="middle">Accept staging</text>
+<text x="474.0" y="253" class="dg-s" text-anchor="middle">item by item</text>
+<line x1="518" y1="242" x2="529" y2="242" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="530" y="218" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="574.0" y="239" class="dg-t" text-anchor="middle">Apply + commit</text>
+<text x="574.0" y="253" class="dg-s" text-anchor="middle">source record</text>
+<line x1="618" y1="242" x2="629" y2="242" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="630" y="218" width="88" height="48" rx="6" class="dg-n dg-opt" stroke-dasharray="5 3"/>
+<text x="674.0" y="239" class="dg-t" text-anchor="middle">Clean inbox?</text>
+<text x="674.0" y="253" class="dg-s" text-anchor="middle">only with a yes</text>
+<line x1="718" y1="242" x2="729" y2="242" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="730" y="218" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="813" y="228" class="dg-badge" text-anchor="end">STOP</text>
+<text x="774.0" y="239" class="dg-t" text-anchor="middle">Push</text>
+<text x="774.0" y="253" class="dg-s" text-anchor="middle">asks first</text>
+<rect x="4" y="278" width="1032" height="116" rx="6" class="dg-lane"/>
+<rect x="4" y="278" width="118" height="116" rx="6" class="dg-lane-h"/>
+<text x="63" y="334.0" class="dg-lt" text-anchor="middle">Per epic</text>
+<text x="63" y="349.0" class="dg-lc" text-anchor="middle">or change</text>
+<rect x="130" y="292" width="88" height="48" rx="6" class="dg-n dg-opt" stroke-dasharray="5 3"/>
+<text x="174.0" y="313" class="dg-t" text-anchor="middle">Catch up</text>
+<text x="174.0" y="327" class="dg-s" text-anchor="middle">/sync · /intake</text>
+<line x1="218" y1="316" x2="229" y2="316" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="230" y="292" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="274.0" y="313" class="dg-t" text-anchor="middle">/requirements</text>
+<text x="274.0" y="327" class="dg-s" text-anchor="middle">≤ 5 Qs per round</text>
+<line x1="318" y1="316" x2="329" y2="316" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="330" y="292" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="413" y="302" class="dg-badge" text-anchor="end">STOP</text>
+<text x="374.0" y="313" class="dg-t" text-anchor="middle">Write doc</text>
+<text x="374.0" y="327" class="dg-s" text-anchor="middle">after yes</text>
+<line x1="418" y1="316" x2="429" y2="316" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="430" y="292" width="88" height="48" rx="6" class="dg-n dg-par"/>
+<text x="474.0" y="313" class="dg-t" text-anchor="middle">/review</text>
+<text x="474.0" y="327" class="dg-s" text-anchor="middle">review.md</text>
+<line x1="518" y1="316" x2="529" y2="316" class="dg-e" marker-end="url(#dg-arrow)"/>
+<polygon points="574,292 618,316 574,340 530,316" class="dg-n dg-gate"/>
+<text x="574" y="320" class="dg-t" text-anchor="middle">Ready?</text>
+<line x1="618" y1="316" x2="629" y2="316" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="630" y="292" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="674.0" y="313" class="dg-t" text-anchor="middle">/backlog</text>
+<text x="674.0" y="327" class="dg-s" text-anchor="middle">duplicate search</text>
+<line x1="718" y1="316" x2="729" y2="316" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="730" y="292" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="813" y="302" class="dg-badge" text-anchor="end">STOP</text>
+<text x="774.0" y="313" class="dg-t" text-anchor="middle">Preview batch</text>
+<text x="774.0" y="327" class="dg-s" text-anchor="middle">≤ 15 items</text>
+<line x1="818" y1="316" x2="829" y2="316" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="830" y="292" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="913" y="302" class="dg-badge" text-anchor="end">STOP</text>
+<text x="874.0" y="313" class="dg-t" text-anchor="middle">Each write</text>
+<text x="874.0" y="327" class="dg-s" text-anchor="middle">Claude Code asks</text>
+<line x1="918" y1="316" x2="929" y2="316" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="930" y="292" width="88" height="48" rx="6" class="dg-n dg-rv"/>
+<text x="974.0" y="313" class="dg-t" text-anchor="middle">Jira</text>
+<text x="974.0" y="327" class="dg-s" text-anchor="middle">epic + stories</text>
+<path d="M574 340 V362 H274 V341" class="dg-e dg-dash" marker-end="url(#dg-arrow)"/>
+<text x="424.0" y="357" class="dg-s" text-anchor="middle">not ready: fix, review again</text>
+<line x1="974" y1="340" x2="974" y2="352" class="dg-e dg-dash"/>
+<rect x="630" y="352" width="388" height="22" rx="4" class="dg-note"/>
+<text x="824.0" y="367" class="dg-s" text-anchor="middle">Keys written back to the document and trace/map.csv · Dev and QA read them</text>
+<rect x="4" y="394" width="1032" height="78" rx="6" class="dg-lane"/>
+<rect x="4" y="394" width="118" height="78" rx="6" class="dg-lane-h"/>
+<text x="63" y="431.0" class="dg-lt" text-anchor="middle">Weekly</text>
+<text x="63" y="446.0" class="dg-lc" text-anchor="middle">/review kb</text>
+<rect x="130" y="409" width="88" height="48" rx="6" class="dg-n dg-par"/>
+<text x="174.0" y="430" class="dg-t" text-anchor="middle">/review kb</text>
+<text x="174.0" y="444" class="dg-s" text-anchor="middle">health report</text>
+<line x1="218" y1="433" x2="229" y2="433" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="230" y="409" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="274.0" y="430" class="dg-t" text-anchor="middle">Rebuild</text>
+<text x="274.0" y="444" class="dg-s" text-anchor="middle">index, registers</text>
+<line x1="318" y1="433" x2="329" y2="433" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="330" y="409" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="413" y="419" class="dg-badge" text-anchor="end">STOP</text>
+<text x="374.0" y="430" class="dg-t" text-anchor="middle">Push</text>
+<text x="374.0" y="444" class="dg-s" text-anchor="middle">asks first</text>
+<line x1="418" y1="433" x2="429" y2="433" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="430" y="409" width="88" height="48" rx="6" class="dg-n dg-opt" stroke-dasharray="5 3"/>
+<text x="474.0" y="430" class="dg-t" text-anchor="middle">Open questions</text>
+<text x="474.0" y="444" class="dg-s" text-anchor="middle">plan who to ask</text>
+<rect x="530" y="422" width="488" height="22" rx="4" class="dg-note"/>
+<text x="774.0" y="437" class="dg-s" text-anchor="middle">Reports broken links · drafts over 30 days · overdue questions · staging over a day · contradictions</text>
+<rect x="4" y="472" width="1032" height="78" rx="6" class="dg-lane"/>
+<rect x="4" y="472" width="118" height="78" rx="6" class="dg-lane-h"/>
+<text x="63" y="503.0" class="dg-lt" text-anchor="middle">Anyone</text>
+<text x="63" y="518.0" class="dg-lc" text-anchor="middle">anytime</text>
+<text x="63" y="530.0" class="dg-lc" text-anchor="middle">/ask</text>
+<rect x="130" y="487" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="174.0" y="508" class="dg-t" text-anchor="middle">Clone once</text>
+<text x="174.0" y="522" class="dg-s" text-anchor="middle">git clone</text>
+<line x1="218" y1="511" x2="229" y2="511" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="230" y="487" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="274.0" y="508" class="dg-t" text-anchor="middle">Open session</text>
+<text x="274.0" y="522" class="dg-s" text-anchor="middle">hook pulls KB</text>
+<line x1="318" y1="511" x2="329" y2="511" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="330" y="487" width="88" height="48" rx="6" class="dg-n dg-par"/>
+<text x="374.0" y="508" class="dg-t" text-anchor="middle">/ask</text>
+<text x="374.0" y="522" class="dg-s" text-anchor="middle">can't write</text>
+<line x1="418" y1="511" x2="429" y2="511" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="430" y="487" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="474.0" y="508" class="dg-t" text-anchor="middle">Cited answer</text>
+<text x="474.0" y="522" class="dg-s" text-anchor="middle">statuses shown</text>
+<line x1="518" y1="511" x2="529" y2="511" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="530" y="487" width="88" height="48" rx="6" class="dg-n dg-opt" stroke-dasharray="5 3"/>
+<text x="574.0" y="508" class="dg-t" text-anchor="middle">Not known?</text>
+<text x="574.0" y="522" class="dg-s" text-anchor="middle">drafts question</text>
+<line x1="618" y1="511" x2="629" y2="511" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="630" y="487" width="88" height="48" rx="6" class="dg-n dg-opt" stroke-dasharray="5 3"/>
+<text x="674.0" y="508" class="dg-t" text-anchor="middle">Suggest change</text>
+<text x="674.0" y="522" class="dg-s" text-anchor="middle">through the BA</text>
+<rect x="4" y="564" width="1032" height="46" rx="6" class="dg-guard"/>
+<text x="63" y="583" class="dg-lt" text-anchor="middle">Always on</text>
+<text x="63" y="597" class="dg-lc" text-anchor="middle">settings + hook</text>
+<text x="130" y="583" class="dg-t">Every Atlassian write tool and git push ask first   |   force push and git reset --hard are denied   |   /ask has no write tools</text>
+<text x="130" y="598" class="dg-s">kb-sync.sh fast-forwards your copy when a session starts · inbox/ is gitignored · Atlassian sign-in is OAuth through /mcp, no tokens stored</text>
+</svg>
+</div>
+<p>Details for each lane: <a href="#setup">Set up a project</a>, <a href="#when">When to run what</a>,
+<a href="#jira">Jira issues</a> and <a href="#team">For teammates</a>.</p>
+
+<h2 id="prereq">Prerequisites</h2>
+<table>
+<thead><tr><th>Need</th><th>Why it matters</th></tr></thead>
+<tbody>
+<tr><td><strong>Claude Code</strong>, signed in (CLI, desktop app or IDE extension)</td><td>Runs the commands. Open it in the root of the BA repository so it finds <code>.claude/</code></td></tr>
+<tr><td><strong>Git</strong>, with <strong>Git Bash</strong> on Windows</td><td>The repository, the copy script (<code>scripts/new-project.sh</code>) and the automatic sync hook are bash. Git for Windows includes Git Bash</td></tr>
+<tr><td><strong>A shared remote</strong> (GitHub, Azure DevOps, Bitbucket)</td><td>Where the team clones from. The automatic sync needs it</td></tr>
+<tr><td><strong>An Atlassian Cloud account</strong> with access to the project's Jira, and Confluence if the project uses it</td><td>The commands read from them, and <code>/backlog</code> creates issues with your own permissions</td></tr>
+<tr><td><strong>OAuth sign-in</strong> through <code>/mcp</code></td><td>The repository's <code>.mcp.json</code> points at <code>https://mcp.atlassian.com/v2/mcp</code>. You sign in once in the browser; no token is stored in the repository. If your Atlassian admin restricts connected apps, they may need to allow it first</td></tr>
+<tr><td><em>optional</em> <code>markitdown</code> (<code>pip install markitdown</code>)</td><td>Lets <code>/intake</code> read Word, Excel and PowerPoint. Set <code>converter: markitdown</code> in the profile. Without it, save those files as PDF</td></tr>
+<tr><td><em>optional</em> Obsidian</td><td>A more comfortable way to read and browse the knowledge base. Nothing depends on it</td></tr>
+</tbody>
+</table>
+<p>Check that bash and git are reachable:</p>
+<pre><code>bash -c 'echo bash-ok' &amp;&amp; git --version</code></pre>
+
+<h2 id="setup">Set up a project</h2>
+<p>Done once per project by the lead BA. Plan an hour for steps 1 to 5, plus the time the first
+<code>/kb-seed</code> review takes. <code>SETUP.md</code> in the template has the same steps.</p>
+<ol class="steps">
+<li>
+  <h3>Create the repository from the template</h3>
+  <p>From a clone of <code>ai-ba-harness</code>, in Git Bash or a terminal:</p>
+  <pre><code>scripts/new-project.sh ../&lt;project&gt;-ba-knowledge --name "&lt;Project name&gt;"</code></pre>
+  <p>It copies everything under <code>project/</code> (dotfiles included), adds
+  <code>HARNESS_VERSION</code>, and records the harness version and commit in
+  <code>PROJECT-PROFILE.md</code>. With <code>--name</code> it also fills the project name, the
+  repository name and the README title. It never overwrites: if any file already exists in the
+  target, it lists them and copies nothing. If the template has uncommitted changes under
+  <code>project/</code> or in <code>HARNESS_VERSION</code>, it stops; commit them first, or pass <code>--allow-dirty</code> to record the
+  commit as <code>&lt;commit&gt;-dirty</code>. Research, design notes and examples stay behind.</p>
+</li>
+<li>
+  <h3>Put it under git and push it</h3>
+  <pre><code>cd ../&lt;project&gt;-ba-knowledge
+git init -b main
+git add -A
+git commit -m "Start from AI BA Harness 0.1.0"
+git remote add origin &lt;repository URL&gt;
+git push -u origin main</code></pre>
+  <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
+  team keeps repositories. The automatic sync does nothing until the branch has an upstream.</p>
+</li>
+<li>
+  <h3>Connect Atlassian</h3>
+  <p>Open Claude Code in the repository folder (<code>claude</code>), run <code>/mcp</code>, choose
+  <code>atlassian</code>, and sign in in the browser window that opens. It uses your own Atlassian
+  account and permissions.</p>
+</li>
+<li>
+  <h3>Run <code>/setup</code></h3>
+  <p>It interviews you in short rounds and fills <code>PROJECT-PROFILE.md</code>. Have these ready:</p>
+  <ul>
+  <li>the Jira project key or keys, and how you tell your team's issues apart (it proposes a scope JQL
+  and shows how many issues it matches);</li>
+  <li>whether Confluence is used, which spaces, and the page published knowledge should go under
+  later;</li>
+  <li>the four to eight business areas the product divides into;</li>
+  <li>the main stakeholders by role, and what each one can decide;</li>
+  <li>the existing material <code>/kb-seed</code> should read.</li>
+  </ul>
+  <p>It reads Jira's required fields for each issue type and asks how each should be filled. It shows
+  the profile as a diff, writes it after your yes, drafts <code>knowledge/stakeholders.md</code>,
+  creates a <code>knowledge/domains/&lt;area&gt;/</code> folder per area, commits, and asks before
+  pushing. If Atlassian isn't reachable, it finishes the local part and lists what is missing.</p>
+</li>
+<li>
+  <h3>Drop existing documents in <code>inbox/</code></h3>
+  <p>The charter, specifications, process documents, glossaries. <code>inbox/</code> is gitignored, so
+  nothing in it is ever committed.</p>
+</li>
+<li>
+  <h3>Run <code>/kb-seed</code></h3>
+  <p>It lists what it will read (files, Confluence pages, Jira epics, with counts) and asks once. Then
+  it writes one staging file per source to <code>knowledge/_staging/</code>. If more than 200 items
+  would be staged in one run, it stops after planning and asks you to split the work, for example
+  one area at a time.</p>
+</li>
+<li>
+  <h3>Work through the staging files</h3>
+  <p>Accept, edit or reject every item (see <a href="#kb-staging">Staging and accepting</a>). Accepted
+  items become pages, each file's changes are committed, and the command asks before pushing. You can
+  accept a whole file as draft and confirm the pages later.</p>
+</li>
+<li>
+  <h3>Bring the team in</h3>
+  <p>Send the repository URL to developers, testers and product owners: clone it once, open Claude Code
+  in it, run <code>/ask &lt;question&gt;</code>. Their copy updates itself whenever they open it. See
+  <a href="#team">For teammates</a>.</p>
+</li>
+</ol>
+
+<h3>Settings you can change</h3>
+<p>Section 5 of <code>PROJECT-PROFILE.md</code>. Edit by hand or re-run <code>/setup</code>.</p>
+<table>
+<thead><tr><th>Key</th><th>Default</th><th>What it controls</th></tr></thead>
+<tbody>
+<tr><td><code>kb_auto_sync</code></td><td><code>on</code></td><td>Pull new knowledge when a Claude Code session starts</td></tr>
+<tr><td><code>confluence</code></td><td><code>off</code></td><td>Confluence sync; <code>/setup</code> sets it on if the project uses Confluence</td></tr>
+<tr><td><code>converter</code></td><td><code>pdf</code></td><td><code>markitdown</code> if installed, otherwise <code>pdf</code> (you save Office files as PDF)</td></tr>
+<tr><td><code>max_batch</code></td><td><code>15</code></td><td>Most items created in Jira per approval</td></tr>
+<tr><td><code>sync_max_issues</code></td><td><code>50</code></td><td>Most Jira issues read per <code>/sync</code> run (and per <code>/kb-seed</code> batch)</td></tr>
+<tr><td><code>sync_max_pages</code></td><td><code>20</code></td><td>Most Confluence pages read per <code>/sync</code> run (and per <code>/kb-seed</code> batch)</td></tr>
+<tr><td><code>draft_age_days</code></td><td><code>30</code></td><td><code>/review kb</code> flags drafts older than this</td></tr>
+</tbody>
+</table>
+<p>Section 7 of the profile holds the project's vague-word list (words such as fast, easy and
+user-friendly that need a measure) and its preferred terms. Add your own.</p>
+
+<h2 id="commands">The eight commands</h2>
+<p>Every command reads <code>PROJECT-PROFILE.md</code> first, pulls before it writes, never invents a
+fact, and ends with a short report: what it did, what is waiting for you, and the suggested next
+command. The full definition of each one is in the BA repository's <code>agents/</code> folder
+(<code>agents/&lt;command&gt;.md</code>); the files in <code>.claude/commands/</code> only point
+there.</p>
+<table>
+<thead><tr><th>Command</th><th>One line</th><th>Who</th><th>Writes to Jira or Confluence?</th></tr></thead>
+<tbody>
+<tr><td><code>/setup</code></td><td>Configure the repository for the project</td><td>Lead BA, once</td><td>No</td></tr>
+<tr><td><code>/kb-seed</code></td><td>Build the first knowledge base from existing material</td><td>BA, at the start</td><td>No</td></tr>
+<tr><td><code>/intake</code></td><td>Turn notes, documents or a conversation into proposed knowledge</td><td>BA, daily</td><td>No</td></tr>
+<tr><td><code>/sync</code></td><td>Turn new Jira and Confluence activity into proposed knowledge</td><td>BA, daily</td><td>No (reads only)</td></tr>
+<tr><td><code>/requirements</code></td><td>Write a requirement document for an epic or topic</td><td>BA, per epic</td><td>No</td></tr>
+<tr><td><code>/review</code></td><td>Check a requirement document, a Jira issue or the knowledge base</td><td>BA, before <code>/backlog</code>; weekly for <code>kb</code></td><td>No</td></tr>
+<tr><td><code>/backlog</code></td><td>Create the epic and stories in Jira from a reviewed requirement</td><td>BA, per epic</td><td>Yes, after approval</td></tr>
+<tr><td><code>/ask</code></td><td>Answer a question from the knowledge base, with citations</td><td>Anyone</td><td>No; it has no write, shell or sub-agent tools</td></tr>
+</tbody>
+</table>
+
+<div class="card">
+<h3><code>/setup</code> <span class="pill">once</span></h3>
+<p>Turns a fresh copy of the template into this project's BA repository, by interview.</p>
+<table><tbody>
+<tr><td><strong>When</strong></td><td>Right after creating the repository. Run it again to change settings: it shows what is filled, asks which sections to change, and never overwrites a filled section without a yes</td></tr>
+<tr><td><strong>Needs</strong></td><td>A git clone with a shared remote; Atlassian signed in through <code>/mcp</code></td></tr>
+<tr><td><strong>Writes</strong></td><td><code>PROJECT-PROFILE.md</code>, <code>knowledge/stakeholders.md</code> (draft), <code>knowledge/domains/&lt;area&gt;/</code> folders, a <code>log.md</code> line. Commit <code>kb: setup &lt;project&gt;</code></td></tr>
+<tr><td><strong>Approval</strong></td><td>Profile shown as a diff, written after a yes; asks before pushing</td></tr>
+</tbody></table>
+</div>
+
+<div class="card">
+<h3><code>/kb-seed [confluence | jira | inbox | &lt;path or page&gt;]</code> <span class="pill">start</span></h3>
+<p>Proposes the first knowledge base from material that already exists: glossary terms,
+stakeholders, entities, capabilities and processes with their rules, decisions, open questions and
+risks, in that order.</p>
+<table><tbody>
+<tr><td><strong>When</strong></td><td>After <code>/setup</code>. Later only when a large body of new material arrives</td></tr>
+<tr><td><strong>Needs</strong></td><td>The sources listed in profile section 6: files in <code>inbox/</code>, Confluence page trees, Jira epics by JQL. It reads nothing outside the profile's scope</td></tr>
+<tr><td><strong>Writes</strong></td><td>One staging file per source; after acceptance, the knowledge pages, registers, index and log</td></tr>
+<tr><td><strong>Approval</strong></td><td>Asks once before reading; every item accepted by you; stops above 200 items and asks you to split the work</td></tr>
+</tbody></table>
+</div>
+
+<div class="card">
+<h3><code>/intake [inbox/&lt;file or folder&gt; | pasted text]</code> <span class="pill">daily</span></h3>
+<p>Turns new material into proposed knowledge, judged against what the knowledge base already holds.
+With no argument it captures what was learned in the current conversation.</p>
+<table><tbody>
+<tr><td><strong>When</strong></td><td>After a meeting or workshop, when a document or email arrives, when a stakeholder answers a question, at the end of a working session with Claude</td></tr>
+<tr><td><strong>Needs</strong></td><td>The material in <code>inbox/</code> (a file elsewhere: it asks you to move or copy it in first). Reads <code>.md</code>, <code>.txt</code>, <code>.vtt</code>, <code>.srt</code>, <code>.csv</code>, <code>.eml</code>, PDF and images directly; Word, Excel and PowerPoint through <code>markitdown</code> or as PDF</td></tr>
+<tr><td><strong>Writes</strong></td><td>A staging file; after acceptance, the pages, a source record in <code>sources/</code>, registers, index and log. For meetings it also lists attendees by role, decisions, actions with owner and date, and drafts a play-back message for participants</td></tr>
+<tr><td><strong>Approval</strong></td><td>Every item accepted by you; asks before pushing; asks before deleting the raw files from <code>inbox/</code> (default: keep them)</td></tr>
+</tbody></table>
+</div>
+
+<div class="card">
+<h3><code>/sync [jira | confluence]</code> <span class="pill">daily</span> <span class="pill">reads Atlassian only</span></h3>
+<p>Brings what happened in Jira (and Confluence, if used) since the last sync into the knowledge base:
+answers to open questions, decisions in comments, rule or scope changes, new terms, and status
+changes with business meaning. Routine workflow moves, estimates and assignee changes are ignored.</p>
+<table><tbody>
+<tr><td><strong>When</strong></td><td>Daily, and before writing requirements for an area</td></tr>
+<tr><td><strong>Needs</strong></td><td><code>/setup</code> done, Atlassian signed in, the scope JQL (and spaces) in the profile. The first run asks how far back to go (default 14 days)</td></tr>
+<tr><td><strong>Writes</strong></td><td>The same as <code>/intake</code>, plus the sync time in <code>knowledge/_meta/sync.json</code>. Nothing in Jira or Confluence, not even comments</td></tr>
+<tr><td><strong>Approval</strong></td><td>Every item accepted by you. The sync time moves only after you have decided every item, so nothing is skipped. By default it reads at most 50 issues and 20 pages per run</td></tr>
+</tbody></table>
+</div>
+
+<div class="card">
+<h3><code>/requirements &lt;epic, topic or Jira epic key&gt;</code> <span class="pill">per epic</span></h3>
+<p>Writes the requirement document, starting from a cited summary of what the knowledge base already
+says about the area.</p>
+<table><tbody>
+<tr><td><strong>When</strong></td><td>A new epic or a significant change needs defining; before <code>/backlog</code></td></tr>
+<tr><td><strong>Needs</strong></td><td>The relevant area seeded in the knowledge base. If there is nothing on the area, it suggests an <code>/intake</code> of existing material first</td></tr>
+<tr><td><strong>Writes</strong></td><td><code>requirements/&lt;epic-slug&gt;/requirement.md</code> (status draft): goal, scope, stakeholders, <code>FR-001</code>, <code>NFR-001</code> in EARS form, user stories (<code>ST-01</code>) with at least two Given/When/Then criteria, assumptions, open questions, success measures, and conflicts with the knowledge base. New terms, rules and decisions go to staging. Commit <code>req: draft &lt;slug&gt;</code></td></tr>
+<tr><td><strong>Approval</strong></td><td>Clarifying questions one at a time, multiple choice with a recommended answer, at most five per round. Document shown, written after a yes; asks before pushing</td></tr>
+</tbody></table>
+</div>
+
+<div class="card">
+<h3><code>/review &lt;requirement.md | JIRA-KEY | kb&gt;</code> <span class="pill">report</span></h3>
+<p>A quality report graded critical, major and minor, with a ready or not-ready verdict. It changes
+the target only when you ask it to apply fixes.</p>
+<table><tbody>
+<tr><td><strong>When</strong></td><td>On a requirement document before <code>/backlog</code>; on a Jira issue someone else wrote; weekly on the knowledge base (<code>/review kb</code>)</td></tr>
+<tr><td><strong>Needs</strong></td><td>The knowledge base; Atlassian for Jira keys and the duplicate search</td></tr>
+<tr><td><strong>Writes</strong></td><td>For a document, <code>requirements/&lt;slug&gt;/review.md</code> (replacing the previous one). For a Jira issue, the chat only. For <code>kb</code>, the rebuilt <code>index.md</code> and registers, committed as <code>kb: review kb rebuild index</code></td></tr>
+<tr><td><strong>Approval</strong></td><td>Fixes applied only if you agree, shown as a diff; asks before pushing</td></tr>
+</tbody></table>
+</div>
+
+<div class="card">
+<h3><code>/backlog &lt;requirements/&lt;slug&gt;/requirement.md&gt;</code> <span class="pill">per epic</span> <span class="pill block">writes to Jira</span></h3>
+<p>Creates the epic and one story per <code>ST-</code> from the Jira templates, with duplicate
+checks, after you approve the batch. The only command in version 1 that writes to Jira.</p>
+<table><tbody>
+<tr><td><strong>When</strong></td><td>After <code>/review</code> gives a ready verdict, or you accept its remaining findings. If the review is missing or older than the document, it asks you to run <code>/review</code> first. If the verdict is not ready, it offers to create only the stories listed as ready</td></tr>
+<tr><td><strong>Needs</strong></td><td>Atlassian signed in; the field rules <code>/setup</code> recorded; a fix version (or an explicit "unscheduled")</td></tr>
+<tr><td><strong>Writes</strong></td><td>Jira issues and links; the keys back into the document (<code>jira_epic</code> and the story table) and <code>trace/map.csv</code>. Commit <code>req: backlog &lt;slug&gt; &lt;epic key&gt;</code></td></tr>
+<tr><td><strong>Approval</strong></td><td>Preview table per batch of at most 15 items, accept, edit or decline per item, then a yes for the batch, then Claude Code's prompt on each write. Asks before pushing</td></tr>
+</tbody></table>
+</div>
+
+<div class="card">
+<h3><code>/ask &lt;question&gt;</code> <span class="pill">anyone</span> <span class="pill">no write tools</span></h3>
+<p>Answers from the knowledge base and requirement documents, citing the page and ID for every
+claim and saying how certain each source is.</p>
+<table><tbody>
+<tr><td><strong>When</strong></td><td>Anytime, by anyone with a clone</td></tr>
+<tr><td><strong>Needs</strong></td><td>The repository. Atlassian is optional: when signed in, it searches Jira and Confluence only if the knowledge base doesn't settle the question or the question is about delivery status, and labels those results "from Jira" or "from Confluence"</td></tr>
+<tr><td><strong>Writes</strong></td><td>Nothing. It has no write, edit or shell tools</td></tr>
+<tr><td><strong>Approval</strong></td><td>None needed. When the knowledge base doesn't know, it says so and drafts an open question you can send to the BA</td></tr>
+</tbody></table>
+</div>
+
+<h2 id="when">When to run what</h2>
+<p>The eight commands fall into four rhythms: once at the start, every day, once per epic, and
+weekly. <code>/ask</code> can be used at any time by anyone.</p>
+
+<h3>Once, at project start (lead BA)</h3>
+<div class="flow"><span>new-project.sh</span><em>→</em><span>git push</span><em>→</em><span>/mcp</span><em>→</em><span>/setup</span><em>→</em><span>inbox/ + /kb-seed</span><em>→</em><span>accept staging</span><em>→</em><span>team clones</span></div>
+<p>The steps are in <a href="#setup">Set up a project</a>.</p>
+
+<h3>Every day (BA)</h3>
+<table>
+<thead><tr><th>Moment</th><th>Run</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Start of the day</td><td>Open Claude Code in the repository (the knowledge base pulls itself), then <code>/sync</code></td><td>Picks up answers, decisions and changes from Jira and Confluence since the last run</td></tr>
+<tr><td>After a meeting or workshop</td><td>Save the notes or transcript to <code>inbox/</code>, then <code>/intake inbox/&lt;file&gt;</code></td><td>Decisions, questions and requirements captured while fresh, with a play-back message for participants</td></tr>
+<tr><td>A document or email arrives</td><td><code>/intake inbox/&lt;file&gt;</code>, or paste the text after <code>/intake</code></td><td>The same, for documents</td></tr>
+<tr><td>A stakeholder answers a question</td><td><code>/intake</code> with the answer</td><td>Closes the <code>Q-</code> item and updates the pages it affects</td></tr>
+<tr><td>End of a working session with Claude</td><td><code>/intake</code> (no argument)</td><td>Captures what was worked out in the conversation</td></tr>
+<tr><td>Someone asks you something</td><td><code>/ask &lt;question&gt;</code></td><td>A cited answer, and an open question if the knowledge base doesn't know</td></tr>
+</tbody>
+</table>
+<div class="callout"><p>Every <code>/intake</code> and <code>/sync</code> ends the same way: you accept, edit
+or reject each staged item, then the command commits and asks before pushing. Don't leave staging
+files overnight; <code>/review kb</code> lists any older than a day.</p></div>
+
+<h3>Per epic or change (BA)</h3>
+<table>
+<thead><tr><th>Step</th><th>Run</th><th>Moves on when</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><code>/sync</code>, and <code>/intake</code> anything outstanding for the area</td><td>The knowledge base is current for this area</td></tr>
+<tr><td>2</td><td><code>/requirements &lt;epic or topic&gt;</code></td><td>The document exists and its clarifying questions are answered or logged</td></tr>
+<tr><td>3</td><td><code>/review requirements/&lt;epic&gt;/requirement.md</code></td><td>The verdict is ready, or you accept the remaining findings</td></tr>
+<tr><td>4</td><td>Fix, and repeat 2 and 3 as needed</td><td>The verdict changes to ready</td></tr>
+<tr><td>5</td><td><code>/backlog requirements/&lt;epic&gt;/requirement.md</code></td><td>Epic and stories created in Jira, keys written back</td></tr>
+<tr><td>6</td><td>Developers and testers pick up the Jira keys</td><td>Handed over</td></tr>
+</tbody>
+</table>
+
+<h3>Weekly (BA)</h3>
+<table>
+<thead><tr><th>Run</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td><code>/review kb</code></td><td>Broken links, old drafts, overdue questions, leftover staging files, contradictions; rebuilds the index and registers</td></tr>
+<tr><td>Go through <code>knowledge/open-questions.md</code></td><td>Plan who to ask; overdue questions go into the next stakeholder meeting</td></tr>
+</tbody>
+</table>
+
+<h3>Anyone, anytime</h3>
+<table>
+<thead><tr><th>Who</th><th>Run</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Developer, tester, product owner, new BA</td><td><code>/ask &lt;question&gt;</code></td><td>Read-only. Draft content is marked unconfirmed. If the knowledge base doesn't know, it drafts a question to send to the BA</td></tr>
+<tr><td>A teammate with material for the knowledge base</td><td>Send it to the BA, or run <code>/intake</code> and open a pull request with the staging file</td><td>The BA accepts or rejects; nothing changes until then</td></tr>
+</tbody>
+</table>
+
+<h3>"What do I run?"</h3>
+<table>
+<thead><tr><th>Situation</th><th>Command</th></tr></thead>
+<tbody>
+<tr><td>New project</td><td><code>/setup</code>, then <code>/kb-seed</code></td></tr>
+<tr><td>New notes, transcript, document or email</td><td><code>/intake &lt;file&gt;</code></td></tr>
+<tr><td>Something got decided in Jira or Confluence</td><td><code>/sync</code></td></tr>
+<tr><td>I worked something out with Claude</td><td><code>/intake</code></td></tr>
+<tr><td>Need requirements for an epic</td><td><code>/requirements &lt;epic&gt;</code></td></tr>
+<tr><td>Is this ready for the backlog?</td><td><code>/review &lt;document&gt;</code></td></tr>
+<tr><td>Put it in Jira</td><td><code>/backlog &lt;document&gt;</code></td></tr>
+<tr><td>Is someone else's ticket any good?</td><td><code>/review &lt;JIRA-KEY&gt;</code></td></tr>
+<tr><td>How does X work? What did we decide about Y?</td><td><code>/ask</code></td></tr>
+<tr><td>Is the knowledge base healthy?</td><td><code>/review kb</code></td></tr>
+</tbody>
+</table>
+
+<h3>What not to do</h3>
+<ul>
+<li>Don't edit the generated files (<code>index.md</code> and the registers) by hand.
+<code>/review kb</code> rebuilds them, and a hand edit is lost.</li>
+<li>Don't paste raw notes straight into knowledge pages. Use <code>/intake</code>, so sources and
+conflicts are checked. Fixing a typo or wording by hand is fine as long as the meaning stays the
+same; add a <code>log.md</code> line with the command <code>EDIT</code>.</li>
+<li>Don't create Jira issues by hand for work that has a requirement document. Use
+<code>/backlog</code>, so the duplicate check and traceability happen.</li>
+<li>Don't commit anything in <code>inbox/</code>. It is gitignored for a reason.</li>
+</ul>
+
+<h2 id="kb">The knowledge base</h2>
+<p>The <code>knowledge/</code> folder of the BA repository. It is plain markdown, so Claude Code,
+GitHub and any text editor read it. It is stored by Obsidian's rules, so the folder also opens as an
+Obsidian vault, and kept compatible with Open Knowledge Format. The project's own copy of the rules
+is <code>knowledge/_meta/conventions.md</code>.</p>
+
+<h3 id="kb-structure">Structure</h3>
+<pre><code>knowledge/
+├── README.md            how to read and contribute (for people)
+├── index.md             generated: every page, one line each; every query starts here
+├── log.md               one line per accepted change
+├── glossary.md          one section per term, with its synonyms
+├── stakeholders.md      people and roles, what they own, what they can decide
+├── raid.md              risks (R-), assumptions (A-), issues (I-), dependencies (D-)
+├── business-rules.md    generated register of BR- rules
+├── decisions.md         generated register of decisions/
+├── open-questions.md    generated register of questions/
+├── domains/&lt;area&gt;/      CAP-###-&lt;slug&gt;.md: how one capability works
+├── entities/            ENT-###-&lt;slug&gt;.md: roles, systems, data objects, integrations
+├── processes/&lt;area&gt;/&lt;slug&gt;/   PROC-###-&lt;slug&gt;.md plus its diagrams
+├── decisions/           DEC-###-&lt;slug&gt;.md, one file per decision
+├── questions/           Q-###-&lt;slug&gt;.md, one file per open question
+├── sources/             SRC-###-&lt;yyyy-mm-dd&gt;-&lt;slug&gt;.md, one per processed input
+├── assets/              images that aren't diagrams
+├── _staging/            proposals waiting for the BA
+├── _meta/               conventions.md, templates/, sync.json
+└── .obsidian/           shipped settings, used only if someone opens the vault</code></pre>
+<p>Decisions, questions and sources are one file per item, so each can be linked, and two BAs adding
+items on the same day don't edit the same file. Next to <code>knowledge/</code>, the repository holds
+<code>requirements/</code> (one folder per epic), <code>trace/map.csv</code> (which requirement became
+which Jira issue and knowledge page) and <code>inbox/</code> (raw material, never committed).</p>
+
+<h3 id="kb-ids">Page types and IDs</h3>
+<table>
+<thead><tr><th>Prefix</th><th>For</th><th>Where it lives</th></tr></thead>
+<tbody>
+<tr><td><code>CAP-</code></td><td>Capability page</td><td><code>domains/&lt;area&gt;/</code></td></tr>
+<tr><td><code>ENT-</code></td><td>Entity page</td><td><code>entities/</code></td></tr>
+<tr><td><code>PROC-</code></td><td>Process page</td><td><code>processes/</code></td></tr>
+<tr><td><code>DEC-</code></td><td>Decision</td><td><code>decisions/</code></td></tr>
+<tr><td><code>Q-</code></td><td>Open question</td><td><code>questions/</code></td></tr>
+<tr><td><code>SRC-</code></td><td>Source record</td><td><code>sources/</code></td></tr>
+<tr><td><code>BR-</code></td><td>Business rule</td><td>Inside a capability or process page, listed in its <code>rules</code> property</td></tr>
+<tr><td><code>R-</code> <code>A-</code> <code>I-</code> <code>D-</code></td><td>Risk, assumption, issue, dependency</td><td><code>raid.md</code></td></tr>
+<tr><td><code>T-</code></td><td>Glossary term</td><td><code>glossary.md</code></td></tr>
+</tbody>
+</table>
+<p>Numbers have three digits and are never reused. File names are <code>&lt;ID&gt;-&lt;slug&gt;.md</code>:
+lowercase, hyphenated, no spaces, for example <code>CAP-012-raising-a-job-card.md</code>.
+Every page starts with flat properties (<code>type</code>, <code>id</code>, <code>title</code>,
+<code>status</code>, <code>owner</code>, <code>sources</code>, <code>aliases</code> and so on). The
+<code>type</code> is one of capability, entity, process, decision, question, source, glossary,
+register, index or guide. In staging files, IDs are provisional (<code>CAP-new-1</code>); the real
+number is given when you accept the item.</p>
+
+<h3 id="kb-status">Statuses</h3>
+<table>
+<thead><tr><th>Status</th><th>Meaning</th><th>Who sets it</th></tr></thead>
+<tbody>
+<tr><td><code>draft</code></td><td>Extracted by AI, not yet checked</td><td><code>/kb-seed</code>, <code>/intake</code>, <code>/sync</code></td></tr>
+<tr><td><code>confirmed</code></td><td>A BA checked it against its source</td><td>The BA, when accepting</td></tr>
+<tr><td><code>approved</code></td><td>A named stakeholder agreed; <code>approved_by</code> and <code>approved_on</code> are set and a <code>DEC-</code> exists</td><td>The BA</td></tr>
+<tr><td><code>superseded</code></td><td>Replaced; <code>superseded_by</code> points to the replacement</td><td>The BA</td></tr>
+</tbody>
+</table>
+<p><code>/ask</code> labels draft content "unconfirmed" and never uses superseded content.</p>
+
+<h3 id="kb-rules">The ten rules for changing it</h3>
+<ol>
+<li>Propose, then write. Commands write proposals to <code>_staging/</code> only; pages change only after you accept an item.</li>
+<li>Cite the source. Every item carries a quote and its location: file and paragraph, transcript time, Jira key and comment, Confluence page and section.</li>
+<li>Search before adding. An existing item gets an update or a link, never a duplicate.</li>
+<li>Contradictions become questions. A statement that conflicts with a confirmed or approved item becomes a <code>Q-</code> (or a <code>DEC-</code> waiting for a named approver). Nothing is overwritten.</li>
+<li>Authority decides decisions. A statement becomes a <code>DEC-</code> only if <code>stakeholders.md</code> says the speaker can decide that matter.</li>
+<li>No personal data. Roles, not names, unless a name is needed (an approver, an owner).</li>
+<li>Business language. No code paths, class names or table names in pages; technical pointers go in the source record.</li>
+<li>Log and index every change. Each accepted change appends a line to <code>log.md</code> and regenerates <code>index.md</code> and the registers.</li>
+<li>Never delete. Retire an item by setting it to superseded, with <code>superseded_by</code>.</li>
+<li>Raw input stays out of git. Only the redacted source record is committed.</li>
+</ol>
+
+<h3 id="kb-staging">Staging and accepting items</h3>
+<p>Each input gets one staging file, <code>knowledge/_staging/&lt;yyyy-mm-dd&gt;-&lt;command&gt;-&lt;slug&gt;.md</code>,
+with a summary table at the top and one block per item:</p>
+<table>
+<thead><tr><th>Field</th><th>What it says</th></tr></thead>
+<tbody>
+<tr><td>Kind</td><td>requirement, rule, decision, action, question, answer, term, risk or fact</td></tr>
+<tr><td>Verdict</td><td><code>new</code>, <code>confirms &lt;ID&gt;</code>, <code>extends &lt;ID&gt;</code>, <code>contradicts &lt;ID&gt;</code>, <code>duplicate of &lt;ID&gt;</code> or <code>answers &lt;Q-ID&gt;</code></td></tr>
+<tr><td>Clarity</td><td>clear, vague (naming the word) or incomplete (naming what is missing)</td></tr>
+<tr><td>Authority</td><td>For decisions and answers: can decide, cannot (with the owner's role), or unknown</td></tr>
+<tr><td>Sensitivity</td><td>clean, or what should be redacted</td></tr>
+<tr><td>Quote</td><td>The exact words and where they came from</td></tr>
+<tr><td>Proposed change</td><td>The exact change: a new page, a diff of an existing page, a new question, a glossary entry, a RAID row, or ignore with the reason</td></tr>
+</tbody>
+</table>
+<p>Decide each item by ticking one of the three boxes under it (accept, edit, reject), or answer in
+the chat, for example:</p>
+<pre><code>accept 1-6, reject 7: wrong meeting, edit 8: it's 10 days not 14</code></pre>
+<p>Nothing is applied until every item has a decision. Then the command pulls again, gives the real
+IDs, writes the accepted items (as <code>confirmed</code>, or <code>draft</code> if you say "keep as
+draft"), writes the source record with the rejected items and their reasons (so they aren't proposed
+again), rebuilds the index and registers, appends to <code>log.md</code>, deletes the staging file,
+commits, and asks whether to push. Items you leave undecided stay in the staging file for later. An
+input with more than 40 items is split into several staging files so you can decide them in
+sittings.</p>
+
+<h3 id="kb-generated">Generated files</h3>
+<p><code>index.md</code>, <code>business-rules.md</code>, <code>decisions.md</code> and
+<code>open-questions.md</code> are rebuilt from the pages' properties. Never edit them by hand. If git
+reports a conflict in one of them, take either side and run <code>/review kb</code>, which rebuilds
+them. <code>log.md</code> is appended, one line per accepted change:</p>
+<pre><code>- 2026-10-14 | INTAKE | SRC-031 | +CAP-012 ~CAP-007 +Q-014 +DEC-007 | accepted by Lead BA</code></pre>
+<p>In the changes column, <code>+</code> is new, <code>~</code> edited, <code>x</code> superseded and
+<code>?</code> a question closed.</p>
+
+<h3 id="kb-sync">Automatic sync, in plain words</h3>
+<p>Everyone clones the BA repository once. After that, their copy updates itself. When anyone starts
+or resumes a Claude Code session in the repository, a small script
+(<code>.claude/hooks/kb-sync.sh</code>) runs first:</p>
+<ol>
+<li>It asks the shared copy whether anything new has arrived. If the network is slow or offline, it
+gives up after about 15 seconds and says it is working with your local copy.</li>
+<li>If there is something new and you have no unsaved edits of your own, it brings your copy up to
+date and prints <code>Knowledge base updated: N new change(s) pulled from the shared copy.</code></li>
+<li>If you have uncommitted edits, or your copy and the shared copy have both changed, it changes
+nothing and tells you what to run (<code>git pull --ff-only</code>, or <code>git pull --rebase</code>
+and then push).</li>
+</ol>
+<p>It only ever moves your copy forward, never overwrites your work, and never stops a session from
+starting. It does nothing in a repository that has no shared remote yet. To switch it off, set
+<code>kb_auto_sync: off</code> in <code>PROJECT-PROFILE.md</code> section 5.</p>
+<p>When a BA writes, the commands pull first (so proposals are made against the latest copy), commit
+after you accept, and ask before pushing, because a push shares the change with everyone.</p>
+<p>People who read in Obsidian without opening Claude Code can stay current with the Obsidian Git
+community plugin (set an auto-pull interval, for example 30 minutes) or a daily scheduled task, for
+example in Windows Task Scheduler:</p>
+<pre><code>git -C "&lt;path to repository&gt;" pull --ff-only</code></pre>
+
+<h3 id="kb-obsidian">Obsidian (optional)</h3>
+<p>Open the <code>knowledge/</code> folder as a vault (in Obsidian: Open folder as vault). Graph view,
+backlinks and the Properties panel work. The repository ships the settings, so links stay in standard
+markdown and look the same on GitHub and in Claude Code:</p>
+<table>
+<thead><tr><th>File</th><th>Setting</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td><code>.obsidian/app.json</code></td><td><code>useMarkdownLinks</code> (no wikilinks)</td><td><code>true</code></td></tr>
+<tr><td><code>.obsidian/app.json</code></td><td><code>newLinkFormat</code></td><td><code>relative</code></td></tr>
+<tr><td><code>.obsidian/app.json</code></td><td><code>alwaysUpdateLinks</code></td><td><code>true</code></td></tr>
+<tr><td><code>.obsidian/app.json</code></td><td><code>attachmentFolderPath</code></td><td><code>assets</code></td></tr>
+<tr><td><code>.obsidian/app.json</code></td><td><code>userIgnoreFilters</code> (excluded files)</td><td><code>_staging/</code>, <code>_meta/sync.json</code></td></tr>
+<tr><td><code>.obsidian/templates.json</code></td><td>Templates folder</td><td><code>_meta/templates</code></td></tr>
+<tr><td><code>.obsidian/core-plugins.json</code></td><td>Core plugins on</td><td>File explorer, search, switcher, graph, backlinks, outgoing links, tags, properties, page preview, templates, outline, bookmarks</td></tr>
+</tbody>
+</table>
+<p>The shared settings are committed. Per-user state (<code>.obsidian/workspace*.json</code>,
+<code>.obsidian/cache</code>, <code>.trash/</code>) is gitignored. Write links as standard markdown
+with relative paths; no <code>[[wikilinks]]</code> and no <code>![[embeds]]</code>. Callouts use the
+five types GitHub and Obsidian both render: <code>[!NOTE]</code> for assumptions,
+<code>[!CAUTION]</code> for unresolved behaviour (always linking the <code>Q-</code>),
+<code>[!WARNING]</code>, <code>[!IMPORTANT]</code> and <code>[!TIP]</code>. Add knowledge through
+<code>/intake</code>, not by typing into pages.</p>
+
+<h3 id="kb-diagrams">Diagrams</h3>
+<p>Mermaid inside the page is the default: it diffs cleanly and renders on GitHub and in Obsidian.
+Add a draw.io source and an exported SVG next to the page only when the diagram goes to Confluence or
+stakeholders need real BPMN shapes, named <code>&lt;process-slug&gt;.as-is.drawio</code> /
+<code>.svg</code> and <code>&lt;process-slug&gt;.to-be.drawio</code> / <code>.svg</code>. Other
+images go in <code>knowledge/assets/</code> as <code>&lt;page-id&gt;-&lt;what&gt;.png</code>.</p>
+
+<h3 id="kb-okf">Open Knowledge Format</h3>
+<p>Pages are plain markdown with a <code>type</code> property, standard links and ISO dates, which
+keeps the knowledge base compatible with Open Knowledge Format. Its tool, <code>okn</code>, is not
+part of version 1 (Windows support is unconfirmed and it changes often). It may be added later if
+teammates need to query the knowledge base from other tools, the team wants a published site without
+Confluence, or the knowledge base grows to a few hundred pages and needs automatic link checks. No
+migration would be needed.</p>
+
+<h2 id="jira">Jira issues</h2>
+<p><code>/backlog</code> builds every issue from the templates in <code>templates/jira/</code>, so
+issues look the same whoever writes them, and developers, testers and the Dev and QA harnesses find
+the same sections in the same place. Section headings are fixed.</p>
+<table>
+<thead><tr><th>Type</th><th>Summary pattern</th><th>Description sections</th></tr></thead>
+<tbody>
+<tr><td>Epic</td><td>The business outcome, for example "Technicians can close job cards from the workshop floor"</td><td>Goal, Scope (in and out), Success measures, Stakeholders, Business rules affected, Assumptions and risks, Source</td></tr>
+<tr><td>Story</td><td>Verb and object from the user's point of view, for example "Raise a job card from the defect screen"</td><td>User story, Context, Acceptance criteria (Given/When/Then), Business rules, Out of scope, Open questions, Source</td></tr>
+<tr><td>Task</td><td>Verb and object, for work with no user-facing behaviour of its own</td><td>What and why, Done when, Source</td></tr>
+<tr><td>Spike</td><td><code>Spike: &lt;the question&gt;</code></td><td>Question (linked to its <code>Q-</code>), Why it matters, Timebox, Exit criteria, Source</td></tr>
+<tr><td>Bug</td><td><code>&lt;Symptom&gt; in &lt;screen or flow&gt;</code>; from UAT or business review only</td><td>What happened, What should happen, Steps to reproduce, Environment, Business impact, Source</td></tr>
+</tbody>
+</table>
+<p>Summaries stay under 100 characters. Stories never start with "As a" in the summary; that belongs
+in the body. Sub-tasks are created only when the team asks; splitting stories is the delivery team's
+job. Every description ends with a Source section linking the requirement document and the knowledge
+pages.</p>
+
+<h3>Field rules</h3>
+<table>
+<thead><tr><th>Field</th><th>Filled from</th></tr></thead>
+<tbody>
+<tr><td>Project, issue type names</td><td><code>PROJECT-PROFILE.md</code> sections 2 and 3</td></tr>
+<tr><td>Parent</td><td>The epic created first in the same batch, or an existing epic (the document's <code>jira_epic</code>)</td></tr>
+<tr><td>Fix version</td><td>The requirement document. Required: <code>/backlog</code> refuses without one, unless you explicitly choose "unscheduled"</td></tr>
+<tr><td>Components</td><td>Profile defaults plus the requirement's area</td></tr>
+<tr><td>Labels</td><td><code>ba-harness</code> plus the area, so harness-created issues are easy to find</td></tr>
+<tr><td>Required custom fields</td><td>The table <code>/setup</code> wrote in profile section 3: a fixed default, a value from the requirement, or ask each time</td></tr>
+<tr><td>Priority</td><td>Set only when the requirement states one, with its source. Priority is a stakeholder decision</td></tr>
+<tr><td>Story points, assignee</td><td>Never set. The team estimates and assigns</td></tr>
+</tbody>
+</table>
+
+<h3>Definition of ready</h3>
+<p>Checked by <code>/review</code> and shown in the <code>/backlog</code> preview. A story is ready
+when it:</p>
+<ul>
+<li>has the user story form and at least two acceptance criteria, including a failure or permission
+path where one exists;</li>
+<li>relies only on business rules that exist in the knowledge base;</li>
+<li>has open questions set to "None", or each marked non-blocking by the BA;</li>
+<li>fits INVEST: independent, negotiable, valuable, estimable, small, testable;</li>
+<li>has a fix version and a parent epic.</li>
+</ul>
+<p><code>/backlog</code> never creates a story with a blocking open question.</p>
+
+<h3>Duplicate check</h3>
+<p>Before the preview, <code>/backlog</code> searches the profile's Jira projects for each issue's key
+summary terms and area label. For each possible match it shows the existing issue and offers three
+choices:</p>
+<table>
+<thead><tr><th>Choice</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>link</td><td>Create the new issue and link it to the existing one as "relates"</td></tr>
+<tr><td>update</td><td>Create nothing; propose an edit to the existing issue, shown as a diff</td></tr>
+<tr><td>create anyway</td><td>Create it as planned</td></tr>
+</tbody>
+</table>
+
+<h3>Approval, and the double prompt</h3>
+<div class="flow"><span>preview table</span><em>→</em><span>accept / edit / decline per item</span><em>→</em><span>yes for the batch (≤ 15)</span><em>→</em><span>Claude Code prompt per write</span><em>→</em><span>read back</span><em>→</em><span>keys written back</span></div>
+<p>The preview shows, per item: type, summary, parent, fix version, required fields and the duplicate
+verdict. More than 15 items are split into batches, with the epic in the first. After your yes for
+the batch, Claude Code asks again before each Jira write, because every Atlassian write tool is on
+the "ask" list in <code>.claude/settings.json</code>. That second prompt is expected: it is the last
+check before anything reaches Jira.</p>
+<p>The epic is created first, then each story with the epic as parent, one at a time. Each created
+issue is read back to confirm the summary, type, parent, fix version and required fields stuck; if
+one didn't, the report says so and offers a fix. If a create fails, the batch stops and the report
+lists what was and wasn't created. <code>/backlog</code> never deletes or transitions existing
+issues.</p>
+
+<h2 id="team">For teammates</h2>
+<p>Developers, testers, product owners and new BAs can ask the project's knowledge questions without
+learning any of the BA commands.</p>
+<ol class="steps">
+<li>
+  <h3>Clone once</h3>
+  <pre><code>git clone &lt;repository URL&gt;</code></pre>
+  <p>You need read access to the repository, Claude Code, and Git (with Git Bash on Windows, for the
+  automatic sync). Atlassian sign-in is optional: without it, <code>/ask</code> answers from the
+  knowledge base only.</p>
+</li>
+<li>
+  <h3>Open Claude Code in the folder and ask</h3>
+  <pre><code>claude
+/ask who can raise a job card?</code></pre>
+  <p>Your copy updates itself whenever you open Claude Code there.</p>
+</li>
+</ol>
+<h3>Reading an answer</h3>
+<ul>
+<li>Every claim is followed by the page and ID it comes from, for example
+<code>(CAP-012, BR-104)</code>, linked to the page.</li>
+<li>Confirmed and approved content is stated plainly. Draft content carries "(unconfirmed: draft
+page)". Superseded content is never used.</li>
+<li>Results from Jira or Confluence are labelled as such, and are not treated as confirmed
+knowledge.</li>
+<li>When something touches an open question, the answer says so and links the <code>Q-</code>.</li>
+<li>When the knowledge base doesn't know, the answer says "The knowledge base doesn't answer this."
+and drafts an open question for you to send to the BA: the question, why you need it, and who might
+know.</li>
+</ul>
+<p><code>/ask</code> is read-only by design: it has no write, edit, shell or sub-agent tools, and every
+Jira and Confluence write tool is disallowed for it. Other assistants (Copilot, Cursor, Codex) follow
+<code>AGENTS.md</code> in the repository and answer the same way. You can also read the pages
+directly: start at <code>knowledge/index.md</code>, on GitHub or in Obsidian.</p>
+<h3>Suggesting a change</h3>
+<p>Send the material to the BA. Or run <code>/intake</code> on it and open a pull request that only
+adds the staging file it writes to <code>knowledge/_staging/</code>. Either way, the BA accepts or
+rejects each item, and nothing changes until then.</p>
+
+<h2 id="safety">Safety</h2>
+<p>The protections are layered, so one missing step doesn't let a write through.</p>
+<table>
+<thead><tr><th>Layer</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><strong>Command definitions</strong> (<code>agents/</code>)</td><td>Each command previews, stages and waits for a yes. Knowledge changes go through staging; Jira writes only through <code>/backlog</code>; a contradiction becomes a question; nothing is deleted from the knowledge base</td></tr>
+<tr><td><strong>Allowed and disallowed tools</strong> (<code>.claude/commands/</code>)</td><td>Each wrapper pre-approves only the reads and git commands that command needs. <code>/ask</code> also lists file writes, Bash, PowerShell, sub-agents and every Atlassian write tool as disallowed</td></tr>
+<tr><td><strong>Settings: ask</strong> (<code>.claude/settings.json</code>)</td><td>Claude Code asks before every Atlassian write tool, matched by verb (<code>create*</code>, <code>edit*</code>, <code>update*</code>, <code>transition*</code>, <code>add*</code> and the rest, plus <code>executeWrite</code>), and before every <code>git push</code>, checkout, restore and rebase, even inside an approved batch</td></tr>
+<tr><td><strong>Settings: deny</strong></td><td>Atlassian delete tools and <code>executeDestructive</code>, force pushes, <code>git reset --hard</code>, <code>git clean</code> and <code>git branch -D</code> are refused outright. These rules match commands as Claude normally writes them; an unusual form such as <code>git -C . push</code> isn't matched, which is why the wrappers pre-approve only narrow git commands and everything else prompts</td></tr>
+<tr><td><strong>inbox/ is gitignored</strong></td><td>Raw notes, transcripts and documents never enter git. Only the redacted source record is committed. Raw files are deleted from <code>inbox/</code> only with your yes</td></tr>
+<tr><td><strong>Redaction</strong></td><td>Intake marks each item's sensitivity and proposes removing names where a role would do, contact details, health or customer data, credentials and anything marked confidential</td></tr>
+<tr><td><strong>No secrets</strong></td><td>Atlassian is OAuth through <code>/mcp</code>. <code>.mcp.json</code> holds only the server URL, <code>/setup</code> never stores a token or password, and the per-user <code>.claude/settings.local.json</code> is gitignored</td></tr>
+</tbody>
+</table>
+<div class="callout warn"><p><strong>Read every preview.</strong> The prompts stop accidental writes.
+They can't stop a wrong item you approve, so a yes is your decision.</p></div>
+<p>Data handling is covered by the organisation's AI-use policy.</p>
+
+<h2 id="trouble">Troubleshooting</h2>
+<table>
+<thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>A command says Atlassian isn't connected</td><td>Not signed in, or the sign-in expired</td><td>Run <code>/mcp</code>, choose <code>atlassian</code>, sign in in the browser. If the app is blocked, ask your Atlassian admin to allow it. <code>/setup</code> finishes the local part meanwhile</td></tr>
+<tr><td><code>/sync</code> tells you to run <code>/setup</code></td><td>The scope JQL in the profile is still a placeholder</td><td>Run <code>/setup</code> and fill section 2</td></tr>
+<tr><td>The knowledge base didn't update when you opened Claude Code</td><td>No upstream yet; uncommitted edits; your copy and the shared copy both changed; offline; or <code>kb_auto_sync: off</code></td><td>Read the message the hook printed and run what it suggests (<code>git pull --ff-only</code>, or <code>git pull --rebase</code> then push). For a new repository, push with <code>git push -u origin main</code></td></tr>
+<tr><td>No hook message at all, ever</td><td>bash isn't available, or the session was already open</td><td>Install Git for Windows (Git Bash). The hook runs when a session starts or resumes; otherwise pull by hand</td></tr>
+<tr><td>A command stops before staging with a pull error</td><td>Local changes or diverged history; it won't stage against an old copy</td><td>Commit or stash your changes, then <code>git pull --rebase</code> and push</td></tr>
+<tr><td>A staging file is left over</td><td>Some items were never decided</td><td>Run <code>/intake knowledge/_staging/&lt;file&gt;</code>. It shows the undecided items and applies them once you decide. <code>/review kb</code> lists staging files older than a day</td></tr>
+<tr><td><code>/backlog</code> refuses: a required field has no value</td><td>A required Jira field isn't in the profile's table, or has no default</td><td>Run <code>/setup</code> again to read Jira's field rules, or give the value when asked</td></tr>
+<tr><td><code>/backlog</code> refuses: no fix version</td><td>The requirement document has none</td><td>Set <code>fix_version</code> in the document, or choose "unscheduled" explicitly</td></tr>
+<tr><td><code>/backlog</code> asks you to run <code>/review</code> first</td><td><code>review.md</code> is missing or older than the document</td><td>Run <code>/review requirements/&lt;slug&gt;/requirement.md</code></td></tr>
+<tr><td>A created issue is missing a field</td><td>The Atlassian server dropped a field silently</td><td>The report names it and offers the fix; accept it, or edit the issue in Jira</td></tr>
+<tr><td><code>/sync</code> stopped with a 429 error</td><td>Atlassian's rate limit for your site</td><td>Nothing is lost: it staged what it read and kept the sync time. Run <code>/sync</code> again later and it continues</td></tr>
+<tr><td><code>/intake</code> can't read a Word, Excel or PowerPoint file</td><td><code>converter</code> is <code>pdf</code>, or <code>markitdown</code> isn't installed</td><td>Save the file as PDF in <code>inbox/</code>, or install <code>markitdown</code> and set <code>converter: markitdown</code></td></tr>
+<tr><td><code>/intake</code> asks you to move a file</td><td>The file is outside <code>inbox/</code></td><td>Move or copy it into <code>inbox/</code>, so the original is never committed</td></tr>
+<tr><td>Git conflict in <code>index.md</code> or a register</td><td>Two BAs changed the knowledge base on the same day</td><td>Take either side, then run <code>/review kb</code> to rebuild them</td></tr>
+<tr><td><code>new-project.sh</code> copied nothing</td><td>Files already exist in the target, or the template has uncommitted changes</td><td>Use an empty target folder; commit the template changes or pass <code>--allow-dirty</code></td></tr>
+</tbody>
+</table>
+
+<h2 id="cheat">Cheat sheet</h2>
+<div class="card">
+<table>
+<thead><tr><th>Situation</th><th>Command</th></tr></thead>
+<tbody>
+<tr><td>New project</td><td><code>scripts/new-project.sh ../&lt;project&gt;-ba-knowledge --name "&lt;Project&gt;"</code> → push → <code>/mcp</code> → <code>/setup</code> → <code>/kb-seed</code></td></tr>
+<tr><td>Start of the day</td><td>Open Claude Code, then <code>/sync</code></td></tr>
+<tr><td>After a meeting, a document or an email</td><td><code>/intake inbox/&lt;file&gt;</code></td></tr>
+<tr><td>A stakeholder answered</td><td><code>/intake</code> with the answer</td></tr>
+<tr><td>End of a session with Claude</td><td><code>/intake</code></td></tr>
+<tr><td>New epic</td><td><code>/requirements &lt;epic&gt;</code> → <code>/review requirements/&lt;slug&gt;/requirement.md</code> → <code>/backlog requirements/&lt;slug&gt;/requirement.md</code></td></tr>
+<tr><td>Someone else's Jira issue</td><td><code>/review &lt;JIRA-KEY&gt;</code></td></tr>
+<tr><td>Weekly health check</td><td><code>/review kb</code></td></tr>
+<tr><td>Any question about the project</td><td><code>/ask &lt;question&gt;</code></td></tr>
+</tbody>
+</table>
+<table>
+<thead><tr><th>File</th><th>What it is</th></tr></thead>
+<tbody>
+<tr><td><code>PROJECT-PROFILE.md</code></td><td>The one file a project fills in; settings in section 5</td></tr>
+<tr><td><code>knowledge/index.md</code></td><td>Every page, one line each (generated)</td></tr>
+<tr><td><code>knowledge/_staging/</code></td><td>Proposals waiting for you</td></tr>
+<tr><td><code>knowledge/_meta/conventions.md</code></td><td>The knowledge base rules</td></tr>
+<tr><td><code>requirements/&lt;slug&gt;/</code></td><td><code>requirement.md</code> and <code>review.md</code></td></tr>
+<tr><td><code>trace/map.csv</code></td><td>Requirement → story → Jira key → knowledge page</td></tr>
+<tr><td><code>inbox/</code></td><td>Raw material, never committed</td></tr>
+<tr><td><code>agents/</code></td><td>The full definition of each command</td></tr>
+</tbody>
+</table>
+</div>
+
+<footer>
+<p>To see a filled-in project repository, open <code>examples/fleetkeep-ba-knowledge/</code> in the template: start with <code>EXAMPLE.md</code>, then <code>knowledge/index.md</code>, the pending staging file, and the requirement with its review.</p>
+<p>More detail: <code>SETUP.md</code> (setting up a project), <code>design/</code> (the agreed
+decisions, command definitions, workflow guide, knowledge base conventions, Jira templates and
+repository layout) and <code>research/</code> (the research behind them) in the template repository.
+In a project repository, <code>agents/</code> holds the command definitions and
+<code>knowledge/_meta/conventions.md</code> the knowledge base rules.</p>
+<p>AI BA Harness · Private repository. All rights reserved.</p>
+</footer>
+</main>
+</div>
+</body>
+</html>

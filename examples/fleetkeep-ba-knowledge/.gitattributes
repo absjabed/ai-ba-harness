@@ -1,0 +1,9 @@
+# Keep line endings consistent on Windows, macOS and Linux. Shell scripts must be LF or bash fails.
+* text=auto eol=lf
+*.sh text eol=lf
+*.png binary
+*.jpg binary
+*.pdf binary
+*.docx binary
+*.xlsx binary
+*.pptx binary

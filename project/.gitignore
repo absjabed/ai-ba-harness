@@ -1,0 +1,16 @@
+# Raw material for /intake: never committed (it can hold personal or confidential data).
+inbox/*
+!inbox/.gitkeep
+
+# Obsidian per-user state (the shared settings in knowledge/.obsidian/app.json are committed).
+knowledge/.obsidian/workspace*.json
+knowledge/.obsidian/cache
+knowledge/.trash/
+
+# Claude Code per-user settings.
+.claude/settings.local.json
+
+# OS and editor files.
+.DS_Store
+Thumbs.db
+desktop.ini
