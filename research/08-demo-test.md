@@ -38,5 +38,7 @@ rebuild, and it showed that the tool itself didn't read inline YAML lists. Both 
 - **Bookkeeping:** the index and registers had no exact format and no tool.
 - Many smaller gaps in ordering, statuses, IDs, redaction, resuming and git.
 
-The CHANGELOG entry for 0.5.0 lists what changed. Not tested yet: anything against a real Jira or
+The demo repository itself is kept, as it was left, in
+[`examples/fleetkeep-demo-test/`](../examples/fleetkeep-demo-test/DEMO-TEST.md). The CHANGELOG entry
+for 0.5.0 lists what changed. Not tested yet: anything against a real Jira or
 Confluence site, the `/sync` command, and `/kb-seed`.

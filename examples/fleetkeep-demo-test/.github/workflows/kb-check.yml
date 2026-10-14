@@ -1,0 +1,19 @@
+# Checks the knowledge base on every push and pull request: properties, file names, IDs, rules,
+# links, cited IDs, and whether the generated index and registers are up to date.
+# Runs tools/kb.py check; see knowledge/_meta/conventions.md section 12.
+name: Knowledge base check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check the knowledge base
+        run: python tools/kb.py check
