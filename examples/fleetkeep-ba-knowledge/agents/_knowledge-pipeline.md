@@ -1,4 +1,4 @@
-# The knowledge pipeline: extract, judge, stage, confirm, apply
+# The knowledge pipeline: extract, judge, stage, critique, confirm, apply
 
 Shared by `/kb-seed`, `/intake`, `/sync` and `/requirements`. It is how anything gets into
 `knowledge/`. The rules it enforces are in `knowledge/_meta/conventions.md`; read that first.
@@ -86,18 +86,28 @@ message the BA can send to participants.
 If there are more than 40 items, split them into several staging files of related items, so the BA
 can decide them in sittings.
 
-## 4. Confirm
+## 4. Critique
 
-Show the BA the staging file. They decide each item by ticking a box in the file, or in the chat
+Run the critic on the staging file, as [`_critic.md`](_critic.md) describes: a fresh-context
+sub-agent when your tool has one, otherwise a separate second pass. It re-reads the source, looks
+for missed items, misquotes, wrong verdicts, unchecked authority and unredacted data, and returns
+findings. Correct the staging file for the `fix` findings, note the `check` findings on their items,
+and fill the staging file's `Critic` section. One critique per staging file; then go to the BA.
+
+When resuming a staging file that already has its `Critic` section filled, skip this step.
+
+## 5. Confirm
+
+Show the BA the staging file, pointing out the critic's findings first. They decide each item by ticking a box in the file, or in the chat
 ("accept 1-6, reject 7: wrong meeting, edit 8: it's 10 days not 14"). Wait for their decisions.
 Apply when the BA says to: normally once every item is decided, or earlier if they say "apply the
 decided ones". Undecided items stay in the staging file for later. To resume in another session, run
 `/intake knowledge/_staging/<file>`; it picks up at this step.
 
-## 5. Apply
+## 6. Apply
 
 Only a BA who maintains this repository applies proposals (`PROJECT-PROFILE.md` section 1 lists the
-roles). If you can't tell that the person is one, ask. A teammate's run stops after step 3: the
+roles). If you can't tell that the person is one, ask. A teammate's run stops after step 4: the
 staging file is their contribution, sent to the BA or opened as a pull request.
 
 1. `git pull --ff-only` again.

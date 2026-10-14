@@ -19,6 +19,7 @@ these. Change a decision here first, then update the notes that depend on it.
 | 12 | Approvals for outward writes | Preview every item, approve per batch, at most 15 items per batch, plus Claude Code's own permission prompt on every Jira and Confluence write tool |
 | 13 | Data handling | Covered by the organisation's AI-use policy (confirmed). `inbox/` is gitignored; intake offers to strip personal data before anything is stored |
 | 14 | Teammates | Anyone with a clone can use `/ask`, which is read-only. Contributions arrive through the BA (or as a staging file in a pull request) and are accepted by the BA |
+| 15 | Internal critics (added in 0.2.0) | A critic re-checks every staging file against its source and the knowledge base before the BA sees it (fresh-context sub-agent where available); `/requirements` pre-checks its draft with `/review`'s rule checks; `/ask` checks each claim against the page it cites. `/backlog` keeps its preview and read-back, and `/review kb` is itself the critic for the knowledge base |
 
 ## Naming
 

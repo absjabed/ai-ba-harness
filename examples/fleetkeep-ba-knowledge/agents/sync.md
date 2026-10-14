@@ -53,7 +53,7 @@ scope JQL is still a placeholder, tell them to run `/setup`.
 
 ### Then
 
-1. Run the pipeline steps 1 to 5:
+1. Run the pipeline steps 1 to 6, critique included:
    - every item's location is the issue key and comment number, or the page title and section;
    - the source record's kind is `jira` or `confluence`, and its title covers the date range.
 2. **Only after the BA has decided every item** (or explicitly deferred the rest), set `last_synced`

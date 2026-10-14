@@ -50,15 +50,26 @@ diff.
 4. **Use the project's words.** Use glossary terms and the profile's preferred terms. Avoid the
    profile's vague words unless they have a measure.
 5. **Stage new knowledge.** Terms defined, rules agreed, decisions made and questions raised while
-   writing go into one staging file (`<date>-requirements-<slug>.md`), following pipeline steps 3 to 5.
+   writing go into one staging file (`<date>-requirements-<slug>.md`), following pipeline steps 3 to 6.
    The document can cite them as `Q-new-n` until they're accepted; update the citations to real IDs
    after applying.
-6. Show the document, write it after a yes, and commit it with any applied knowledge changes:
+6. **Check the draft before showing it.** Run the rule-based checks from `agents/review.md`, plus
+   its check that every cited `BR-`, `Q-`, `DEC-` and `CAP-` exists. Use a fresh-context sub-agent
+   when your tool has one (give it the draft and `agents/review.md`, and ask for findings only);
+   otherwise do it as a separate pass, re-reading the draft from the top.
+   - Fix what is mechanical yourself: missing or duplicate IDs, a story not in the "As a … I want …
+     so that …" form, a vague word the knowledge base gives a measure for, a citation to the wrong ID.
+   - Don't invent content to pass a check. A missing failure path or a missing measure becomes an
+     open question or a note to the BA.
+   - Show the remaining findings with the document. This is a pre-check, not the review: it writes
+     no `review.md` and gives no verdict.
+7. Show the document, write it after a yes, and commit it with any applied knowledge changes:
    `req: draft <slug>`. Ask before pushing.
 
 ## Report
 
 - The document path, with counts of FR, NFR and stories.
+- What the pre-check fixed, and what it left open.
 - Open questions that block stories, and who to ask.
 - Conflicts with the knowledge base.
 - Next: `/review requirements/<slug>/requirement.md`.

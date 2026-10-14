@@ -37,7 +37,13 @@ statuses.
      - **superseded:** never use it. If the only source is superseded, say the earlier answer was
        replaced and cite the replacement.
    - If the question touches an open question or an unresolved callout, say so and link the `Q-`.
-4. **When the knowledge base doesn't know,** say "The knowledge base doesn't answer this." Say what
+4. **Check the answer before sending it.** Go through the draft answer claim by claim:
+   - re-open each cited page and find the passage that supports the claim. If none does, remove the
+     claim or cite the right page;
+   - check each status label against the cited page's `status`, and that no superseded page is used;
+   - remove anything that came from general knowledge rather than a source.
+   If this removes part of the answer, say that the knowledge base doesn't confirm that part.
+5. **When the knowledge base doesn't know,** say "The knowledge base doesn't answer this." Say what
    it does cover nearby, if anything. Then draft an open question the person can send to the BA:
    - the question;
    - why they need it;

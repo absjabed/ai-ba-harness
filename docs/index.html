@@ -122,7 +122,7 @@ main a{color:var(--accent);text-underline-offset:2px}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.1.0</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.2.0</span></div>
   </div>
   <h2>Start here</h2>
   <a href="#what">What it is</a>
@@ -214,21 +214,22 @@ limits and draw on Rovo credits.</li>
 or drop exported transcripts in <code>inbox/</code>. Word, Excel and PowerPoint files need
 <code>markitdown</code>, or save them as PDF.</li>
 <li>The knowledge base is only as good as what you accept. The model's extraction and judgement can
-miss things; that is why everything AI-drafted stays visible as a proposal until you decide.</li>
+miss things. A critic pass checks every staging file before you see it, but it is the same kind of
+model, so everything AI-drafted stays visible as a proposal until you decide.</li>
 <li>Scale. Every question starts from <code>knowledge/index.md</code>. Once it no longer fits in one
 read (roughly 300 or more pages), a local search server will be needed.</li>
-<li>This is version 0.1.0, the first build of the design. It has not been used on a real project
-yet.</li>
+<li>This is version 0.2.0. It has not been used on a real project yet.</li>
 </ul>
 
 <h2 id="map">Harness map</h2>
 <p>Each lane is one rhythm of work, read left to right. Yellow boxes are where a command stops and
-asks you. The purple box is the only place anything is written to Jira. On a narrow screen, scroll the
+asks you. Green boxes only read, such as the critic that checks every staging file before you see
+it. The purple box is the only place anything is written to Jira. On a narrow screen, scroll the
 diagram sideways.</p>
 <div class="dg-wrap">
 <svg viewBox="0 0 1040 620" role="img" aria-labelledby="dg-title dg-desc" class="dg" xmlns="http://www.w3.org/2000/svg">
 <title id="dg-title">Harness map: when each command runs</title>
-<desc id="dg-desc">Swimlane diagram of the five rhythms of the AI BA Harness: start of a project, daily, per epic, weekly, and anyone at any time. Approval points (STOP), read-only steps and the one step that writes to Jira are marked.</desc>
+<desc id="dg-desc">Swimlane diagram of the five rhythms of the AI BA Harness: start of a project, daily, per epic, weekly, and anyone at any time. Approval points (STOP), read-only steps such as the critic, and the one step that writes to Jira are marked.</desc>
 <defs><marker id="dg-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="dg-ah"/></marker></defs>
 <text x="10" y="26" class="dg-h">Five rhythms, at a glance</text>
 <rect x="300" y="14" width="18" height="14" rx="3" class="dg-n dg-proc"/>
@@ -272,7 +273,7 @@ diagram sideways.</p>
 <line x1="718" y1="103" x2="729" y2="103" class="dg-e" marker-end="url(#dg-arrow)"/>
 <rect x="730" y="79" width="88" height="48" rx="6" class="dg-n dg-proc"/>
 <text x="774.0" y="100" class="dg-t" text-anchor="middle">/kb-seed</text>
-<text x="774.0" y="114" class="dg-s" text-anchor="middle">to _staging/</text>
+<text x="774.0" y="114" class="dg-s" text-anchor="middle">stage + critic</text>
 <line x1="818" y1="103" x2="829" y2="103" class="dg-e" marker-end="url(#dg-arrow)"/>
 <rect x="830" y="79" width="88" height="48" rx="10" class="dg-n dg-gate"/>
 <text x="913" y="89" class="dg-badge" text-anchor="end">STOP</text>
@@ -296,19 +297,23 @@ diagram sideways.</p>
 <text x="274.0" y="175" class="dg-t" text-anchor="middle">/sync</text>
 <text x="274.0" y="189" class="dg-s" text-anchor="middle">reads Atlassian</text>
 <line x1="318" y1="178" x2="329" y2="178" class="dg-e" marker-end="url(#dg-arrow)"/>
-<rect x="330" y="154" width="88" height="48" rx="10" class="dg-n dg-gate"/>
-<text x="413" y="164" class="dg-badge" text-anchor="end">STOP</text>
-<text x="374.0" y="175" class="dg-t" text-anchor="middle">Accept staging</text>
-<text x="374.0" y="189" class="dg-s" text-anchor="middle">item by item</text>
+<rect x="330" y="154" width="88" height="48" rx="6" class="dg-n dg-par"/>
+<text x="374.0" y="175" class="dg-t" text-anchor="middle">Critic</text>
+<text x="374.0" y="189" class="dg-s" text-anchor="middle">second look</text>
 <line x1="418" y1="178" x2="429" y2="178" class="dg-e" marker-end="url(#dg-arrow)"/>
-<rect x="430" y="154" width="88" height="48" rx="6" class="dg-n dg-proc"/>
-<text x="474.0" y="175" class="dg-t" text-anchor="middle">Apply + commit</text>
-<text x="474.0" y="189" class="dg-s" text-anchor="middle">sync time moves</text>
+<rect x="430" y="154" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="513" y="164" class="dg-badge" text-anchor="end">STOP</text>
+<text x="474.0" y="175" class="dg-t" text-anchor="middle">Accept staging</text>
+<text x="474.0" y="189" class="dg-s" text-anchor="middle">item by item</text>
 <line x1="518" y1="178" x2="529" y2="178" class="dg-e" marker-end="url(#dg-arrow)"/>
-<rect x="530" y="154" width="88" height="48" rx="10" class="dg-n dg-gate"/>
-<text x="613" y="164" class="dg-badge" text-anchor="end">STOP</text>
-<text x="574.0" y="175" class="dg-t" text-anchor="middle">Push</text>
-<text x="574.0" y="189" class="dg-s" text-anchor="middle">asks first</text>
+<rect x="530" y="154" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="574.0" y="175" class="dg-t" text-anchor="middle">Apply + commit</text>
+<text x="574.0" y="189" class="dg-s" text-anchor="middle">sync time moves</text>
+<line x1="618" y1="178" x2="629" y2="178" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="630" y="154" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="713" y="164" class="dg-badge" text-anchor="end">STOP</text>
+<text x="674.0" y="175" class="dg-t" text-anchor="middle">Push</text>
+<text x="674.0" y="189" class="dg-s" text-anchor="middle">asks first</text>
 <rect x="130" y="218" width="88" height="48" rx="6" class="dg-n dg-proc"/>
 <text x="174.0" y="239" class="dg-t" text-anchor="middle">New material</text>
 <text x="174.0" y="253" class="dg-s" text-anchor="middle">notes or a doc</text>
@@ -321,23 +326,27 @@ diagram sideways.</p>
 <text x="374.0" y="239" class="dg-t" text-anchor="middle">/intake</text>
 <text x="374.0" y="253" class="dg-s" text-anchor="middle">extract + judge</text>
 <line x1="418" y1="242" x2="429" y2="242" class="dg-e" marker-end="url(#dg-arrow)"/>
-<rect x="430" y="218" width="88" height="48" rx="10" class="dg-n dg-gate"/>
-<text x="513" y="228" class="dg-badge" text-anchor="end">STOP</text>
-<text x="474.0" y="239" class="dg-t" text-anchor="middle">Accept staging</text>
-<text x="474.0" y="253" class="dg-s" text-anchor="middle">item by item</text>
+<rect x="430" y="218" width="88" height="48" rx="6" class="dg-n dg-par"/>
+<text x="474.0" y="239" class="dg-t" text-anchor="middle">Critic</text>
+<text x="474.0" y="253" class="dg-s" text-anchor="middle">second look</text>
 <line x1="518" y1="242" x2="529" y2="242" class="dg-e" marker-end="url(#dg-arrow)"/>
-<rect x="530" y="218" width="88" height="48" rx="6" class="dg-n dg-proc"/>
-<text x="574.0" y="239" class="dg-t" text-anchor="middle">Apply + commit</text>
-<text x="574.0" y="253" class="dg-s" text-anchor="middle">source record</text>
+<rect x="530" y="218" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="613" y="228" class="dg-badge" text-anchor="end">STOP</text>
+<text x="574.0" y="239" class="dg-t" text-anchor="middle">Accept staging</text>
+<text x="574.0" y="253" class="dg-s" text-anchor="middle">item by item</text>
 <line x1="618" y1="242" x2="629" y2="242" class="dg-e" marker-end="url(#dg-arrow)"/>
-<rect x="630" y="218" width="88" height="48" rx="6" class="dg-n dg-opt" stroke-dasharray="5 3"/>
-<text x="674.0" y="239" class="dg-t" text-anchor="middle">Clean inbox?</text>
-<text x="674.0" y="253" class="dg-s" text-anchor="middle">only with a yes</text>
+<rect x="630" y="218" width="88" height="48" rx="6" class="dg-n dg-proc"/>
+<text x="674.0" y="239" class="dg-t" text-anchor="middle">Apply + commit</text>
+<text x="674.0" y="253" class="dg-s" text-anchor="middle">source record</text>
 <line x1="718" y1="242" x2="729" y2="242" class="dg-e" marker-end="url(#dg-arrow)"/>
-<rect x="730" y="218" width="88" height="48" rx="10" class="dg-n dg-gate"/>
-<text x="813" y="228" class="dg-badge" text-anchor="end">STOP</text>
-<text x="774.0" y="239" class="dg-t" text-anchor="middle">Push</text>
-<text x="774.0" y="253" class="dg-s" text-anchor="middle">asks first</text>
+<rect x="730" y="218" width="88" height="48" rx="6" class="dg-n dg-opt" stroke-dasharray="5 3"/>
+<text x="774.0" y="239" class="dg-t" text-anchor="middle">Clean inbox?</text>
+<text x="774.0" y="253" class="dg-s" text-anchor="middle">only with a yes</text>
+<line x1="818" y1="242" x2="829" y2="242" class="dg-e" marker-end="url(#dg-arrow)"/>
+<rect x="830" y="218" width="88" height="48" rx="10" class="dg-n dg-gate"/>
+<text x="913" y="228" class="dg-badge" text-anchor="end">STOP</text>
+<text x="874.0" y="239" class="dg-t" text-anchor="middle">Push</text>
+<text x="874.0" y="253" class="dg-s" text-anchor="middle">asks first</text>
 <rect x="4" y="278" width="1032" height="116" rx="6" class="dg-lane"/>
 <rect x="4" y="278" width="118" height="116" rx="6" class="dg-lane-h"/>
 <text x="63" y="334.0" class="dg-lt" text-anchor="middle">Per epic</text>
@@ -348,7 +357,7 @@ diagram sideways.</p>
 <line x1="218" y1="316" x2="229" y2="316" class="dg-e" marker-end="url(#dg-arrow)"/>
 <rect x="230" y="292" width="88" height="48" rx="6" class="dg-n dg-proc"/>
 <text x="274.0" y="313" class="dg-t" text-anchor="middle">/requirements</text>
-<text x="274.0" y="327" class="dg-s" text-anchor="middle">≤ 5 Qs per round</text>
+<text x="274.0" y="327" class="dg-s" text-anchor="middle">Qs + pre-check</text>
 <line x1="318" y1="316" x2="329" y2="316" class="dg-e" marker-end="url(#dg-arrow)"/>
 <rect x="330" y="292" width="88" height="48" rx="10" class="dg-n dg-gate"/>
 <text x="413" y="302" class="dg-badge" text-anchor="end">STOP</text>
@@ -421,11 +430,11 @@ diagram sideways.</p>
 <line x1="318" y1="511" x2="329" y2="511" class="dg-e" marker-end="url(#dg-arrow)"/>
 <rect x="330" y="487" width="88" height="48" rx="6" class="dg-n dg-par"/>
 <text x="374.0" y="508" class="dg-t" text-anchor="middle">/ask</text>
-<text x="374.0" y="522" class="dg-s" text-anchor="middle">can't write</text>
+<text x="374.0" y="522" class="dg-s" text-anchor="middle">no write tools</text>
 <line x1="418" y1="511" x2="429" y2="511" class="dg-e" marker-end="url(#dg-arrow)"/>
 <rect x="430" y="487" width="88" height="48" rx="6" class="dg-n dg-proc"/>
 <text x="474.0" y="508" class="dg-t" text-anchor="middle">Cited answer</text>
-<text x="474.0" y="522" class="dg-s" text-anchor="middle">statuses shown</text>
+<text x="474.0" y="522" class="dg-s" text-anchor="middle">citations checked</text>
 <line x1="518" y1="511" x2="529" y2="511" class="dg-e" marker-end="url(#dg-arrow)"/>
 <rect x="530" y="487" width="88" height="48" rx="6" class="dg-n dg-opt" stroke-dasharray="5 3"/>
 <text x="574.0" y="508" class="dg-t" text-anchor="middle">Not known?</text>
@@ -437,7 +446,7 @@ diagram sideways.</p>
 <rect x="4" y="564" width="1032" height="46" rx="6" class="dg-guard"/>
 <text x="63" y="583" class="dg-lt" text-anchor="middle">Always on</text>
 <text x="63" y="597" class="dg-lc" text-anchor="middle">settings + hook</text>
-<text x="130" y="583" class="dg-t">Every Atlassian write tool and git push ask first   |   force push and git reset --hard are denied   |   /ask has no write tools</text>
+<text x="130" y="583" class="dg-t">Every Atlassian write tool and git push ask first   |   Atlassian deletes, force push, reset --hard, git clean are denied   |   /ask has no write tools</text>
 <text x="130" y="598" class="dg-s">kb-sync.sh fast-forwards your copy when a session starts · inbox/ is gitignored · Atlassian sign-in is OAuth through /mcp, no tokens stored</text>
 </svg>
 </div>
@@ -481,7 +490,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.1.0"
+git commit -m "Start from AI BA Harness 0.2.0"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -592,7 +601,7 @@ risks, in that order.</p>
 <table><tbody>
 <tr><td><strong>When</strong></td><td>After <code>/setup</code>. Later only when a large body of new material arrives</td></tr>
 <tr><td><strong>Needs</strong></td><td>The sources listed in profile section 6: files in <code>inbox/</code>, Confluence page trees, Jira epics by JQL. It reads nothing outside the profile's scope</td></tr>
-<tr><td><strong>Writes</strong></td><td>One staging file per source; after acceptance, the knowledge pages, registers, index and log</td></tr>
+<tr><td><strong>Writes</strong></td><td>One staging file per source, each checked by the critic; after acceptance, the knowledge pages, registers, index and log</td></tr>
 <tr><td><strong>Approval</strong></td><td>Asks once before reading; every item accepted by you; stops above 200 items and asks you to split the work</td></tr>
 </tbody></table>
 </div>
@@ -604,7 +613,7 @@ With no argument it captures what was learned in the current conversation.</p>
 <table><tbody>
 <tr><td><strong>When</strong></td><td>After a meeting or workshop, when a document or email arrives, when a stakeholder answers a question, at the end of a working session with Claude</td></tr>
 <tr><td><strong>Needs</strong></td><td>The material in <code>inbox/</code> (a file elsewhere: it asks you to move or copy it in first). Reads <code>.md</code>, <code>.txt</code>, <code>.vtt</code>, <code>.srt</code>, <code>.csv</code>, <code>.eml</code>, PDF and images directly; Word, Excel and PowerPoint through <code>markitdown</code> or as PDF</td></tr>
-<tr><td><strong>Writes</strong></td><td>A staging file; after acceptance, the pages, a source record in <code>sources/</code>, registers, index and log. For meetings it also lists attendees by role, decisions, actions with owner and date, and drafts a play-back message for participants</td></tr>
+<tr><td><strong>Writes</strong></td><td>A staging file, checked by the critic before you see it; after acceptance, the pages, a source record in <code>sources/</code>, registers, index and log. For meetings it also lists attendees by role, decisions, actions with owner and date, and drafts a play-back message for participants</td></tr>
 <tr><td><strong>Approval</strong></td><td>Every item accepted by you; asks before pushing; asks before deleting the raw files from <code>inbox/</code> (default: keep them)</td></tr>
 </tbody></table>
 </div>
@@ -617,7 +626,7 @@ changes with business meaning. Routine workflow moves, estimates and assignee ch
 <table><tbody>
 <tr><td><strong>When</strong></td><td>Daily, and before writing requirements for an area</td></tr>
 <tr><td><strong>Needs</strong></td><td><code>/setup</code> done, Atlassian signed in, the scope JQL (and spaces) in the profile. The first run asks how far back to go (default 14 days)</td></tr>
-<tr><td><strong>Writes</strong></td><td>The same as <code>/intake</code>, plus the sync time in <code>knowledge/_meta/sync.json</code>. Nothing in Jira or Confluence, not even comments</td></tr>
+<tr><td><strong>Writes</strong></td><td>The same as <code>/intake</code> (critic included), plus the sync time in <code>knowledge/_meta/sync.json</code>. Nothing in Jira or Confluence, not even comments</td></tr>
 <tr><td><strong>Approval</strong></td><td>Every item accepted by you. The sync time moves only after you have decided every item, so nothing is skipped. By default it reads at most 50 issues and 20 pages per run</td></tr>
 </tbody></table>
 </div>
@@ -629,7 +638,7 @@ says about the area.</p>
 <table><tbody>
 <tr><td><strong>When</strong></td><td>A new epic or a significant change needs defining; before <code>/backlog</code></td></tr>
 <tr><td><strong>Needs</strong></td><td>The relevant area seeded in the knowledge base. If there is nothing on the area, it suggests an <code>/intake</code> of existing material first</td></tr>
-<tr><td><strong>Writes</strong></td><td><code>requirements/&lt;epic-slug&gt;/requirement.md</code> (status draft): goal, scope, stakeholders, <code>FR-001</code>, <code>NFR-001</code> in EARS form, user stories (<code>ST-01</code>) with at least two Given/When/Then criteria, assumptions, open questions, success measures, and conflicts with the knowledge base. New terms, rules and decisions go to staging. Commit <code>req: draft &lt;slug&gt;</code></td></tr>
+<tr><td><strong>Writes</strong></td><td><code>requirements/&lt;epic-slug&gt;/requirement.md</code> (status draft): goal, scope, stakeholders, <code>FR-001</code>, <code>NFR-001</code> in EARS form, user stories (<code>ST-01</code>) with at least two Given/When/Then criteria, assumptions, open questions, success measures, and conflicts with the knowledge base. Before showing the draft it runs <code>/review</code>'s rule checks on it in a fresh context and fixes what is mechanical; the rest is listed with the draft. This pre-check gives no verdict, so <code>/review</code> is still the gate before <code>/backlog</code>. New terms, rules and decisions go to staging. Commit <code>req: draft &lt;slug&gt;</code></td></tr>
 <tr><td><strong>Approval</strong></td><td>Clarifying questions one at a time, multiple choice with a recommended answer, at most five per round. Document shown, written after a yes; asks before pushing</td></tr>
 </tbody></table>
 </div>
@@ -661,7 +670,8 @@ checks, after you approve the batch. The only command in version 1 that writes t
 <div class="card">
 <h3><code>/ask &lt;question&gt;</code> <span class="pill">anyone</span> <span class="pill">no write tools</span></h3>
 <p>Answers from the knowledge base and requirement documents, citing the page and ID for every
-claim and saying how certain each source is.</p>
+claim and saying how certain each source is. Before answering it re-opens each cited page and drops
+any claim the page doesn't support.</p>
 <table><tbody>
 <tr><td><strong>When</strong></td><td>Anytime, by anyone with a clone</td></tr>
 <tr><td><strong>Needs</strong></td><td>The repository. Atlassian is optional: when signed in, it searches Jira and Confluence only if the knowledge base doesn't settle the question or the question is about delivery status, and labels those results "from Jira" or "from Confluence"</td></tr>
@@ -847,17 +857,27 @@ with a summary table at the top and one block per item:</p>
 <tr><td>Authority</td><td>For decisions and answers: can decide, cannot (with the owner's role), or unknown</td></tr>
 <tr><td>Sensitivity</td><td>clean, or what should be redacted</td></tr>
 <tr><td>Quote</td><td>The exact words and where they came from</td></tr>
+<tr><td>Critic</td><td>ok, what the critic fixed, or what it wants you to check</td></tr>
 <tr><td>Proposed change</td><td>The exact change: a new page, a diff of an existing page, a new question, a glossary entry, a RAID row, or ignore with the reason</td></tr>
 </tbody>
 </table>
+<p>Before you see the file, a critic reads the source again and checks the staging file against it
+and against the knowledge base: items left out, quotes that don't match, <code>new</code> items that
+already exist, contradictions of confirmed text, authority not checked, and data that should have
+been redacted. In Claude Code it runs as a sub-agent with a fresh context, so it doesn't share the
+first pass's blind spots. It writes nothing itself. The command fixes what the critic proved wrong,
+marks items it added as "added by the critic", and lists everything else in the file's
+<code>Critic</code> section for you. Start there.</p>
 <p>Decide each item by ticking one of the three boxes under it (accept, edit, reject), or answer in
 the chat, for example:</p>
 <pre><code>accept 1-6, reject 7: wrong meeting, edit 8: it's 10 days not 14</code></pre>
-<p>Nothing is applied until every item has a decision. Then the command pulls again, gives the real
+<p>The command applies the decided items when you say so, normally once every item is decided
+(say "apply the decided ones" to go earlier). It pulls again, gives the real
 IDs, writes the accepted items (as <code>confirmed</code>, or <code>draft</code> if you say "keep as
 draft"), writes the source record with the rejected items and their reasons (so they aren't proposed
 again), rebuilds the index and registers, appends to <code>log.md</code>, deletes the staging file,
-commits, and asks whether to push. Items you leave undecided stay in the staging file for later. An
+commits, and asks whether to push. Items you leave undecided stay in the staging file for later,
+and only a BA who maintains the repository applies; a teammate's run stops at the staging file. An
 input with more than 40 items is split into several staging files so you can decide them in
 sittings.</p>
 
@@ -1032,6 +1052,8 @@ page)". Superseded content is never used.</li>
 <li>Results from Jira or Confluence are labelled as such, and are not treated as confirmed
 knowledge.</li>
 <li>When something touches an open question, the answer says so and links the <code>Q-</code>.</li>
+<li>Before answering, <code>/ask</code> checks each claim against the page it cites. If it had to
+drop a claim, it tells you the knowledge base doesn't confirm that part.</li>
 <li>When the knowledge base doesn't know, the answer says "The knowledge base doesn't answer this."
 and drafts an open question for you to send to the BA: the question, why you need it, and who might
 know.</li>
@@ -1051,6 +1073,7 @@ rejects each item, and nothing changes until then.</p>
 <thead><tr><th>Layer</th><th>What it does</th></tr></thead>
 <tbody>
 <tr><td><strong>Command definitions</strong> (<code>agents/</code>)</td><td>Each command previews, stages and waits for a yes. Knowledge changes go through staging; Jira writes only through <code>/backlog</code>; a contradiction becomes a question; nothing is deleted from the knowledge base</td></tr>
+<tr><td><strong>Critic</strong> (<code>agents/_critic.md</code>)</td><td>A fresh-context second look at every staging file before you decide, a pre-check of every requirement draft, and a citation check on every <code>/ask</code> answer. It catches mistakes; it doesn't replace your decision</td></tr>
 <tr><td><strong>Allowed and disallowed tools</strong> (<code>.claude/commands/</code>)</td><td>Each wrapper pre-approves only the reads and git commands that command needs. <code>/ask</code> also lists file writes, Bash, PowerShell, sub-agents and every Atlassian write tool as disallowed</td></tr>
 <tr><td><strong>Settings: ask</strong> (<code>.claude/settings.json</code>)</td><td>Claude Code asks before every Atlassian write tool, matched by verb (<code>create*</code>, <code>edit*</code>, <code>update*</code>, <code>transition*</code>, <code>add*</code> and the rest, plus <code>executeWrite</code>), and before every <code>git push</code>, checkout, restore and rebase, even inside an approved batch</td></tr>
 <tr><td><strong>Settings: deny</strong></td><td>Atlassian delete tools and <code>executeDestructive</code>, force pushes, <code>git reset --hard</code>, <code>git clean</code> and <code>git branch -D</code> are refused outright. These rules match commands as Claude normally writes them; an unusual form such as <code>git -C . push</code> isn't matched, which is why the wrappers pre-approve only narrow git commands and everything else prompts</td></tr>
@@ -1111,7 +1134,7 @@ They can't stop a wrong item you approve, so a yes is your decision.</p></div>
 <tr><td><code>requirements/&lt;slug&gt;/</code></td><td><code>requirement.md</code> and <code>review.md</code></td></tr>
 <tr><td><code>trace/map.csv</code></td><td>Requirement → story → Jira key → knowledge page</td></tr>
 <tr><td><code>inbox/</code></td><td>Raw material, never committed</td></tr>
-<tr><td><code>agents/</code></td><td>The full definition of each command</td></tr>
+<tr><td><code>agents/</code></td><td>The full definition of each command, the knowledge pipeline and the critic</td></tr>
 </tbody>
 </table>
 </div>

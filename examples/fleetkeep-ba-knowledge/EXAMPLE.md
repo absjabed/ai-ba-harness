@@ -26,8 +26,10 @@ Jira comments and keys (FK-1188 to FK-1305) are invented, and so are the two nam
    superseded CAP-003 beside it.
 2. **[The staging file](knowledge/_staging/2026-10-14-intake-defect-triage-call.md).** It is
    deliberately left pending, with every box unticked, to show what `/intake` proposes before the BA
-   decides. Its seven items cover each verdict: new, confirms, contradicts (which becomes a question,
-   because the speaker can't decide), answers an open question, and duplicate. A BA would decide it by
+   decides. Its eight items cover each verdict: new, confirms, contradicts (which becomes a question,
+   because the speaker can't decide), answers an open question, and duplicate. Read its `Critic`
+   section first: the critic added a missed action (item 8), fixed items 1 and 2, and left one point
+   for the BA to check (item 1). A BA would decide it by
    ticking boxes, or by running `/intake knowledge/_staging/2026-10-14-intake-defect-triage-call.md`
    to resume it.
 3. **[The requirement](requirements/defect-escalation-to-workshop/requirement.md)** and

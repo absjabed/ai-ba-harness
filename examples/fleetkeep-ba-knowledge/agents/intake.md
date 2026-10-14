@@ -37,14 +37,14 @@ For transcripts, use timestamps as locations. For documents, use page and sectio
 
 ## Steps
 
-1. Run the pipeline from step 0 to step 3 (prepare, extract, judge, stage).
+1. Run the pipeline from step 0 to step 4 (prepare, extract, judge, stage, critique).
 2. **For meetings and transcripts,** also put three things in the staging summary:
    - the attendees by role;
    - the decisions made, each marked "can decide" or "needs owner";
    - the actions with owner and date.
-   Then draft the play-back message.
-3. Show the staging file and wait for the BA's decisions (pipeline step 4).
-4. Apply (pipeline step 5).
+   Then draft the play-back message. Do this before the critique, so the critic checks it too.
+3. Show the staging file and wait for the BA's decisions (pipeline step 5).
+4. Apply (pipeline step 6).
 5. **Clean up the inbox, only with permission.** List the raw files and any converted copies in
    `inbox/.converted/` that this run used, and ask: "Delete these N files from inbox/? The redacted
    source record is kept. (yes / no / choose)". Default no. Delete only the files the BA agrees to.

@@ -17,7 +17,8 @@ second copy waiting to drift.
 | [`review.md`](review.md) | `/review` | Quality report on a document, an issue, or the knowledge base; changes nothing but its report unless the BA asks | No |
 | [`backlog.md`](backlog.md) | `/backlog` | Creates the epic and stories in Jira after approval | **Yes**, after approval |
 | [`ask.md`](ask.md) | `/ask` | Answers questions from the knowledge base with citations | No; it has no write, shell or sub-agent tools |
-| [`_knowledge-pipeline.md`](_knowledge-pipeline.md) | (shared) | Extract, judge, stage, confirm, apply: used by `/kb-seed`, `/intake`, `/sync`, `/requirements` | No |
+| [`_knowledge-pipeline.md`](_knowledge-pipeline.md) | (shared) | Extract, judge, stage, critique, confirm, apply: used by `/kb-seed`, `/intake`, `/sync`, `/requirements` | No |
+| [`_critic.md`](_critic.md) | (shared) | The second look at a staging file before the BA decides: pipeline step 4 | No; it writes nothing |
 
 ## Safety, in layers
 

@@ -33,7 +33,8 @@ seeding.
    verdicts will be `new`. Still compare sources with each other: when two documents disagree,
    propose an open question, not two facts.
 4. **Stage by source** (pipeline step 3): one staging file per document, per Confluence page tree and
-   per Jira epic group. Items stay `draft` unless the BA accepts them as confirmed.
+   per Jira epic group. Items stay `draft` unless the BA accepts them as confirmed. Run the critic on
+   each staging file (pipeline step 4).
 5. **Structure first.** Propose in this order, so later items can link to earlier ones:
    1. glossary terms;
    2. stakeholders and roles;
@@ -42,7 +43,7 @@ seeding.
    5. decisions;
    6. open questions;
    7. risks.
-6. **Confirm and apply** each staging file (pipeline steps 4 and 5). The BA may accept a whole file
+6. **Confirm and apply** each staging file (pipeline steps 5 and 6). The BA may accept a whole file
    at once ("accept all in this file as draft"); apply with `status: draft` in that case.
 7. If more than 200 items would be staged in one run, stop after planning and ask the BA to split the
    work (for example one area at a time).

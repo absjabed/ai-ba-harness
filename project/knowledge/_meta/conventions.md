@@ -178,10 +178,13 @@ People may fix typos and wording on a page by hand, as long as the meaning doesn
 ## 9. Staging files
 
 One file per input, `_staging/<yyyy-mm-dd>-<command>-<slug>.md`, from
-[`templates/staging.md`](templates/staging.md). Each item has a kind, a verdict, the quote, and the
-exact change, followed by three checkboxes. The BA ticks one per item, or answers in the chat
-("accept 1-4, reject 5, edit 6: …"). When every item is decided, the command applies the accepted
-ones and deletes the staging file.
+[`templates/staging.md`](templates/staging.md). Each item has a kind, a verdict, the quote, the
+critic's note and the exact change, followed by three checkboxes. Before the BA sees it, the critic
+(`agents/_critic.md`) checks the file against the source and the knowledge base, and its findings are
+recorded in the file's `Critic` section. The BA ticks one box per item, or answers in the chat
+("accept 1-4, reject 5, edit 6: …"). The command applies the decided items when the BA says so,
+normally once every item is decided. It deletes the staging file then, or keeps it with only the
+undecided items left.
 
 A staging file left in place for more than a day is reported by `/review kb`.
 
