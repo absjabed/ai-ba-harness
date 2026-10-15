@@ -147,7 +147,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.0</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.1</span></div>
   </div>
   <h2>Start here</h2>
   <a href="walkthrough.html">FleetKeep walkthrough</a>
@@ -528,7 +528,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.6.0"
+git commit -m "Start from AI BA Harness 0.6.1"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -696,7 +696,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <a href="#setup">Set up a project</a>:</p>
 <pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
 cd ../fleetkeep-ba-knowledge
-git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.0"
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.1"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main
 claude</code></pre>
@@ -1154,8 +1154,8 @@ check form. <b>Who might know:</b> the Product owner, who decides product behavi
 <p>Every command reads <code>PROJECT-PROFILE.md</code> first, pulls before it writes, never invents a
 fact, and ends with a short report: what it did, what is waiting for you, and the suggested next
 command. The full definition of each one is in the BA repository's <code>agents/</code> folder
-(<code>agents/&lt;command&gt;.md</code>); the files in <code>.claude/commands/</code> only point
-there.</p>
+(<code>agents/&lt;command&gt;.md</code>); the wrappers in <code>.claude/commands/</code>,
+<code>.opencode/commands/</code> and <code>.agents/skills/</code> only point there.</p>
 <table>
 <thead><tr><th>Command</th><th>One line</th><th>Who</th><th>Writes to Jira or Confluence?</th></tr></thead>
 <tbody>
@@ -1754,12 +1754,12 @@ never on the model's own initiative.</li>
 none of the repository's settings: no Atlassian server, no rules, no sync.</li>
 <li><strong>Codex asks before Jira reads too</strong> when the Atlassian server doesn't mark its tools
 read-only. That's safe, just more prompts.</li>
-<li><strong>How far it's tested.</strong> In OpenCode 1.19, on the FleetKeep example, the project's
-settings, commands and agents loaded with the intended permissions, and <code>/ask</code> ran as the
-read-only <code>kb-reader</code> agent and answered with correct citations. A shell command that
-isn't on the allowed list asked first, as it should. The other OpenCode commands haven't been run end
-to end yet, and the Codex files follow Codex's documentation (October 2026) but haven't been run at
-all, so try both on a practice copy first.</li>
+<li><strong>How far it's tested.</strong> OpenCode is proven: in OpenCode 1.19, on the FleetKeep
+example, the project's settings, commands and agents loaded with the intended permissions,
+<code>/ask</code> ran as the read-only <code>kb-reader</code> agent and answered with correct
+citations, and a shell command that isn't on the allowed list asked first. The other commands use the
+same wiring. Codex gets a basic compatibility setup, written from Codex's documentation (October
+2026) but not yet run; try it on a practice copy before relying on its prompts.</li>
 </ul>
 
 <h2 id="safety">Safety</h2>

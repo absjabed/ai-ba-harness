@@ -4,6 +4,20 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.6.1 (2026-10-15)
+
+Fixes from a review of 0.6.0:
+
+- **Deletes stay in staging.** `git rm` is pre-approved only for `knowledge/_staging/` files, in the
+  Claude Code wrappers and in OpenCode (it was any path). Any `rm` or `git rm` with `..` in its path
+  now asks first, in `.claude/settings.json` and `opencode.json`, so a staging-folder rule can't reach
+  outside the folder.
+- **Handbook:** the command section names all three wrapper folders, and "OpenCode and Codex" says
+  plainly that OpenCode is proven and Codex is a basic compatibility setup.
+
+**To update a project:** copy `.claude/settings.json`, `.claude/commands/` and `opencode.json` from
+the template's `project/`, and set `HARNESS_VERSION` to 0.6.1.
+
 ## 0.6.0 (2026-10-15)
 
 OpenCode and Codex can run the harness, alongside Claude Code. The commands' definitions in `agents/`
