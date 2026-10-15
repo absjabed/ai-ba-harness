@@ -14,7 +14,8 @@ with `scripts/new-project.sh`, then follow [SETUP.md](SETUP.md).
 > **Start here:** [`docs/index.html`](docs/index.html) is the BA handbook on one page: what the harness
 > does, setting up a project, a worked example of every command on one project (from `/setup` to
 > `/ask`), what to run when, the knowledge base, Jira templates and troubleshooting. Open it in a
-> browser.
+> browser. The worked example is also a page of its own, to share with a team:
+> [`docs/walkthrough.html`](docs/walkthrough.html).
 
 ## What a project gets
 
