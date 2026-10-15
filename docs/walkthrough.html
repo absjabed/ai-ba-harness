@@ -168,11 +168,11 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
 <p class="lede">One example, start to finish: setting up a project, building its knowledge base,
 writing an epic, putting it into Jira, changing it afterwards, shipping it, and answering a
 teammate's question, with a detour into improving the harness itself. Every command appears at least once, with what you type, what it reads, what it
-asks you and what you end up with. Written for someone who has never worked this way.</p>
+asks you and what you end up with. It assumes you have never worked this way. To share it with a team, use the same example as a page of its own: <a href="walkthrough.html">the FleetKeep walkthrough</a>.</p>
 
 <div class="callout warn">
-<p><strong>An illustration of the design, not a recording.</strong> The harness has not yet run
-against a real Jira site; this is what each command is written to do. Parts 1 to 4 end in real files:
+<p><strong>An illustration of the design.</strong> The harness has not yet run
+against a real Jira site, so this shows what each command is written to do. Parts 1 to 4 end in real files:
 the worked example in the template at <code>examples/fleetkeep-ba-knowledge/</code>, which stops on
 Oct 14. Part 5 goes further than those files. The chat exchanges show what the commands ask; the
 wording varies from run to run.</p>
@@ -236,7 +236,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <div class="tl-row"><span class="tl-date">Oct 13</span><span class="tl-cmd">/backlog</span><span>Epic FK-1301 and stories FK-1302 to FK-1305, after your approval</span></div>
 <div class="tl-part">Part 5 · Changes and release (beyond the example files)</div>
 <div class="tl-row"><span class="tl-date">Oct 15</span><span class="tl-cmd">/intake, /backlog task</span><span>Triage call decided, with its delivery impact; an action becomes a Jira task</span></div>
-<div class="tl-row"><span class="tl-date">Oct 20</span><span class="tl-cmd">/intake, /requirements, /review, /backlog</span><span>A rule changes after the stories exist; three stories updated, nothing created twice</span></div>
+<div class="tl-row"><span class="tl-date">Oct 20</span><span class="tl-cmd">/intake, /requirements, /review, /backlog</span><span>A rule changes after the stories exist; three stories are updated and none is created twice</span></div>
 <div class="tl-row"><span class="tl-date">Oct 22</span><span class="tl-cmd">/intake</span><span>The Product owner signs the requirement off</span></div>
 <div class="tl-row"><span class="tl-date">Oct 26</span><span class="tl-cmd">/kb-seed confluence</span><span>The rewritten product rules are seeded; the inspections area gets its first pages</span></div>
 <div class="tl-row"><span class="tl-date">Nov 9</span><span class="tl-cmd">/backlog bug</span><span>A UAT finding becomes a bug</span></div>
@@ -332,7 +332,7 @@ FleetKeep runs it later, in <a href="#ex-seed">Part 5</a>.</p>
 <li><b>Extract and judge.</b> Every requirement, rule, decision, question, term and risk in the notes,
 each with its quote. The Product owner's "the clock starts when the driver reports it" is a decision
 by someone who can decide. The supervisor and the transport manager gave different accounts of who
-triages, so that becomes a question (Q-001), not a fact.</li>
+triages, so that becomes a question (Q-001) instead of a fact.</li>
 <li><b>Stage.</b> One file in <code>knowledge/_staging/</code>, with the exact change for each item.</li>
 <li><b>Critic.</b> A second look in a fresh context: anything left out, quotes that don't match,
 authority not checked, names to redact. Its findings go at the top of the file.</li>
@@ -391,7 +391,7 @@ on the road quickly."</p>
 </table>
 <p>Verdict: not ready. Nothing is written anywhere. You take it to the Product owner: if they have
 changed their mind, their confirmation goes through <code>/intake</code> and supersedes DEC-003;
-otherwise the story is rewritten or closed in Jira by people.</p>
+otherwise someone rewrites or closes the story in Jira by hand.</p>
 
 <div class="cmd"><code>/intake inbox/2026-10-14-defect-triage-call-notes.md</code></div>
 <p>The weekly triage call with the pilot customer. The staging file has eight items covering every
@@ -568,8 +568,8 @@ Nothing is created twice, and nothing is moved or deleted.</p>
 requirement to <code>approved</code>, with <code>approved_by: Product owner</code> and
 <code>approved_on: 2026-10-22</code>. Had the requirement carried proposals marked "pending" (your
 answers on product behaviour that only the Product owner can decide), the same sign-off would have
-answered all of them and turned them into agreed rules. As a Jira comment, <code>/sync</code> would have proposed the
-same.</p>
+answered all of them and turned them into agreed rules. Had the sign-off come as a Jira comment, <code>/sync</code> would have proposed the
+same change.</p>
 
 <h4 id="ex-seed">Oct 26: the product rules come back</h4>
 <div class="cmd"><code>/kb-seed confluence</code></div>
@@ -600,8 +600,8 @@ testers themselves stay with the QA harness.</p>
 
 <h4 id="ex-delivered">Nov 30: the release ships</h4>
 <div class="cmd"><code>/sync jira</code></div>
-<p>FK-1302 to FK-1305 reached Done. They are in the trace map, so this isn't routine: what they
-delivered is now how FleetKeep works. The staging file proposes updating the pages each story lists:
+<p>FK-1302 to FK-1305 reached Done. Because they are in the trace map, the sync treats this as more
+than a routine status move: what they delivered is now how FleetKeep works. The staging file proposes updating the pages each story lists:
 CAP-004 gains the rules for flagging escalated defects on the depot's queue and emailing its
 technicians; CAP-002 gains triage and job card in one action; PROC-001's to-be escalation steps become
 as-is; ENT-001's history gains the escalation entry; and the requirement gets

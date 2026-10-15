@@ -1,20 +1,21 @@
 # AI BA Harness
 
-A business-analysis workflow for Claude Code. Each project gets a BA knowledge repository: a
-knowledge base that grows every day from meetings, documents, Jira and Confluence, and nine
-commands that turn it into reviewed requirements and a clean Jira backlog. Anyone on the project can
+The AI BA Harness is a business-analysis workflow for Claude Code. Each project gets a BA knowledge
+repository. Its knowledge base grows every day from meetings, documents, Jira and Confluence, and
+nine commands turn it into reviewed requirements and a clean Jira backlog. Anyone on the project can
 clone that repository and ask it questions.
 
-It is the project-level companion to the AI Dev Harness (developers) and the AI QA Harness (testers).
-The three meet in Jira: the BA harness creates the epics and stories the other two read.
+It works at project level alongside two other harnesses: the AI Dev Harness for developers and the
+AI QA Harness for testers. The three meet in Jira, where the BA harness creates the epics and stories
+the other two read.
 
-**This repository is the template.** Don't do project work here. Create a project repository from it
-with `scripts/new-project.sh`, then follow [SETUP.md](SETUP.md).
+This repository is the template, so don't do project work in it. Create a project repository with
+`scripts/new-project.sh`, then follow [SETUP.md](SETUP.md).
 
-> **Start here:** [`docs/index.html`](docs/index.html) is the BA handbook on one page: what the harness
-> does, setting up a project, a worked example of every command on one project (from `/setup` to
-> `/ask`), what to run when, the knowledge base, Jira templates and troubleshooting. Open it in a
-> browser. The worked example is also a page of its own, to share with a team:
+> The BA handbook is a single page, [`docs/index.html`](docs/index.html). It covers what the
+> harness does, setting up a project, a worked example of every command on one project (from `/setup`
+> to `/ask`), what to run when, the knowledge base, Jira templates and troubleshooting. Open it in a
+> browser. To share the worked example with a team, use its own page,
 > [`docs/walkthrough.html`](docs/walkthrough.html).
 
 ## What a project gets
@@ -60,13 +61,13 @@ Then follow [SETUP.md](SETUP.md): create the shared remote, sign in to Atlassian
 version and commit it started from. When you release a change to the template, bump the version, add
 a `CHANGELOG.md` entry and tag the commit `v<version>`:
 
-- **patch** for fixes and wording;
-- **minor** for new features projects can use without changes;
-- **major** when project repositories must change something.
+- patch for fixes and wording;
+- minor for new features projects can use without changes;
+- major when project repositories must change something.
 
-The handbook's sidebar shows the same version; update it in the same change, then run
-`python scripts/build-walkthrough.py` so the walkthrough page picks up the version and any change
-to the worked example.
+The handbook's sidebar shows the same version, so update it in the same change. Then run
+`python scripts/build-walkthrough.py`, which copies the new version and any edits to the worked
+example into the walkthrough page.
 
 ## License
 

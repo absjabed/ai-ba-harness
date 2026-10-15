@@ -222,18 +222,18 @@ BA repository, which the BAs maintain and everyone else can clone and ask questi
 </table>
 
 <h2 id="why">Why use it</h2>
-<p>Most of a BA's time goes into collecting, checking and passing on what the project knows. Each row
-pairs a common problem with the part of the harness that handles it.</p>
+<p>Most of a BA's time goes into collecting, checking and passing on what the project knows. These are
+the common problems in that work and what the harness does about each.</p>
 <table>
 <thead><tr><th>Without it</th><th>What the harness does</th></tr></thead>
 <tbody>
 <tr><td>What the project knows is spread over meeting notes, Confluence pages, Jira comments and people's memory</td><td>One knowledge base in the BA repository. Every page has an ID, its sources and a status (draft, confirmed, approved, superseded)</td></tr>
-<tr><td>New notes are copied in without checking them against what is already known</td><td><code>/intake</code> judges each item against the knowledge base (new, confirms, extends, contradicts, duplicate, answers a question). A contradiction of confirmed content becomes an open question; nothing is overwritten</td></tr>
+<tr><td>New notes are copied in without checking them against what is already known</td><td><code>/intake</code> judges each item against the knowledge base (new, confirms, extends, contradicts, duplicate, answers a question). A contradiction of confirmed content becomes an open question, and the confirmed content stays as it is</td></tr>
 <tr><td>Someone's opinion gets recorded as a decision</td><td>A statement becomes a decision only if <code>stakeholders.md</code> says the speaker can decide that matter. Otherwise it is recorded as their view, with a question to the owner</td></tr>
 <tr><td>Answers and decisions in Jira comments are never written down anywhere else</td><td><code>/sync</code> reads issues, comments and status changes since the last run and proposes what matters</td></tr>
 <tr><td>Requirements look different depending on who wrote them, and use words like "fast" or "easy"</td><td>One requirement template, user stories with Given/When/Then criteria, EARS for system rules and NFRs, and <code>/review</code> checks them against a fixed list, including the project's vague words</td></tr>
 <tr><td>Duplicate Jira issues, missing required fields, stories nobody can trace to a source</td><td><code>/backlog</code> searches for duplicates, fills fields read from Jira by <code>/setup</code>, reads each created issue back, and writes the keys into <code>trace/map.csv</code></td></tr>
-<tr><td>AI fills gaps with plausible guesses</td><td>Nothing is invented. A fact without a source becomes an open question or a stated assumption</td></tr>
+<tr><td>AI fills gaps with plausible guesses</td><td>A fact without a source becomes an open question or a stated assumption</td></tr>
 <tr><td>Developers and testers ask the BA the same questions again and again</td><td><code>/ask</code> answers from the knowledge base with citations, marks draft content as unconfirmed, and says plainly when it doesn't know</td></tr>
 <tr><td>Raw notes with names and personal details end up in shared folders</td><td><code>inbox/</code> is gitignored, and intake proposes removing personal data before anything is stored</td></tr>
 </tbody>
@@ -250,7 +250,7 @@ limits and draw on Rovo credits.</li>
 <li>Version 1 has no Confluence publishing and no connection to meeting-transcript tools: paste notes
 or drop exported transcripts in <code>inbox/</code>. Word, Excel and PowerPoint files need
 <code>markitdown</code>, or save them as PDF.</li>
-<li>The knowledge base is only as good as what you accept. The model's extraction and judgement can
+<li>The knowledge base holds only what you accept, and the model's extraction and judgement can
 miss things. A critic pass checks every staging file before you see it, but it is the same kind of
 model, so everything AI-drafted stays visible as a proposal until you decide.</li>
 <li>Scale. Every question starts from <code>knowledge/index.md</code>. Once it no longer fits in one
@@ -259,7 +259,7 @@ read (roughly 300 or more pages), a local search server will be needed.</li>
 </ul>
 
 <h2 id="map">Harness map</h2>
-<p>Each lane is one rhythm of work, read left to right. Yellow boxes are where a command stops and
+<p>Each lane is one recurring kind of work, read left to right. Yellow boxes are where a command stops and
 asks you. Green boxes only read, such as the critic that checks every staging file before you see
 it. The purple box is the only place anything is written to Jira. On a narrow screen, scroll the
 diagram sideways.</p>
@@ -612,11 +612,11 @@ user-friendly that need a measure) and its preferred terms. Add your own.</p>
 <p class="lede">One example, start to finish: setting up a project, building its knowledge base,
 writing an epic, putting it into Jira, changing it afterwards, shipping it, and answering a
 teammate's question, with a detour into improving the harness itself. Every command appears at least once, with what you type, what it reads, what it
-asks you and what you end up with. Written for someone who has never worked this way. The same example, as a page of its own to share with a team: <a href="walkthrough.html">the FleetKeep walkthrough</a>.</p>
+asks you and what you end up with. It assumes you have never worked this way. To share it with a team, use the same example as a page of its own: <a href="walkthrough.html">the FleetKeep walkthrough</a>.</p>
 
 <div class="callout warn">
-<p><strong>An illustration of the design, not a recording.</strong> The harness has not yet run
-against a real Jira site; this is what each command is written to do. Parts 1 to 4 end in real files:
+<p><strong>An illustration of the design.</strong> The harness has not yet run
+against a real Jira site, so this shows what each command is written to do. Parts 1 to 4 end in real files:
 the worked example in the template at <code>examples/fleetkeep-ba-knowledge/</code>, which stops on
 Oct 14. Part 5 goes further than those files. The chat exchanges show what the commands ask; the
 wording varies from run to run.</p>
@@ -680,7 +680,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <div class="tl-row"><span class="tl-date">Oct 13</span><span class="tl-cmd">/backlog</span><span>Epic FK-1301 and stories FK-1302 to FK-1305, after your approval</span></div>
 <div class="tl-part">Part 5 · Changes and release (beyond the example files)</div>
 <div class="tl-row"><span class="tl-date">Oct 15</span><span class="tl-cmd">/intake, /backlog task</span><span>Triage call decided, with its delivery impact; an action becomes a Jira task</span></div>
-<div class="tl-row"><span class="tl-date">Oct 20</span><span class="tl-cmd">/intake, /requirements, /review, /backlog</span><span>A rule changes after the stories exist; three stories updated, nothing created twice</span></div>
+<div class="tl-row"><span class="tl-date">Oct 20</span><span class="tl-cmd">/intake, /requirements, /review, /backlog</span><span>A rule changes after the stories exist; three stories are updated and none is created twice</span></div>
 <div class="tl-row"><span class="tl-date">Oct 22</span><span class="tl-cmd">/intake</span><span>The Product owner signs the requirement off</span></div>
 <div class="tl-row"><span class="tl-date">Oct 26</span><span class="tl-cmd">/kb-seed confluence</span><span>The rewritten product rules are seeded; the inspections area gets its first pages</span></div>
 <div class="tl-row"><span class="tl-date">Nov 9</span><span class="tl-cmd">/backlog bug</span><span>A UAT finding becomes a bug</span></div>
@@ -776,7 +776,7 @@ FleetKeep runs it later, in <a href="#ex-seed">Part 5</a>.</p>
 <li><b>Extract and judge.</b> Every requirement, rule, decision, question, term and risk in the notes,
 each with its quote. The Product owner's "the clock starts when the driver reports it" is a decision
 by someone who can decide. The supervisor and the transport manager gave different accounts of who
-triages, so that becomes a question (Q-001), not a fact.</li>
+triages, so that becomes a question (Q-001) instead of a fact.</li>
 <li><b>Stage.</b> One file in <code>knowledge/_staging/</code>, with the exact change for each item.</li>
 <li><b>Critic.</b> A second look in a fresh context: anything left out, quotes that don't match,
 authority not checked, names to redact. Its findings go at the top of the file.</li>
@@ -835,7 +835,7 @@ on the road quickly."</p>
 </table>
 <p>Verdict: not ready. Nothing is written anywhere. You take it to the Product owner: if they have
 changed their mind, their confirmation goes through <code>/intake</code> and supersedes DEC-003;
-otherwise the story is rewritten or closed in Jira by people.</p>
+otherwise someone rewrites or closes the story in Jira by hand.</p>
 
 <div class="cmd"><code>/intake inbox/2026-10-14-defect-triage-call-notes.md</code></div>
 <p>The weekly triage call with the pilot customer. The staging file has eight items covering every
@@ -1012,8 +1012,8 @@ Nothing is created twice, and nothing is moved or deleted.</p>
 requirement to <code>approved</code>, with <code>approved_by: Product owner</code> and
 <code>approved_on: 2026-10-22</code>. Had the requirement carried proposals marked "pending" (your
 answers on product behaviour that only the Product owner can decide), the same sign-off would have
-answered all of them and turned them into agreed rules. As a Jira comment, <code>/sync</code> would have proposed the
-same.</p>
+answered all of them and turned them into agreed rules. Had the sign-off come as a Jira comment, <code>/sync</code> would have proposed the
+same change.</p>
 
 <h4 id="ex-seed">Oct 26: the product rules come back</h4>
 <div class="cmd"><code>/kb-seed confluence</code></div>
@@ -1044,8 +1044,8 @@ testers themselves stay with the QA harness.</p>
 
 <h4 id="ex-delivered">Nov 30: the release ships</h4>
 <div class="cmd"><code>/sync jira</code></div>
-<p>FK-1302 to FK-1305 reached Done. They are in the trace map, so this isn't routine: what they
-delivered is now how FleetKeep works. The staging file proposes updating the pages each story lists:
+<p>FK-1302 to FK-1305 reached Done. Because they are in the trace map, the sync treats this as more
+than a routine status move: what they delivered is now how FleetKeep works. The staging file proposes updating the pages each story lists:
 CAP-004 gains the rules for flagging escalated defects on the depot's queue and emailing its
 technicians; CAP-002 gains triage and job card in one action; PROC-001's to-be escalation steps become
 as-is; ENT-001's history gains the escalation entry; and the requirement gets
@@ -1258,7 +1258,7 @@ checks, after you approve the batch. Run it again after the requirement changes:
 have keys are compared with the document and updated (shown as a diff), new stories are created, and
 stories dropped from the document are listed for you to close by hand. It also creates single items:
 a task from an action (<code>task ACT-002</code>), a spike for an open question
-(<code>spike Q-003</code>), or a bug from UAT (<code>bug SRC-006 2</code>). The only command that
+(<code>spike Q-003</code>), or a bug from UAT (<code>bug SRC-006 2</code>). No other command
 writes to Jira.</p>
 <table><tbody>
 <tr><td><strong>When</strong></td><td>After <code>/review</code> gives a ready verdict, or you accept its remaining findings. If the review is missing or older than the document, it asks you to run <code>/review</code> first. If the verdict is not ready, it offers to create only the stories listed as ready</td></tr>
@@ -1283,7 +1283,7 @@ any claim the page doesn't support.</p>
 
 <div class="card">
 <h3><code>/improve-harness [what isn't working | list]</code> <span class="pill">anytime</span></h3>
-<p>For when a command, template or rule should work differently. It asks up to three questions to
+<p>Use it when a command, template or rule should work differently. It asks up to three questions to
 pin the problem down, with an example, and decides where the fix belongs: a project setting
 (changed in the profile after your yes), knowledge (sent to <code>/intake</code>), or the harness
 itself. A harness change is drafted as a diff and written up as a proposal in
@@ -1297,8 +1297,8 @@ itself. A harness change is drafted as a diff and written up as a proposal in
 </div>
 
 <h2 id="when">When to run what</h2>
-<p>The nine commands fall into four rhythms: once at the start, every day, once per epic, and
-weekly. <code>/ask</code> can be used at any time by anyone.</p>
+<p>The commands run on four schedules: once at the start, every day, once per epic, and
+weekly. Anyone can use <code>/ask</code> at any time.</p>
 
 <h3>Once, at project start (lead BA)</h3>
 <div class="flow"><span>new-project.sh</span><em>→</em><span>git push</span><em>→</em><span>/mcp</span><em>→</em><span>/setup</span><em>→</em><span>inbox/ + /kb-seed</span><em>→</em><span>accept staging</span><em>→</em><span>team clones</span></div>
@@ -1385,13 +1385,14 @@ conflicts are checked. Fixing a typo or wording by hand is fine as long as the m
 same; add a <code>log.md</code> line with the command <code>EDIT</code>.</li>
 <li>Don't create Jira issues by hand for work that has a requirement document. Use
 <code>/backlog</code>, so the duplicate check and traceability happen.</li>
-<li>Don't commit anything in <code>inbox/</code>. It is gitignored for a reason.</li>
+<li>Don't commit anything in <code>inbox/</code>. It is gitignored so that raw notes stay out of the
+repository.</li>
 </ul>
 
 <h2 id="kb">The knowledge base</h2>
-<p>The <code>knowledge/</code> folder of the BA repository. It is plain markdown, so Claude Code,
-GitHub and any text editor read it. It is stored by Obsidian's rules, so the folder also opens as an
-Obsidian vault, and kept compatible with Open Knowledge Format. The project's own copy of the rules
+<p>The knowledge base is the <code>knowledge/</code> folder of the BA repository. It is plain markdown, so Claude Code,
+GitHub and any text editor can read it. Files follow Obsidian's rules, so the folder also opens as an
+Obsidian vault, and the format stays compatible with Open Knowledge Format. The project's own copy of the rules
 is <code>knowledge/_meta/conventions.md</code>.</p>
 
 <h3 id="kb-structure">Structure</h3>
@@ -1715,19 +1716,19 @@ Either way, the BA accepts or rejects each item, and nothing changes until then.
 <thead><tr><th>Layer</th><th>What it does</th></tr></thead>
 <tbody>
 <tr><td><strong>Command definitions</strong> (<code>agents/</code>)</td><td>Each command previews, stages and waits for a yes. Knowledge changes go through staging; Jira writes only through <code>/backlog</code>; a contradiction becomes a question; nothing is deleted from the knowledge base</td></tr>
-<tr><td><strong>Critic</strong> (<code>agents/_critic.md</code>, <code>.claude/agents/critic.md</code>)</td><td>A read-only, fresh-context second look at every staging file before you decide, a pre-check of every requirement draft, and a citation check on every <code>/ask</code> answer. It catches mistakes; it doesn't replace your decision</td></tr>
+<tr><td><strong>Critic</strong> (<code>agents/_critic.md</code>, <code>.claude/agents/critic.md</code>)</td><td>A read-only, fresh-context second look at every staging file before you decide, a pre-check of every requirement draft, and a citation check on every <code>/ask</code> answer. It catches mistakes, and the decision stays yours</td></tr>
 <tr><td><strong>Allowed and disallowed tools</strong> (<code>.claude/commands/</code>)</td><td>Each wrapper pre-approves only the reads and git commands that command needs. <code>/ask</code> also lists file writes, Bash, PowerShell, sub-agents and every Atlassian write tool as disallowed</td></tr>
 <tr><td><strong>Settings: ask</strong> (<code>.claude/settings.json</code>)</td><td>Claude Code asks before every Atlassian write tool, matched by verb (<code>create*</code>, <code>edit*</code>, <code>update*</code>, <code>transition*</code>, <code>add*</code> and the rest, plus <code>executeWrite</code>), and before every <code>git push</code>, checkout, restore and rebase, even inside an approved batch. The rules cover the repository's own <code>atlassian</code> server and the Atlassian plugin; <code>/setup</code> warns if Atlassian arrives through any other connection</td></tr>
 <tr><td><strong>Settings: deny</strong></td><td>Atlassian delete tools and <code>executeDestructive</code>, force pushes, <code>git reset --hard</code>, <code>git clean</code> and <code>git branch -D</code> are refused outright. These rules match commands as Claude normally writes them; an unusual form such as <code>git -C . push</code> isn't matched, which is why the wrappers pre-approve only narrow git commands and everything else prompts</td></tr>
 <tr><td><strong>Checks</strong> (<code>tools/kb.py check</code>)</td><td>Broken links, bad properties, unknown or duplicate IDs and out-of-date registers are caught before each commit, and by the GitHub workflow on every push</td></tr>
-<tr><td><strong>Harness changes</strong> (<code>/improve-harness</code>)</td><td>Never applied locally when they touch permissions, approval steps, redaction or when Jira is written; those go to the harness maintainers only. Claude Code also asks before any edit under <code>.claude/</code></td></tr>
+<tr><td><strong>Harness changes</strong> (<code>/improve-harness</code>)</td><td>Never applied locally when they touch permissions, approval steps, redaction or Jira writes; those go to the harness maintainers only. Claude Code also asks before any edit under <code>.claude/</code></td></tr>
 <tr><td><strong>inbox/ is gitignored</strong></td><td>Raw notes, transcripts and documents never enter git. Only the redacted source record is committed. Raw files are deleted from <code>inbox/</code> only with your yes</td></tr>
 <tr><td><strong>Redaction</strong></td><td>Intake marks each item's sensitivity and proposes removing names where a role would do, contact details, health or customer data, credentials and anything marked confidential</td></tr>
 <tr><td><strong>No secrets</strong></td><td>Atlassian is OAuth through <code>/mcp</code>. <code>.mcp.json</code> holds only the server URL, <code>/setup</code> never stores a token or password, and the per-user <code>.claude/settings.local.json</code> is gitignored</td></tr>
 </tbody>
 </table>
-<div class="callout warn"><p><strong>Read every preview.</strong> The prompts stop accidental writes.
-They can't stop a wrong item you approve, so a yes is your decision.</p></div>
+<div class="callout warn"><p><strong>Read every preview.</strong> The prompts stop accidental writes,
+but they can't stop a wrong item you approve.</p></div>
 <p>Data handling is covered by the organisation's AI-use policy.</p>
 
 <h2 id="trouble">Troubleshooting</h2>

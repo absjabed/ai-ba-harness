@@ -7,13 +7,13 @@ status: approved
 
 # How to read and contribute to this knowledge base
 
-This folder is the project's knowledge: how the product works and must work, its business rules,
+This folder holds the project's knowledge: how the product works and must work, its business rules,
 the decisions made and who made them, and the questions still open.
 
 ## Reading
 
-- Start at [index.md](index.md). Every page is listed there with one line.
-- Each page shows a **status**:
+- Start at [index.md](index.md), which lists every page with one line.
+- Each page shows a status:
   - `draft`: extracted by AI, not yet checked;
   - `confirmed`: checked by a BA against its source;
   - `approved`: agreed by a named stakeholder;
@@ -26,13 +26,13 @@ the decisions made and who made them, and the questions still open.
 ## Opening it in Obsidian (optional)
 
 Open this `knowledge/` folder as a vault. The shared settings in `.obsidian/app.json` keep links in
-standard markdown, so everything works the same in Obsidian, on GitHub and in Claude Code. Graph
-view, backlinks and the Properties panel all work.
+standard markdown, so everything works the same in Obsidian, on GitHub and in Claude Code. Graph view,
+backlinks and the Properties panel all work.
 
 ## Contributing
 
-Don't change what a page says directly. Either give the new material to a BA (the usual route), or,
-if you're comfortable with git, run `/intake` on it, commit the staging file it writes to `_staging/`
-on a branch, and open a pull request: a BA decides each item. Fixing a typo or awkward wording by
-hand is fine, as long as the meaning stays the same; add a `log.md` line with the command `EDIT`. The rules are in
-[_meta/conventions.md](_meta/conventions.md).
+Don't change what a page says directly. Usually you give the new material to a BA. If you're
+comfortable with git, you can instead run `/intake` on it, commit the staging file it writes to
+`_staging/` on a branch, and open a pull request; a BA then decides each item. You may fix a typo or
+awkward wording by hand if the meaning stays the same; when you do, add a `log.md` line with the
+command `EDIT`. The rules are in [_meta/conventions.md](_meta/conventions.md).

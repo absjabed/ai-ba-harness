@@ -1,9 +1,9 @@
 # FleetKeep BA knowledge
 
-What this project knows: how the product works and must work, the business rules, the decisions
-made and who made them, the open questions, and the requirements behind the Jira backlog. The
-business analysts maintain it with the AI BA Harness. **Everyone else can clone it and ask it
-questions.**
+This repository holds what the project knows: how the product works and must work, the business
+rules, the decisions made and who made them, the open questions, and the requirements behind the
+Jira backlog. The business analysts maintain it with the AI BA Harness, and everyone else can clone
+it and ask it questions.
 
 > [!NOTE]
 > **This is a worked example.** FleetKeep and Northwind Systems are fictional, and so are every
@@ -25,8 +25,8 @@ you can send to the BA.
 Your copy updates itself whenever you open Claude Code here. Other assistants (Copilot, Cursor,
 Codex) follow `AGENTS.md` and answer the same way.
 
-You can also read the pages directly: start at [`knowledge/index.md`](knowledge/index.md). They
-render on GitHub and open as an Obsidian vault (`knowledge/`).
+To read the pages directly, start at [`knowledge/index.md`](knowledge/index.md). They render on
+GitHub, and the `knowledge/` folder opens as an Obsidian vault.
 
 ## What's here
 
@@ -39,11 +39,12 @@ render on GitHub and open as an Obsidian vault (`knowledge/`).
 
 ## For BAs
 
-The commands and when to run them are in the AI BA Harness handbook, and in short in
-[`CLAUDE.md`](CLAUDE.md). The rules for the knowledge base are in
+The AI BA Harness handbook lists the commands and when to run them; [`CLAUDE.md`](CLAUDE.md) has a
+short version. The rules for the knowledge base are in
 [`knowledge/_meta/conventions.md`](knowledge/_meta/conventions.md).
 
 ## Suggesting a change
 
-Send the material to the BA, or open a pull request that adds a staging file (run `/intake` on your
-material; it writes one to `knowledge/_staging/`). The BA accepts or rejects each item.
+Send the material to the BA, or open a pull request that adds a staging file. To make one, run
+`/intake` on your material and it writes the file to `knowledge/_staging/`. The BA accepts or
+rejects each item.
