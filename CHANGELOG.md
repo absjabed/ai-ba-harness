@@ -195,7 +195,7 @@ get their critique the next time they are resumed.
 
 ## 0.1.0 (2026-10-14)
 
-First version, built from the agreed design in `design/`. Not yet used on a real project.
+First version, built from the agreed design in `design/`.
 
 - Eight commands: `/setup`, `/kb-seed`, `/intake`, `/sync`, `/requirements`, `/review`, `/backlog`,
   `/ask`, with vendor-neutral definitions in `project/agents/` and thin Claude Code wrappers.

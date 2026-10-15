@@ -1,7 +1,8 @@
 # AI BA Harness
 
-The AI BA Harness is a business-analysis workflow for Claude Code. Each project gets a BA knowledge
-repository. Its knowledge base grows every day from meetings, documents, Jira and Confluence, and
+**A business-analysis harness layer for Claude Code:** commands, agents and a project knowledge base that sit on top of Claude Code's own agent runtime.
+
+Each project gets a BA knowledge repository. Its knowledge base grows every day from meetings, documents, Jira and Confluence, and
 nine commands turn it into reviewed requirements and a clean Jira backlog. Anyone on the project can
 clone that repository and ask it questions.
 
