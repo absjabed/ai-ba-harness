@@ -59,7 +59,7 @@ page = f"""{head}</head>
 <a href="index.html#example">BA handbook</a>, which also has the reference for every command, the
 knowledge base rules and the safety layers. The files Parts 1 to 4 end with are in
 <code>examples/fleetkeep-ba-knowledge/</code>; start with its <code>EXAMPLE.md</code>.</p>
-<p>AI BA Harness · Private repository. All rights reserved.</p>
+<p>AI BA Harness · MIT License.</p>
 </footer>
 </main>
 </div>

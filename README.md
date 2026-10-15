@@ -68,7 +68,10 @@ The handbook's sidebar shows the same version; update it in the same change, the
 `python scripts/build-walkthrough.py` so the walkthrough page picks up the version and any change
 to the worked example.
 
-## Licence
+## License
 
-Private repository. All rights reserved. Not licensed for distribution, publication, or use outside
-the organisations that hold rights to it.
+MIT. See [`LICENSE`](LICENSE): you may use, copy, change and share the harness freely, as long as the
+copyright and license notice stays with it.
+
+The harness files a project copies from `project/` stay under MIT. What a project writes with them
+(its knowledge base, requirements and profile) belongs to that project.
