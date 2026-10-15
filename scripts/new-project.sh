@@ -86,7 +86,7 @@ fi
 
 cp -a "$src/." "$target/"
 cp "$root/HARNESS_VERSION" "$target/HARNESS_VERSION"
-chmod +x "$target/.claude/hooks/kb-sync.sh" 2>/dev/null || true
+chmod +x "$target/tools/kb-sync.sh" 2>/dev/null || true
 
 profile="$target/PROJECT-PROFILE.md"
 sed -i.bak \
@@ -112,4 +112,8 @@ echo
 echo "Next:"
 echo "  1. cd \"$target\" && git init -b main && git add -A && git commit -m \"Start from AI BA Harness $version\""
 echo "  2. Create the shared remote repository (e.g. on GitHub), then: git remote add origin <url> && git push -u origin main"
-echo "  3. Open Claude Code there (claude), run /mcp and sign in to Atlassian, then run /setup"
+echo "  3. Open your assistant there and sign in to Atlassian, then run /setup (\$setup in Codex):"
+echo "       Claude Code: claude, then /mcp"
+echo "       OpenCode:    opencode mcp auth atlassian, then opencode"
+echo "       Codex:       codex, trust the project, approve the hook with /hooks, then codex mcp login atlassian"
+echo "     A team that doesn't use one of them can delete its files; the handbook lists which they are."

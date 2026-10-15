@@ -27,15 +27,19 @@ ai-ba-harness/
 └── project/                      everything below is what a project repository receives
     ├── PROJECT-PROFILE.md
     ├── CLAUDE.md                 tells Claude to start from knowledge/index.md and follow the conventions
-    ├── AGENTS.md                 the same for other assistants (Copilot, Cursor, Codex)
+    ├── AGENTS.md                 the same for OpenCode, Codex and any other assistant
+    ├── opencode.json             OpenCode: Atlassian server, ask and deny rules (0.6.0)
     ├── .gitignore                inbox/, Obsidian workspace files, local settings
     ├── .mcp.json                 Atlassian Rovo MCP server (OAuth; no secrets)
     ├── .claude/
     │   ├── settings.json         Atlassian write tools set to "ask"; the knowledge-sync hook
-    │   ├── commands/             eight thin command files pointing at agents/
-    │   └── hooks/
-    │       └── kb-sync.sh        pulls new knowledge when a session starts
+    │   ├── commands/             thin command files pointing at agents/
+    │   └── agents/critic.md      the read-only critic
+    ├── .opencode/                OpenCode commands and read-only agents (0.6.0)
+    ├── .codex/                   Codex settings, command rules, sync hook, critic (0.6.0)
+    ├── .agents/skills/           the commands as Codex skills (0.6.0)
     ├── agents/                   the canonical command definitions, plain markdown
+    ├── tools/                    kb.py (rebuild, check) and kb-sync.sh (pulls new knowledge)
     ├── templates/
     │   ├── jira/                 epic, story, task, spike, bug
     │   └── requirement.md        requirement document

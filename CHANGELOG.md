@@ -4,6 +4,47 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.6.0 (2026-10-15)
+
+OpenCode and Codex can run the harness, alongside Claude Code. The commands' definitions in `agents/`
+don't change; each assistant gets thin wrappers and its own copy of the safety settings.
+
+- **OpenCode:** `.opencode/commands/` (the nine commands, run as `/<name>`), `.opencode/agents/`
+  (a read-only `critic`, and `kb-reader`, which runs `/ask` without write, shell or Jira-write tools)
+  and `opencode.json` (the Atlassian server; ask before Jira and Confluence writes, `git push` and
+  edits to the harness's own files; refuse deletes, force pushes, hard resets and `git clean`).
+  Each command syncs the knowledge base first. It blocks the Codex skills, which OpenCode also reads.
+- **Codex:** `.agents/skills/<name>/` (the nine commands, run as `$<name>`; all but `ask` only when
+  named), `.codex/config.toml` (the Atlassian server; tools not marked read-only ask,
+  `executeDestructive` off), `.codex/rules/ba-harness.rules` (git push asks; force push, hard reset,
+  `git clean`, `git branch -D` and `filter-branch` refused), `.codex/hooks.json` (the sync at session
+  start) and `.codex/agents/critic.toml` (read-only sandbox). Codex applies them only to a trusted
+  project.
+- **`AGENTS.md`** is now the full guide for every assistant other than Claude Code: how to run each
+  command, and the rules to keep when the tool doesn't enforce them. It used to allow questions only.
+- **The sync script moved** from `.claude/hooks/kb-sync.sh` to `tools/kb-sync.sh`, so all three
+  assistants share it.
+- **`kb.py check`** reports a command that is missing from an assistant's folder, or a wrapper that
+  doesn't point at its definition. It skips assistants whose folder was deleted.
+- **Wording:** the definitions, conventions and READMEs say "your assistant" where they said Claude
+  Code, and give the sign-in step for each assistant. The handbook has a new section, "OpenCode and
+  Codex".
+
+Tested in OpenCode 1.19 on the FleetKeep example: the settings, commands and agents load with the
+intended permissions, and `/ask` ran as `kb-reader` and answered with correct citations. The other
+OpenCode commands haven't run end to end yet. The Codex files follow Codex's documentation and
+haven't been run.
+
+**To update a project:**
+
+1. Copy from the template's `project/`: `.opencode/`, `.codex/`, `.agents/`, `opencode.json`,
+   `AGENTS.md`, `tools/kb-sync.sh`, `tools/kb.py`, `.claude/settings.json`, and the changed
+   definitions (`agents/`).
+2. Delete `.claude/hooks/kb-sync.sh`; `.claude/settings.json` now runs `tools/kb-sync.sh`.
+3. In `PROJECT-PROFILE.md` section 5, the `kb_auto_sync` comment reads "pull new knowledge when a
+   session (or an OpenCode command) starts" (optional).
+4. If the project uses only Claude Code, skip the OpenCode and Codex files.
+
 ## 0.5.1 (2026-10-15)
 
 A second demo test of 0.5.0: a fresh project with two BAs and a developer on three clones, plus an

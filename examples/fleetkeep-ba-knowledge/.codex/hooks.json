@@ -1,0 +1,18 @@
+{
+  "description": "AI BA Harness: bring the knowledge base up to date when a session starts. Codex runs it only after you trust it with /hooks.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash tools/kb-sync.sh",
+            "statusMessage": "Updating the knowledge base",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

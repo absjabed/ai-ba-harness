@@ -1,0 +1,3 @@
+# Run this skill only when someone asks for it by name ($requirements), never on Codex's own initiative.
+policy:
+  allow_implicit_invocation: false

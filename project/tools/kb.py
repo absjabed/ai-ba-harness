@@ -1,7 +1,7 @@
 """Knowledge base tool: rebuild the generated files, check the knowledge base, find the next free ID.
 
     python tools/kb.py rebuild       rewrite knowledge/index.md and the three registers
-    python tools/kb.py check         check links, names, properties and IDs (exit 1 on errors)
+    python tools/kb.py check         check links, names, properties, IDs and command wrappers (exit 1 on errors)
     python tools/kb.py next CAP      print the next free ID for a prefix (CAP, BR, Q, ACT, T, ...)
 
 Set KB_TODAY=YYYY-MM-DD to judge due dates and ages against another day than today.
@@ -453,6 +453,22 @@ def check():
         json.loads(read(os.path.join(KB, "_meta", "sync.json")))
     except (OSError, ValueError) as e:
         errors.append(f"knowledge/_meta/sync.json: {e}")
+
+    # Every command is wired into every assistant whose folder is here, and each wrapper points at
+    # its definition. A team that doesn't use an assistant deletes its folder.
+    agents_dir = os.path.join(ROOT, "agents")
+    commands = sorted(f[:-3] for f in os.listdir(agents_dir)
+                      if f.endswith(".md") and not f.startswith("_") and f != "README.md") if os.path.isdir(agents_dir) else []
+    for folder, wrapper in ((".claude/commands", "{}.md"), (".opencode/commands", "{}.md"),
+                            (".agents/skills", "{}/SKILL.md")):
+        if not os.path.isdir(os.path.join(ROOT, folder)):
+            continue
+        for name in commands:
+            path = os.path.join(ROOT, folder, wrapper.format(name))
+            if not os.path.exists(path):
+                errors.append(f"{folder}/{wrapper.format(name)}: missing; every command needs a wrapper here")
+            elif f"agents/{name}.md" not in read(path):
+                errors.append(f"{folder}/{wrapper.format(name)}: doesn't point at agents/{name}.md")
 
     for w in warnings:
         print("warning:", w)

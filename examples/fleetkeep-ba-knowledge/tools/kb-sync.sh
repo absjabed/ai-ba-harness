@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# SessionStart hook: bring this clone's knowledge base up to date.
+# Bring this clone's knowledge base up to date. Claude Code and Codex run it when a session starts
+# (a SessionStart hook); OpenCode runs it at the start of each harness command. You can also run it
+# by hand: bash tools/kb-sync.sh
 #
 # It only ever fast-forwards. If you have local changes, or your branch has diverged from the shared
 # one, it changes nothing and says what to do. It never fails a session: every problem is reported
-# and the hook exits 0.
+# and the script exits 0.
 #
 # Turn it off in PROJECT-PROFILE.md section 5: kb_auto_sync: off
 
-cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
+cd "$(dirname "${BASH_SOURCE[0]}")/.." 2>/dev/null || exit 0
 
 # Respect the profile switch.
 if grep -qiE '^[[:space:]]*kb_auto_sync:[[:space:]]*off' PROJECT-PROFILE.md 2>/dev/null; then

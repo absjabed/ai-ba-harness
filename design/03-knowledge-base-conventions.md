@@ -161,8 +161,8 @@ Committed: `.obsidian/app.json` and `.obsidian/core-plugins.json`. Gitignored:
 
 Team members clone the project BA repository once. After that it updates itself.
 
-**When anyone opens Claude Code in the repository**, a `SessionStart` hook (`.claude/hooks/kb-sync.sh`)
-runs:
+**When anyone opens Claude Code or Codex in the repository**, a `SessionStart` hook
+(`tools/kb-sync.sh`) runs; OpenCode runs the same script at the start of each command:
 
 1. `git fetch` from the shared remote.
 2. If the working copy has no local changes and can fast-forward, it pulls (`git merge --ff-only`)

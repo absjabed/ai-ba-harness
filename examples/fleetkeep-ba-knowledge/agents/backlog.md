@@ -23,9 +23,10 @@ Jira.
 2. **Local checks first,** so the BA hears every problem at once: the requirement mode's readiness
    (step 1 below), or the single item's source (single step 1).
 3. **Then Jira.** Call `getAccessibleAtlassianResources` and check that the profile's site is listed.
-   - If the tools aren't there or the call fails, tell the BA: run `/mcp`, approve and sign in to
-     the repository's `atlassian` server (from `.mcp.json`; not another Atlassian connection), then
-     run the command again. Report the local findings from step 2 too, and stop.
+   - If the tools aren't there or the call fails, tell the BA to sign in to the repository's
+     `atlassian` server (not another Atlassian connection): `/mcp` in Claude Code,
+     `opencode mcp auth atlassian` in OpenCode, `codex mcp login atlassian` in Codex. Then run the
+     command again. Report the local findings from step 2 too, and stop.
    - If the profile's Cloud ID is still a placeholder, use the one returned for the site, and tell
      the BA to run `/setup` again to record it.
    - Read the create metadata for each issue type you'll use (`getJiraIssueTypeMetaWithFields`, or
@@ -88,7 +89,7 @@ Jira.
    - Create the epic first (`createJiraIssue`, or `executeWrite` on the v2 server). Then each story
      with `parent` set to the epic key, one at a time.
    - Apply approved updates with `editJiraIssue`, one at a time.
-   - Claude Code will also ask before each write tool call; that prompt is expected.
+   - Your assistant will also ask before each write tool call; that prompt is expected.
    - After each create or update, read the issue back with `getJiraIssue`. Check that summary, type,
      parent, fix version, labels and required fields are as sent, and that every description heading
      is there. Calls can drop fields silently, so if something didn't stick, say so and offer to fix

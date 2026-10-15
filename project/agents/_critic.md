@@ -10,10 +10,12 @@ called it updates the staging file.
 
 ## How to run it
 
-- **With sub-agents:** in Claude Code, start the `critic` sub-agent (`.claude/agents/critic.md`),
-  which can only read. If that agent type isn't available (for example when the session was opened
-  outside the repository), start any read-only sub-agent and give it that file's instructions. Other tools: start a fresh-context sub-agent and tell it to read only. Give it
-  the staging file's path and the source: an `inbox/` path, the pasted text or conversation excerpt
+- **With sub-agents:** start the repository's `critic` sub-agent, which can only read:
+  `.claude/agents/critic.md` in Claude Code, `.opencode/agents/critic.md` in OpenCode (`@critic`),
+  `.codex/agents/critic.toml` in Codex (ask Codex to spawn the `critic` agent). If that agent
+  isn't available (for example when the session was opened outside the repository), start any
+  read-only sub-agent and give it that file's instructions; in any other tool, start a
+  fresh-context sub-agent and tell it to read only. Give it the staging file's path and the source: an `inbox/` path, the pasted text or conversation excerpt
   itself, or the Jira keys and Confluence page IDs.
 - **Without sub-agents:** do it yourself as a separate pass. Re-read the source from the beginning
   and search the knowledge base again; don't rely on what you remember from extracting.

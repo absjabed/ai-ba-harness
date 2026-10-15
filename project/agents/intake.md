@@ -69,5 +69,5 @@ counts.
 - Change a knowledge page before the BA accepts the item.
 - Commit any file from `inbox/`, or move a file out of it.
 - Delete inbox files without an explicit yes, or any file outside `inbox/` and `knowledge/_staging/`.
-  Claude Code asks before each delete; that prompt is expected.
+  Your assistant asks before each delete; that prompt is expected.
 - Treat a statement as a decision when the speaker can't decide it.

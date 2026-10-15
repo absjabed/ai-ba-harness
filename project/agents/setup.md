@@ -9,18 +9,21 @@ interview the lead BA, read the project's Jira and Confluence configuration, and
 1. Read `PROJECT-PROFILE.md` and `knowledge/_meta/conventions.md`.
 2. Check the state:
    - Is this a git repository with a remote (`git remote -v`)? If not, say so and continue; the
-     sync hook needs a remote later.
+     knowledge base sync needs a remote later.
    - Is the repository's own `atlassian` server available? Call `getAccessibleAtlassianResources`.
      If it returns more than one site, ask which one this project uses.
-     - If it fails, tell the BA to run `/mcp`, approve the project's `atlassian` server and sign in.
+     - If it fails, tell the BA to approve the project's `atlassian` server and sign in: `/mcp` in
+       Claude Code, `opencode mcp auth atlassian` in OpenCode, `codex mcp login atlassian` in Codex
+       (Codex also needs the project trusted first, or it ignores `.codex/`).
        Then carry on **offline**: record what the BA tells you, mark each Jira or Confluence value
        by adding ` (not verified)` after it (outside any backticks), leave the Cloud ID as a
        placeholder, skip the label check in round 4 and the "Read Jira's field rules" section, and
        list all of them under "Still unknown" in the report.
-     - If Atlassian tools are available only under another name (a plugin or a claude.ai connector),
-       say so: the harness's permission rules are written for the project's `atlassian` server and
-       the Atlassian plugin, and any other connection would let Jira writes through without the
-       per-write prompt. Ask the BA to use the project's server.
+     - If Atlassian tools are available only under another name (a plugin, a claude.ai connector or
+       a server from the BA's own settings), say so: the harness's permission rules are written for
+       the project's `atlassian` server (and, in Claude Code, the Atlassian plugin), and any other
+       connection would let Jira writes through without the per-write prompt. Ask the BA to use the
+       project's server.
    - Is this a re-run? It is if `knowledge/log.md` already has a `SETUP` line. Then show what is
      filled, ask which sections to change, and never overwrite a section without a yes. If values
      were marked "not verified" and Atlassian is now available, offer to **verify**: read Jira and
@@ -111,7 +114,7 @@ the result actually contains what you asked for; if it doesn't, say so rather th
    - Set `created` and `updated` to today on `knowledge/glossary.md`, `knowledge/stakeholders.md`
      and `knowledge/raid.md`, replacing the `YYYY-MM-DD` placeholders.
 4. Create a `knowledge/domains/<area>/` folder, each with a `.gitkeep`, for every area.
-5. Check that `.gitignore` excludes `inbox/` and that `.claude/hooks/kb-sync.sh` exists.
+5. Check that `.gitignore` excludes `inbox/` and that `tools/kb-sync.sh` exists.
 6. Append a log line:
    `- <date> | SETUP | interview | profile, stakeholders, areas | accepted by <role>`.
 7. If Python is available, run `python tools/kb.py rebuild`, so the index lists the root pages.
@@ -138,4 +141,5 @@ the result actually contains what you asked for; if it doesn't, say so rather th
 
 - Invent a stakeholder, a field rule or a JQL that wasn't confirmed.
 - Write to Jira or Confluence.
-- Store an API token or password anywhere. The Atlassian connection is OAuth through `/mcp` only.
+- Store an API token or password anywhere. The Atlassian connection is OAuth through the
+  assistant's own sign-in only.

@@ -147,7 +147,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.5.1</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.0</span></div>
   </div>
   <h2>Start here</h2>
   <a href="walkthrough.html">FleetKeep walkthrough</a>
@@ -176,6 +176,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
   <a class="sub" href="#kb-obsidian">Obsidian (optional)</a>
   <a href="#jira">Jira issues</a>
   <a href="#team">For teammates</a>
+  <a href="#assistants">OpenCode and Codex</a>
   <h2>Reference</h2>
   <a href="#safety">Safety</a>
   <a href="#trouble">Troubleshooting</a>
@@ -184,14 +185,14 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
 
 <main>
 <h1>AI BA Harness</h1>
-<p class="lede">A working method for business analysts in Claude Code. It keeps one knowledge base
+<p class="lede">A working method for business analysts in Claude Code, OpenCode or Codex. It keeps one knowledge base
 per project, turns meetings, documents and Jira activity into proposed changes you accept item by
 item, writes requirement documents from what is known, and creates Jira issues only after you have
 seen and approved them.</p>
 
 <h2 id="what">What it is</h2>
 <p>AI BA Harness is a development-workflow layer for business analysts. It runs inside Claude Code
-and adds nine commands, a knowledge base stored as plain markdown files, and fixed steps for
+(or <a href="#assistants">OpenCode or Codex</a>) and adds nine commands, a knowledge base stored as plain markdown files, and fixed steps for
 anything that changes that knowledge or touches Jira. It works at project level: each project has one
 BA repository, which the BAs maintain and everyone else can clone and ask questions of.</p>
 <div class="grid">
@@ -493,7 +494,7 @@ diagram sideways.</p>
 <table>
 <thead><tr><th>Need</th><th>Why it matters</th></tr></thead>
 <tbody>
-<tr><td><strong>Claude Code</strong>, signed in (CLI, desktop app or IDE extension)</td><td>Runs the commands. Open it in the root of the BA repository so it finds <code>.claude/</code></td></tr>
+<tr><td><strong>Claude Code</strong>, signed in (CLI, desktop app or IDE extension), or <a href="#assistants">OpenCode or Codex</a></td><td>Runs the commands. Open it in the root of the BA repository so it finds its settings</td></tr>
 <tr><td><strong>Git</strong>, with <strong>Git Bash</strong> on Windows</td><td>The repository, the copy script (<code>scripts/new-project.sh</code>) and the automatic sync hook are bash. Git for Windows includes Git Bash</td></tr>
 <tr><td><strong>A shared remote</strong> (GitHub, Azure DevOps, Bitbucket)</td><td>Where the team clones from. The automatic sync needs it</td></tr>
 <tr><td><strong>An Atlassian Cloud account</strong> with access to the project's Jira, and Confluence if the project uses it</td><td>The commands read from them, and <code>/backlog</code> creates issues with your own permissions</td></tr>
@@ -527,7 +528,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.5.1"
+git commit -m "Start from AI BA Harness 0.6.0"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -539,7 +540,7 @@ git push -u origin main</code></pre>
   you trust the folder (yes: the project's settings and sync hook need it) and whether to use the
   <code>atlassian</code> server from <code>.mcp.json</code> (yes). Then run <code>/mcp</code>, choose
   <code>atlassian</code>, and sign in in the browser window that opens. It uses your own Atlassian
-  account and permissions.</p>
+  account and permissions. With OpenCode or Codex, see <a href="#assistants">OpenCode and Codex</a>.</p>
 </li>
 <li>
   <h3>Run <code>/setup</code></h3>
@@ -595,7 +596,7 @@ git push -u origin main</code></pre>
 <table>
 <thead><tr><th>Key</th><th>Default</th><th>What it controls</th></tr></thead>
 <tbody>
-<tr><td><code>kb_auto_sync</code></td><td><code>on</code></td><td>Pull new knowledge when a Claude Code session starts</td></tr>
+<tr><td><code>kb_auto_sync</code></td><td><code>on</code></td><td>Pull new knowledge when a session starts (in OpenCode, when a command starts)</td></tr>
 <tr><td><code>confluence</code></td><td><code>off</code></td><td>Confluence sync; <code>/setup</code> sets it on if the project uses Confluence</td></tr>
 <tr><td><code>converter</code></td><td><code>pdf</code></td><td><code>markitdown</code> if installed, otherwise <code>pdf</code> (you save Office files as PDF)</td></tr>
 <tr><td><code>max_batch</code></td><td><code>15</code></td><td>Most items created in Jira per approval</td></tr>
@@ -695,7 +696,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <a href="#setup">Set up a project</a>:</p>
 <pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
 cd ../fleetkeep-ba-knowledge
-git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.5.1"
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.0"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main
 claude</code></pre>
@@ -1531,8 +1532,8 @@ generated files are current), and a GitHub workflow runs it on every push and pu
 
 <h3 id="kb-sync">Automatic sync, in plain words</h3>
 <p>Everyone clones the BA repository once. After that, their copy updates itself. When anyone starts
-or resumes a Claude Code session in the repository, a small script
-(<code>.claude/hooks/kb-sync.sh</code>) runs first:</p>
+or resumes a Claude Code or Codex session in the repository, a small script
+(<code>tools/kb-sync.sh</code>) runs first. OpenCode runs it at the start of each command.</p>
 <ol>
 <li>It asks the shared copy whether anything new has arrived. If the network is slow or offline, it
 gives up after about 15 seconds and says it is working with your local copy.</li>
@@ -1547,7 +1548,7 @@ starting. It does nothing in a repository that has no shared remote yet. To swit
 <code>kb_auto_sync: off</code> in <code>PROJECT-PROFILE.md</code> section 5.</p>
 <p>When a BA writes, the commands pull first (so proposals are made against the latest copy), commit
 after you accept, and ask before pushing, because a push shares the change with everyone.</p>
-<p>People who read in Obsidian without opening Claude Code can stay current with the Obsidian Git
+<p>People who read in Obsidian without opening an assistant can stay current with the Obsidian Git
 community plugin (set an auto-pull interval, for example 30 minutes) or a daily scheduled task, for
 example in Windows Task Scheduler:</p>
 <pre><code>git -C "&lt;path to repository&gt;" pull --ff-only</code></pre>
@@ -1698,8 +1699,9 @@ and drafts an open question for you to send to the BA: the question, why you nee
 know.</li>
 </ul>
 <p><code>/ask</code> is read-only by design: it has no write, edit, shell or sub-agent tools, and every
-Jira and Confluence write tool is disallowed for it. Other assistants (Copilot, Cursor, Codex) follow
-<code>AGENTS.md</code> in the repository and answer the same way. You can also read the pages
+Jira and Confluence write tool is disallowed for it. In OpenCode it is <code>/ask</code> too, and in
+Codex <code>$ask</code>. Other assistants (Copilot, Cursor, Gemini) follow <code>AGENTS.md</code> in
+the repository and answer the same way. You can also read the pages
 directly: start at <code>knowledge/index.md</code>, on GitHub or in Obsidian.</p>
 <h3>Suggesting a change</h3>
 <p>Send the material to the BA. Or run <code>/intake</code> on it: it asks whether you maintain the
@@ -1708,17 +1710,70 @@ what was proposed, and offers to put it on a branch (<code>kb/stage-&lt;slug&gt;
 request that only adds the staging file. Keep your original note until the BA has dealt with it.
 Either way, the BA accepts or rejects each item, and nothing changes until then.</p>
 
+<h2 id="assistants">OpenCode and Codex</h2>
+<p>Claude Code is the main way to run the harness, and the rest of this handbook shows it. A project
+repository also carries wrappers and settings for <strong>OpenCode</strong> and <strong>Codex</strong>,
+so a BA or teammate who uses one of those gets the same nine commands from the same definitions in
+<code>agents/</code>. Any other assistant (Copilot, Cursor, Gemini) reads <code>AGENTS.md</code>: it
+answers questions the way <code>/ask</code> does, and runs a command when you ask for it by name ("run
+intake"), but nothing in the repository enforces its prompts.</p>
+<table>
+<thead><tr><th></th><th>Claude Code</th><th>OpenCode</th><th>Codex</th></tr></thead>
+<tbody>
+<tr><td><strong>Run a command</strong></td><td><code>/intake</code></td><td><code>/intake</code></td><td><code>$intake</code> (or pick it from <code>/skills</code>)</td></tr>
+<tr><td><strong>Its files</strong></td><td><code>.claude/</code>, <code>.mcp.json</code>, <code>CLAUDE.md</code></td><td><code>.opencode/</code>, <code>opencode.json</code>, <code>AGENTS.md</code></td><td><code>.agents/skills/</code>, <code>.codex/</code>, <code>AGENTS.md</code></td></tr>
+<tr><td><strong>First time</strong></td><td>Trust the folder, approve the <code>atlassian</code> server, <code>/mcp</code> to sign in</td><td><code>opencode mcp auth atlassian</code> to sign in</td><td>Trust the project (Codex ignores <code>.codex/</code> until you do), approve the sync hook with <code>/hooks</code>, then <code>codex mcp login atlassian</code></td></tr>
+<tr><td><strong>Automatic sync</strong></td><td>When a session starts</td><td>At the start of each command</td><td>When a session starts, once the hook is trusted</td></tr>
+<tr><td><strong>Jira and Confluence writes</strong></td><td>Ask, matched by verb</td><td>Ask: every Atlassian tool that isn't on the list of reads</td><td>Ask: every tool the server doesn't mark read-only, and <code>executeWrite</code> always</td></tr>
+<tr><td><strong>Jira and Confluence deletes</strong></td><td>Refused</td><td>Refused</td><td><code>executeDestructive</code> switched off</td></tr>
+<tr><td><strong><code>git push</code></strong></td><td>Asks</td><td>Asks</td><td>Asks</td></tr>
+<tr><td><strong>Force push, hard reset, <code>git clean</code></strong></td><td>Refused</td><td>Refused</td><td>Refused when the command starts that way; <code>git push origin --force</code> isn't matched, and the definitions forbid it</td></tr>
+<tr><td><strong>The critic</strong></td><td><code>critic</code> sub-agent, read-only</td><td><code>critic</code> sub-agent (<code>@critic</code>), read-only</td><td><code>critic</code> agent with a read-only sandbox</td></tr>
+<tr><td><strong><code>/ask</code></strong></td><td>No write, shell or agent tools</td><td>Runs as the <code>kb-reader</code> agent, which can't write, run commands or write to Jira</td><td>Read-only by its definition; Codex settings don't restrict it further</td></tr>
+</tbody>
+</table>
+<h3>Setting up with OpenCode or Codex</h3>
+<p>The steps in <a href="#setup">Set up a project</a> are the same; only step 3 changes.</p>
+<ul>
+<li><strong>OpenCode:</strong> in the repository folder, run <code>opencode mcp auth atlassian</code>
+and sign in in the browser, then start <code>opencode</code> and run <code>/setup</code>.</li>
+<li><strong>Codex:</strong> start <code>codex</code> in the repository folder and trust the project when
+asked. Run <code>/hooks</code> and trust the knowledge base sync. Then run
+<code>codex mcp login atlassian</code>, restart Codex, and run <code>$setup</code>.</li>
+</ul>
+<p>Teams that use only one assistant can delete the other assistants' files. <code>tools/kb.py check</code>
+only checks the wrappers of assistants whose folder is still there.</p>
+<h3>Good to know</h3>
+<ul>
+<li><strong>OpenCode also sees the Codex skills</strong> in <code>.agents/skills/</code>. The project's
+<code>opencode.json</code> blocks them, so in OpenCode the commands run only as <code>/commands</code>,
+never on the model's own initiative.</li>
+<li><strong>Codex runs the commands only when you name them.</strong> Every skill except
+<code>ask</code> is set not to start by itself.</li>
+<li><strong>Codex settings apply only to a trusted project.</strong> Until you trust it, Codex uses
+none of the repository's settings: no Atlassian server, no rules, no sync.</li>
+<li><strong>Codex asks before Jira reads too</strong> when the Atlassian server doesn't mark its tools
+read-only. That's safe, just more prompts.</li>
+<li><strong>How far it's tested.</strong> In OpenCode 1.19, on the FleetKeep example, the project's
+settings, commands and agents loaded with the intended permissions, and <code>/ask</code> ran as the
+read-only <code>kb-reader</code> agent and answered with correct citations. A shell command that
+isn't on the allowed list asked first, as it should. The other OpenCode commands haven't been run end
+to end yet, and the Codex files follow Codex's documentation (October 2026) but haven't been run at
+all, so try both on a practice copy first.</li>
+</ul>
+
 <h2 id="safety">Safety</h2>
 <p>The protections are layered, so one missing step doesn't let a write through.</p>
 <table>
 <thead><tr><th>Layer</th><th>What it does</th></tr></thead>
 <tbody>
 <tr><td><strong>Command definitions</strong> (<code>agents/</code>)</td><td>Each command previews, stages and waits for a yes. Knowledge changes go through staging; Jira writes only through <code>/backlog</code>; a contradiction becomes a question; nothing is deleted from the knowledge base</td></tr>
-<tr><td><strong>Critic</strong> (<code>agents/_critic.md</code>, <code>.claude/agents/critic.md</code>)</td><td>A read-only, fresh-context second look at every staging file before you decide, a pre-check of every requirement draft, and a citation check on every <code>/ask</code> answer. It catches mistakes, and the decision stays yours</td></tr>
+<tr><td><strong>Critic</strong> (<code>agents/_critic.md</code>, and a read-only <code>critic</code> agent for each assistant)</td><td>A read-only, fresh-context second look at every staging file before you decide, a pre-check of every requirement draft, and a citation check on every <code>/ask</code> answer. It catches mistakes, and the decision stays yours</td></tr>
 <tr><td><strong>Allowed and disallowed tools</strong> (<code>.claude/commands/</code>)</td><td>Each wrapper pre-approves only the reads and git commands that command needs. <code>/ask</code> also lists file writes, Bash, PowerShell, sub-agents and every Atlassian write tool as disallowed</td></tr>
 <tr><td><strong>Settings: ask</strong> (<code>.claude/settings.json</code>)</td><td>Claude Code asks before every Atlassian write tool, matched by verb (<code>create*</code>, <code>edit*</code>, <code>update*</code>, <code>transition*</code>, <code>add*</code> and the rest, plus <code>executeWrite</code>), and before every <code>git push</code>, checkout, restore and rebase, even inside an approved batch. The rules cover the repository's own <code>atlassian</code> server and the Atlassian plugin; <code>/setup</code> warns if Atlassian arrives through any other connection</td></tr>
 <tr><td><strong>Settings: deny</strong></td><td>Atlassian delete tools and <code>executeDestructive</code>, force pushes, <code>git reset --hard</code>, <code>git clean</code> and <code>git branch -D</code> are refused outright. These rules match commands as Claude normally writes them; an unusual form such as <code>git -C . push</code> isn't matched, which is why the wrappers pre-approve only narrow git commands and everything else prompts</td></tr>
-<tr><td><strong>Checks</strong> (<code>tools/kb.py check</code>)</td><td>Broken links, bad properties, unknown or duplicate IDs and out-of-date registers are caught before each commit, and by the GitHub workflow on every push</td></tr>
+<tr><td><strong>OpenCode and Codex</strong> (<code>opencode.json</code>, <code>.codex/</code>)</td><td>The same asks and refusals in each tool's own settings, with the differences listed in <a href="#assistants">OpenCode and Codex</a></td></tr>
+<tr><td><strong>Checks</strong> (<code>tools/kb.py check</code>)</td><td>Broken links, bad properties, unknown or duplicate IDs, out-of-date registers and missing command wrappers are caught before each commit, and by the GitHub workflow on every push</td></tr>
 <tr><td><strong>Harness changes</strong> (<code>/improve-harness</code>)</td><td>Never applied locally when they touch permissions, approval steps, redaction or Jira writes; those go to the harness maintainers only. Claude Code also asks before any edit under <code>.claude/</code></td></tr>
 <tr><td><strong>inbox/ is gitignored</strong></td><td>Raw notes, transcripts and documents never enter git. Only the redacted source record is committed. Raw files are deleted from <code>inbox/</code> only with your yes</td></tr>
 <tr><td><strong>Redaction</strong></td><td>Intake marks each item's sensitivity and proposes removing names where a role would do, contact details, health or customer data, credentials and anything marked confidential</td></tr>
@@ -1733,9 +1788,11 @@ but they can't stop a wrong item you approve.</p></div>
 <table>
 <thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr></thead>
 <tbody>
-<tr><td>A command says Atlassian isn't connected</td><td>Not signed in, or the sign-in expired</td><td>Run <code>/mcp</code>, choose <code>atlassian</code>, sign in in the browser. If the app is blocked, ask your Atlassian admin to allow it. <code>/setup</code> finishes the local part meanwhile</td></tr>
+<tr><td>A command says Atlassian isn't connected</td><td>Not signed in, or the sign-in expired</td><td>Run <code>/mcp</code>, choose <code>atlassian</code>, sign in in the browser (OpenCode: <code>opencode mcp auth atlassian</code>; Codex: <code>codex mcp login atlassian</code>). If the app is blocked, ask your Atlassian admin to allow it. <code>/setup</code> finishes the local part meanwhile</td></tr>
 <tr><td><code>/sync</code> tells you to run <code>/setup</code></td><td>The scope JQL in the profile is still a placeholder</td><td>Run <code>/setup</code> and fill section 2</td></tr>
 <tr><td>The knowledge base didn't update when you opened Claude Code</td><td>No upstream yet; uncommitted edits; your copy and the shared copy both changed; offline; or <code>kb_auto_sync: off</code></td><td>Read the message the hook printed and run what it suggests (<code>git pull --ff-only</code>, or <code>git pull --rebase</code> then push). For a new repository, push with <code>git push -u origin main</code></td></tr>
+<tr><td>Codex ignores the repository's settings: no Atlassian server, no sync, no prompts</td><td>The project isn't trusted, or the sync hook isn't</td><td>Trust the project when Codex asks (or in its settings), then run <code>/hooks</code> and trust the sync hook</td></tr>
+<tr><td>OpenCode doesn't show the commands</td><td>OpenCode was started outside the repository folder</td><td>Start <code>opencode</code> in the repository root, where <code>opencode.json</code> and <code>.opencode/</code> are</td></tr>
 <tr><td>No hook message at all, ever</td><td>bash isn't available, or the session was already open</td><td>Install Git for Windows (Git Bash). The hook runs when a session starts or resumes; otherwise pull by hand</td></tr>
 <tr><td>A command says Python isn't available</td><td>The knowledge base tool needs Python 3.8 or later</td><td>Nothing breaks: the command rebuilds the index and registers by hand. Install Python to get the exact rebuild and the full check</td></tr>
 <tr><td>The "Knowledge base check" workflow fails on GitHub</td><td>A broken link, a bad property, an unknown ID or out-of-date registers</td><td>Run <code>python tools/kb.py check</code> locally; for out-of-date registers run <code>python tools/kb.py rebuild</code> and commit</td></tr>

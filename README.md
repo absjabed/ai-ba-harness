@@ -1,6 +1,6 @@
 # AI BA Harness
 
-**A business-analysis harness layer for Claude Code:** commands, agents and a project knowledge base that sit on top of Claude Code's own agent runtime.
+**A business-analysis harness layer for Claude Code, OpenCode and Codex:** commands, agents and a project knowledge base that sit on top of the assistant's own agent runtime.
 
 Each project gets a BA knowledge repository. Its knowledge base grows every day from meetings, documents, Jira and Confluence, and
 nine commands turn it into reviewed requirements and a clean Jira backlog. Anyone on the project can
@@ -28,7 +28,8 @@ This repository is the template, so don't do project work in it. Create a projec
 | A knowledge base tool | `tools/kb.py`: rebuilds the index and registers, checks links, properties and IDs; a GitHub workflow runs the check on every push |
 | Templates | Jira epic, story, task, spike and bug; requirement document; knowledge pages |
 | Safety | Nothing reaches the knowledge base, Jira or Confluence without a preview and the BA's yes |
-| Automatic sync | Every clone pulls new knowledge when someone opens Claude Code in it |
+| Automatic sync | Every clone pulls new knowledge when someone opens Claude Code or Codex in it, or runs an OpenCode command |
+| Three assistants | Claude Code, OpenCode and Codex each get the nine commands and the same safety settings; any other assistant follows `AGENTS.md` |
 
 ## Start a project
 

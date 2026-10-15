@@ -84,7 +84,7 @@ issues. Lowercase, hyphenated.
 The harness reads this block. Values are `on` / `off` or numbers.
 
 ```yaml
-kb_auto_sync: on         # pull new knowledge when a Claude Code session starts
+kb_auto_sync: on         # pull new knowledge when a session (or an OpenCode command) starts
 confluence: off          # Confluence sync and publishing; set on if section 2 says yes
 converter: pdf           # markitdown (if installed) or pdf (ask the BA to save Office files as PDF)
 max_batch: 15            # most items created in Jira or Confluence per approval

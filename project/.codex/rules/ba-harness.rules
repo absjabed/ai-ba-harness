@@ -1,0 +1,63 @@
+# Command rules for Codex in this BA knowledge repository. Codex loads them only after you trust
+# the project. When several rules match a command, the strictest wins (forbidden > prompt > allow).
+# Rules match the start of a command, so `git push origin --force` isn't caught by the force rule;
+# the command definitions forbid it too, and the push itself still asks.
+
+# Reading the shared copy: fetch and fast-forward only, no prompt needed.
+prefix_rule(
+    pattern = ["git", "fetch"],
+    decision = "allow",
+    justification = "Reads the shared knowledge base; changes nothing local.",
+)
+prefix_rule(
+    pattern = ["git", "pull", "--ff-only"],
+    decision = "allow",
+    justification = "Fast-forwards only; refuses when local work would be affected.",
+)
+
+# Publishing and moving between branches: ask every time.
+prefix_rule(
+    pattern = ["git", "push"],
+    decision = "prompt",
+    justification = "Pushing shares your changes with the whole team.",
+    match = ["git push", "git push origin main"],
+)
+prefix_rule(
+    pattern = ["git", ["checkout", "restore", "rebase"]],
+    decision = "prompt",
+    justification = "Can discard or rewrite local work.",
+)
+prefix_rule(
+    pattern = ["git", "stash", "drop"],
+    decision = "prompt",
+    justification = "Throws away stashed work.",
+)
+
+# Never: these destroy history or local work.
+prefix_rule(
+    pattern = ["git", "push", ["--force", "-f", "--force-with-lease", "--mirror", "--delete"]],
+    decision = "forbidden",
+    justification = "The shared knowledge base is never force-pushed or deleted from here.",
+    match = ["git push --force", "git push -f origin main"],
+    not_match = ["git push origin main"],
+)
+prefix_rule(
+    pattern = ["git", "reset", "--hard"],
+    decision = "forbidden",
+    justification = "Discards uncommitted work.",
+)
+prefix_rule(
+    pattern = ["git", "clean"],
+    decision = "forbidden",
+    justification = "Deletes untracked files, including inbox material.",
+)
+prefix_rule(
+    pattern = ["git", "branch", "-D"],
+    decision = "forbidden",
+    justification = "Deletes a branch even when its work isn't merged.",
+)
+prefix_rule(
+    pattern = ["git", "filter-branch"],
+    decision = "forbidden",
+    justification = "Rewrites the shared history.",
+)

@@ -9,8 +9,9 @@ Confluence; you never write to them.
 Read `PROJECT-PROFILE.md` (section 2 for scope, section 5 for limits), `knowledge/_meta/conventions.md`,
 `agents/_knowledge-pipeline.md` and `knowledge/_meta/sync.json`.
 
-If the Atlassian server isn't connected, tell the BA to run `/mcp` and sign in, and stop. If the
-scope JQL is still a placeholder, tell them to run `/setup`.
+If the Atlassian server isn't connected, tell the BA to sign in to the repository's `atlassian`
+server (`/mcp` in Claude Code, `opencode mcp auth atlassian` in OpenCode, `codex mcp login atlassian`
+in Codex), and stop. If the scope JQL is still a placeholder, tell them to run `/setup`.
 
 ## Input
 

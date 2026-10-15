@@ -10,7 +10,7 @@ status: approved
 The rules every harness command follows when it reads or changes this knowledge base. People
 editing by hand follow them too. The files are stored by Obsidian's rules and stay compatible with
 Open Knowledge Format, so the folder opens as an Obsidian vault and works with OKF tools, while
-Claude Code, GitHub and any text editor read it as plain markdown.
+AI assistants, GitHub and any text editor read it as plain markdown.
 
 ## 1. Folders
 
@@ -246,7 +246,7 @@ closed. For example `+CAP-012 +BR-031 ~CAP-007 +Q-014 ?Q-009 +DEC-007 +ACT-004`.
 
 **When a push is rejected because another BA pushed first:**
 
-1. `git pull --rebase` (Claude Code asks first).
+1. `git pull --rebase` (your assistant asks first).
 2. **Find clashes,** even if the rebase went through without a conflict: new pages with the same ID
    but a different file name sit side by side without any git conflict. Run
    `python tools/kb.py check`, which reports any ID used twice (pages, rules, RAID rows, actions,
@@ -268,7 +268,7 @@ closed. For example `+CAP-012 +BR-031 ~CAP-007 +Q-014 ?Q-009 +DEC-007 +ACT-004`.
    - in the source record, note "renumbered from <old> after a push clash".
 5. `python tools/kb.py rebuild`, then `check`; `git add` and `git rebase --continue`. If the commit
    message names a renumbered ID, correct it (`git commit --amend`, before pushing).
-6. Push again (Claude Code asks).
+6. Push again (your assistant asks).
 7. Tell the BA which of their IDs changed, old to new, and that the other BA's items kept theirs.
    Anyone already told an old number needs the new one.
 

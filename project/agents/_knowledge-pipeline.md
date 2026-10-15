@@ -162,8 +162,7 @@ can decide them in sittings.
 ## 4. Critique
 
 Run the critic on the staging file, as [`_critic.md`](_critic.md) describes: the read-only `critic`
-sub-agent (`.claude/agents/critic.md`) when your tool has sub-agents, otherwise a separate second
-pass. It re-reads the source and returns findings. Correct the staging file for the `fix` findings,
+sub-agent when your tool has sub-agents, otherwise a separate second pass. It re-reads the source and returns findings. Correct the staging file for the `fix` findings,
 note the `check` findings on their items, and fill the staging file's `Critic` section; findings that
 belong to no item (the summary, the play-back, a missed point you didn't add) go under "Other
 findings" there. One critique per staging file; your own corrections aren't critiqued again.
@@ -223,7 +222,7 @@ A teammate's run ends with the teammate route in step 5.
 6. Append one line to `log.md` (conventions section 10).
 7. Delete the staging file, or keep it with only its undecided items left. If the file was committed,
    remove it with `git rm -f` (it was changed when the decisions were written in); otherwise delete
-   it. Claude Code asks before deleting; that prompt is expected.
+   it. Your assistant asks before deleting; that prompt is expected.
 8. Check before committing: `python tools/kb.py check` when Python is available. Otherwise check by
    hand that every link you wrote resolves, every new file name follows the naming rule, and every
    page has `type`, `id`, `title` and `status`.

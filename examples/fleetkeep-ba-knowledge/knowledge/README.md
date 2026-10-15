@@ -21,12 +21,13 @@ the decisions made and who made them, and the questions still open.
 - IDs in brackets, such as `(SRC-031)` or `(BR-104)`, point to where a statement came from or to the
   rule it refers to.
 - `[!CAUTION]` boxes mark behaviour that is still unresolved, with a link to the open question.
-- To ask a question instead of reading, run `/ask <question>` in Claude Code from the repository root.
+- To ask a question instead of reading, run `/ask <question>` (`$ask` in Codex) from the repository
+  root, or just ask your assistant.
 
 ## Opening it in Obsidian (optional)
 
 Open this `knowledge/` folder as a vault. The shared settings in `.obsidian/app.json` keep links in
-standard markdown, so everything works the same in Obsidian, on GitHub and in Claude Code. Graph view,
+standard markdown, so everything works the same in Obsidian, on GitHub and in any AI assistant. Graph view,
 backlinks and the Properties panel all work.
 
 ## Contributing

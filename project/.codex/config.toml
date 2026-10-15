@@ -1,0 +1,18 @@
+# Codex settings for this BA knowledge repository. Codex reads this file only after you trust the
+# project; until then none of it applies, including the Atlassian server and the safety settings.
+
+# Ask before anything outside the sandbox; commands may write only inside this repository.
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+# The repository's own Atlassian server. Sign in once with: codex mcp login atlassian
+[mcp_servers.atlassian]
+url = "https://mcp.atlassian.com/v2/mcp"
+# Tools the server marks read-only run without asking; every other tool asks first.
+default_tools_approval_mode = "writes"
+# The one tool that deletes in Jira or Confluence. The harness never deletes there.
+disabled_tools = ["executeDestructive"]
+
+# Jira and Confluence writes always ask, whatever the server says about them.
+[mcp_servers.atlassian.tools.executeWrite]
+approval_mode = "prompt"

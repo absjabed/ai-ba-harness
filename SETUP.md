@@ -7,7 +7,7 @@ an hour for steps 1 to 5, plus however long the first `/kb-seed` review takes.
 
 | Need | Why |
 |---|---|
-| Claude Code (CLI, desktop app or IDE extension), signed in | Runs the commands |
+| Claude Code (CLI, desktop app or IDE extension), OpenCode or Codex, signed in | Runs the commands. The steps below use Claude Code; the handbook's "OpenCode and Codex" section has the differences |
 | Git, with Git Bash on Windows | The repository, the copy script and the automatic sync. Git for Windows includes Git Bash |
 | Access to the project's Jira (and Confluence, if used) on Atlassian Cloud | The commands read from them, and `/backlog` creates issues |
 | *(recommended)* Python 3.8 or later | Runs `tools/kb.py`, which rebuilds the index and registers exactly and checks the knowledge base. Without it the commands do the same by hand |
@@ -56,6 +56,11 @@ use the `atlassian` server from the repository's `.mcp.json` (yes). Then:
 2. Approve the connection for your site. If your Atlassian admin restricts connected apps, they may
    need to allow it first.
 
+With **OpenCode**, run `opencode mcp auth atlassian` in the repository folder and sign in, then start
+`opencode`. With **Codex**, start `codex` in the folder and trust the project (Codex ignores the
+repository's settings until you do), run `/hooks` and trust the sync hook, then run
+`codex mcp login atlassian` and restart Codex. In Codex, commands start with `$` (`$setup`).
+
 ## 4. Run `/setup`
 
 `/setup` interviews you and fills `PROJECT-PROFILE.md`:
@@ -103,8 +108,8 @@ seed read Jira or Confluence, it records where it stopped, so the first `/sync` 
 
 Send the repository URL to developers, testers and product owners:
 
-> Clone this once, open Claude Code in it, and ask: `/ask <question>`. Your copy updates itself
-> whenever you open it.
+> Clone this once, open Claude Code, OpenCode or Codex in it, and ask: `/ask <question>` (`$ask` in
+> Codex). Your copy updates itself.
 
 They need read access to the repository. The first time they open Claude Code there, they answer
 the same two prompts (trust the folder: yes; the `atlassian` server: yes if they have Atlassian
@@ -121,7 +126,7 @@ page of its own to share with the team: [`docs/walkthrough.html`](docs/walkthrou
 |---|---|
 | Start of the day | `/sync` |
 | After each meeting or new document | `/intake inbox/<file>` |
-| End of a working session with Claude | `/intake` |
+| End of a working session with your assistant | `/intake` |
 | Per epic | `/requirements`, then `/review`, then `/backlog` |
 | Weekly | `/review kb` |
 
@@ -131,7 +136,7 @@ The handbook ([`docs/index.html`](docs/index.html)) has the full guide.
 
 Open the `knowledge/` folder as a vault. The shipped settings (`knowledge/.obsidian/app.json`) keep
 links in standard markdown, so nothing changes for anyone else. To stay in sync without opening
-Claude Code, either:
+an assistant, either:
 
 - install the Obsidian Git community plugin and set an auto-pull interval (for example 30 minutes);
 - or schedule a daily pull, for example in Windows Task Scheduler:
@@ -164,8 +169,8 @@ started from. In the template:
 
 1. **Read what changed:** the `CHANGELOG.md` entries newer than the project's version, oldest
    first (or `git log --oneline v<version>..`).
-2. **Copy from the template's `project/` folder:** `agents/`, `.claude/`, `templates/`, `tools/`,
-   `.github/`, `CLAUDE.md`, `AGENTS.md`, `knowledge/_meta/conventions.md`,
+2. **Copy from the template's `project/` folder:** `agents/`, `.claude/`, `.opencode/`, `.codex/`,
+   `.agents/`, `opencode.json`, `templates/`, `tools/`, `.github/`, `CLAUDE.md`, `AGENTS.md`, `knowledge/_meta/conventions.md`,
    `knowledge/_meta/templates/`, and any new folder a CHANGELOG entry names. Never copy
    `knowledge/_meta/sync.json` (the project's last sync times), knowledge pages,
    `PROJECT-PROFILE.md`, `requirements/` or `trace/map.csv`: they hold the project's own content.
@@ -176,4 +181,4 @@ started from. In the template:
 5. Set `HARNESS_VERSION` to the new version.
 6. Run `python tools/kb.py rebuild` and `python tools/kb.py check`.
 7. Commit (`harness: update to <version>`) and push. Everyone's clone picks it up the next time they
-   open Claude Code, and the GitHub check runs on every push from then on.
+   open their assistant, and the GitHub check runs on every push from then on.
