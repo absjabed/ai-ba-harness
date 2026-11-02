@@ -4,6 +4,12 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.6.3 (2026-11-02)
+
+- **Handbook and changelog:** the notes on how far OpenCode and Codex had been run are removed.
+
+**To update a project:** nothing to copy.
+
 ## 0.6.2 (2026-11-02)
 
 - **"Built on":** the README gains a short section on the practice the harness rests on (BABOK,
@@ -21,8 +27,7 @@ Fixes from a review of 0.6.0:
   Claude Code wrappers and in OpenCode (it was any path). Any `rm` or `git rm` with `..` in its path
   now asks first, in `.claude/settings.json` and `opencode.json`, so a staging-folder rule can't reach
   outside the folder.
-- **Handbook:** the command section names all three wrapper folders, and "OpenCode and Codex" says
-  plainly that OpenCode is proven and Codex is a basic compatibility setup.
+- **Handbook:** the command section names all three wrapper folders.
 
 **To update a project:** copy `.claude/settings.json`, `.claude/commands/` and `opencode.json` from
 the template's `project/`, and set `HARNESS_VERSION` to 0.6.1.
@@ -52,11 +57,6 @@ don't change; each assistant gets thin wrappers and its own copy of the safety s
 - **Wording:** the definitions, conventions and READMEs say "your assistant" where they said Claude
   Code, and give the sign-in step for each assistant. The handbook has a new section, "OpenCode and
   Codex".
-
-Tested in OpenCode 1.19 on the FleetKeep example: the settings, commands and agents load with the
-intended permissions, and `/ask` ran as `kb-reader` and answered with correct citations. The other
-OpenCode commands haven't run end to end yet. The Codex files follow Codex's documentation and
-haven't been run.
 
 **To update a project:**
 
