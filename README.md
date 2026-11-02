@@ -19,6 +19,21 @@ This repository is the template, so don't do project work in it. Create a projec
 > browser. To share the worked example with a team, use its own page,
 > [`docs/walkthrough.html`](docs/walkthrough.html).
 
+## Built on
+
+The harness applies established business analysis practice rather than inventing its own:
+
+- **Business analysis:** IIBA BABOK v3 and its Agile Extension, stakeholder decision rights (RACI),
+  a RAID log and end-to-end traceability.
+- **Requirements quality:** user stories with Given/When/Then criteria, EARS for system rules, and
+  checks against INVEST, ISO/IEC/IEEE 29148 and a Definition of Ready.
+- **Responsible AI:** nothing is written without the analyst's approval, every fact cites its source,
+  rule checks run before AI review, and a read-only critic reviews each proposal.
+- **Open knowledge:** plain markdown that opens in Obsidian and stays compatible with the Open
+  Knowledge Format, owned by the project.
+
+The handbook explains each one: [What it's built on](docs/index.html#built-on).
+
 ## What a project gets
 
 | | |

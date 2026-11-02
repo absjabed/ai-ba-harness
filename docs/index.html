@@ -147,12 +147,13 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.1</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.2</span></div>
   </div>
   <h2>Start here</h2>
   <a href="walkthrough.html">FleetKeep walkthrough</a>
   <a href="#what">What it is</a>
   <a href="#why">Why use it</a>
+  <a href="#built-on">What it's built on</a>
   <a href="#map">Harness map</a>
   <a href="#prereq">Prerequisites</a>
   <a href="#setup">Set up a project</a>
@@ -257,6 +258,26 @@ model, so everything AI-drafted stays visible as a proposal until you decide.</l
 <li>Scale. Every question starts from <code>knowledge/index.md</code>. Once it no longer fits in one
 read (roughly 300 or more pages), a local search server will be needed.</li>
 </ul>
+
+<h2 id="built-on">What it's built on</h2>
+<p>The harness gives business analysts an AI-assisted way of working that rests on established
+practice. It doesn't invent a new method. It takes the standards BA teams already recognise and builds
+them into every command, so the assistant does the drafting and checking and the analyst keeps the
+decisions.</p>
+<table>
+<thead><tr><th>Foundation</th><th>What the harness takes from it</th></tr></thead>
+<tbody>
+<tr><td><strong>Business analysis practice</strong></td><td>The harness is organised around IIBA's BABOK Guide v3 and its Agile Extension. Elicitation results are played back for confirmation before they become requirements. Stakeholder decision rights live in a RACI, so a statement is recorded as a decision only when the speaker has the authority to make it. Risks, assumptions, issues, dependencies and actions sit in a RAID log, and traceability runs from each requirement to its Jira issues and to the knowledge it relies on.</td></tr>
+<tr><td><strong>Requirements quality</strong></td><td>Stories use the "As a … I want … so that …" form with Given/When/Then acceptance criteria. System rules and non-functional requirements use EARS. <code>/review</code> checks every story against INVEST, every requirement against the clarity and testability characteristics of ISO/IEC/IEEE 29148, and the backlog against a Definition of Ready.</td></tr>
+<tr><td><strong>Responsible use of AI</strong></td><td>The safeguards come from published research and industry practice on AI in requirements work. Nothing reaches the knowledge base, Jira or Confluence without a preview and the analyst's approval. Every statement cites its source; anything unsourced becomes an open question, not a fact. Rule-based checks run before any AI judgement, and a separate read-only critic reviews each proposal. Jira is searched for duplicates before anything is created, and raw notes are redacted and never committed.</td></tr>
+<tr><td><strong>Open, durable knowledge</strong></td><td>Project knowledge is plain markdown that follows Obsidian's conventions and stays compatible with the Open Knowledge Format. It belongs to the project, reads in any editor or on GitHub, and anyone on the team can ask it questions and get answers with their sources.</td></tr>
+<tr><td><strong>Secure integration</strong></td><td>Jira and Confluence are reached through Atlassian's official MCP server, signed in as the analyst, with no stored credentials. The harness runs in Claude Code, OpenCode and Codex, with the same approval rules enforced in each.</td></tr>
+</tbody>
+</table>
+<p><strong>Why it matters.</strong> Analysts spend most of their time collecting, checking and passing on
+what a project knows. The harness keeps that knowledge in one place, checks new information against
+it, and turns it into reviewed requirements and a clean, traceable backlog, while every decision stays
+with a named person.</p>
 
 <h2 id="map">Harness map</h2>
 <p>Each lane is one recurring kind of work, read left to right. Yellow boxes are where a command stops and
@@ -528,7 +549,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.6.1"
+git commit -m "Start from AI BA Harness 0.6.2"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -696,7 +717,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <a href="#setup">Set up a project</a>:</p>
 <pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
 cd ../fleetkeep-ba-knowledge
-git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.1"
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.2"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main
 claude</code></pre>

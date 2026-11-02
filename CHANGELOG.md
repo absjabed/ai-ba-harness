@@ -4,6 +4,15 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.6.2 (2026-11-02)
+
+- **"Built on":** the README gains a short section on the practice the harness rests on (BABOK,
+  RACI, RAID, Given/When/Then, EARS, INVEST, ISO/IEC/IEEE 29148, Definition of Ready, Obsidian and
+  Open Knowledge Format), and the handbook a full "What it's built on" section after "Why use it".
+
+**To update a project:** nothing to copy; the change is in the template's README and handbook. Set
+`HARNESS_VERSION` to 0.6.2 if you want to record it.
+
 ## 0.6.1 (2026-10-15)
 
 Fixes from a review of 0.6.0:
