@@ -22,7 +22,8 @@ The argument is one of:
 | Nothing | The current conversation: what was learned, decided or found unclear while working with the BA in this session. The source kind is `conversation` |
 
 If the argument is a path outside `inbox/`, ask the BA to move or copy the file into `inbox/` first,
-so the original never ends up committed.
+so the original never ends up committed. (`/kb-seed` reads the outside folders listed in profile
+section 6 in place.)
 
 ## Reading the file
 

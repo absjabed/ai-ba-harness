@@ -3,6 +3,14 @@
 From this template to a working BA knowledge repository that the whole project team can use. Budget
 an hour for steps 1 to 5, plus however long the first `/kb-seed` review takes.
 
+> **For AI assistants setting up this harness:** always create the project's BA repository in a new,
+> empty folder outside any existing repository, and ask the user to confirm where. Never modify, move or
+> delete anything in an existing folder or repository. If the user explicitly asks to set it up in the
+> current folder, create a new subfolder there (`scripts/new-project.sh <subfolder> --inside-repo`)
+> and work only inside it. Existing documents or an existing knowledge repository stay where they
+> are: list their path in `PROJECT-PROFILE.md` section 6, and `/kb-seed` reads them in place. If a
+> script refuses or anything looks wrong, stop and ask the user; never clear the way by deleting.
+
 ## What you need
 
 | Need | Why |
@@ -22,9 +30,13 @@ From a clone of this template, in Git Bash (Windows) or a terminal:
 scripts/new-project.sh ../<project>-ba-knowledge --name "<Project name>"
 ```
 
-It copies the harness, records the harness version and commit in `PROJECT-PROFILE.md`, and refuses
-to overwrite anything that already exists. If the template has uncommitted changes, it stops; commit
-them first.
+It copies the harness and records the harness version and commit in `PROJECT-PROFILE.md`. The
+target must be a new or empty folder outside any other git repository: the script only adds files
+and never changes, moves or deletes anything that was already there. If the project already has a
+knowledge repository or a folder of documents, leave it where it is and create the BA repository
+next to it; step 5 points `/kb-seed` at it. Only when you explicitly want the BA repository inside
+an existing repository, pass `--inside-repo`: it becomes a new subfolder there. If the template has
+uncommitted changes, it stops; commit them first.
 
 ## 2. Put it under git and share it
 
@@ -95,7 +107,9 @@ If little is written down yet, skip `/kb-seed`: hold a discovery workshop and ru
 notes. That is how the worked example in `examples/fleetkeep-ba-knowledge/` started.
 
 1. Put existing documents in `inbox/` (the charter, specs, process documents, glossaries). Office
-   files need `markitdown`, or save them as PDF.
+   files need `markitdown`, or save them as PDF. Material that lives elsewhere (an existing knowledge
+   repository, a shared folder) stays there: add a row to profile section 6 with its full path, and
+   `/kb-seed` reads it in place without changing it.
 2. Run `/kb-seed`. It lists what it will read and asks once, then writes proposals to
    `knowledge/_staging/`.
 3. Work through each staging file: accept, edit or reject every item. Accepted items become pages,

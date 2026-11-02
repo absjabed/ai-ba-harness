@@ -49,6 +49,7 @@ A team that never uses one of the assistants can delete that assistant's folder 
    | Jira and Confluence deletes | denied | denied | `executeDestructive` switched off |
    | `git push` | ask | ask | ask |
    | Force push, hard reset, `git clean`, `git branch -D` | denied | denied | forbidden (rules match the start of a command only) |
+   | Recursive deletes (`rm -r`, `Remove-Item -Recurse`, `rmdir`, `rd /s`, `del /s`) | denied | denied | forbidden or asked (start of a command only) |
    | Changing the harness's own files | ask (`.claude/`) | ask (all harness folders) | inside the sandbox; the definitions forbid it |
    | `/ask` | can't write, run commands or start agents | runs as `kb-reader`, which can't either | the definition forbids it |
    | Takes effect | when the folder opens | when the folder opens | only after you trust the project (and the hook with `/hooks`) |

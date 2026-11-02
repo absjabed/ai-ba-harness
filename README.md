@@ -13,6 +13,14 @@ the other two read.
 This repository is the template, so don't do project work in it. Create a project repository with
 `scripts/new-project.sh`, then follow [SETUP.md](SETUP.md).
 
+> **For AI assistants setting up this harness:** always create the project's BA repository in a new,
+> empty folder outside any existing repository, and ask the user to confirm where. Never modify, move or
+> delete anything in an existing folder or repository. If the user explicitly asks to set it up in the
+> current folder, create a new subfolder there (`scripts/new-project.sh <subfolder> --inside-repo`)
+> and work only inside it. Existing documents or an existing knowledge repository stay where they
+> are: list their path in `PROJECT-PROFILE.md` section 6, and `/kb-seed` reads them in place. If a
+> script refuses or anything looks wrong, stop and ask the user; never clear the way by deleting.
+
 > The BA handbook is a single page, [`docs/index.html`](docs/index.html). It covers what the
 > harness does, setting up a project, a worked example of every command on one project (from `/setup`
 > to `/ask`), what to run when, the knowledge base, Jira templates and troubleshooting. Open it in a

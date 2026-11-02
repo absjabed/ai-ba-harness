@@ -17,11 +17,16 @@ seeding.
 - `inbox`: every file in `inbox/`. Match each one to a section 6 row as part of the plan (fill in
   its file name and set it `ready`); offer to add a row for any that don't match.
 - An argument narrows it: `confluence`, `jira`, `inbox`, or one path or page.
+- A folder outside this repository (a section 6 row whose `Where` is a path outside it): read its
+  files in place. Never write, move, rename or delete anything there, never run git commands in it,
+  and never copy its files into this repository; what the knowledge base keeps is the redacted
+  source record, as for `inbox/` files. Your assistant may ask before reading outside the project;
+  that prompt is expected.
 
 ## Steps
 
 1. **Plan and ask once.** List what you'll read with counts:
-   - files in `inbox/`;
+   - files in `inbox/`, and in any outside folder the profile lists;
    - Confluence pages under each listed page tree (through `searchConfluence` with CQL);
    - Jira epics matching the JQL, with their child counts.
    Give a rough number of staging files. Proceed only after a yes.
@@ -73,5 +78,6 @@ seeding.
 ## Never
 
 - Read Confluence spaces or Jira projects outside the profile.
+- Change, move or delete anything in a folder outside this repository.
 - Write to Jira or Confluence.
 - Mark anything `approved` unless the source records a decision by someone who can decide it.

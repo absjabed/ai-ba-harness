@@ -101,6 +101,8 @@ draft_age_days: 30       # /review kb flags drafts older than this
 ## 6. Material for `/kb-seed`
 
 What already exists that the first knowledge base should be built from. Files go in `inbox/`.
+Material that lives elsewhere (an existing knowledge repository, a shared folder) stays where it
+is: give its full path in `Where`, and `/kb-seed` reads it in place without changing it.
 
 Status is `ready` (there to read), `expected` (promised, not received) or `done` (seeded).
 `/kb-seed` with no argument reads only the `ready` rows.

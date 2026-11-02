@@ -1,29 +1,33 @@
 #!/usr/bin/env bash
 # Create a project BA knowledge repository from this template.
 #
-#   scripts/new-project.sh <target-folder> [--name <project>] [--allow-dirty]
+#   scripts/new-project.sh <target-folder> [--name <project>] [--allow-dirty] [--inside-repo]
 #
 # Copies everything under project/ (dotfiles included) into <target-folder>, adds HARNESS_VERSION,
-# and records in PROJECT-PROFILE.md which harness version and commit the copy came from. It never
-# overwrites: if any file it would write already exists in the target, it lists them and writes
-# nothing. Research notes, design notes and examples stay behind; they describe the template.
+# and records in PROJECT-PROFILE.md which harness version and commit the copy came from.
+# The target must be a new or empty folder outside any other git repository. With --inside-repo
+# (only when the user explicitly asks for it) it may be a new subfolder of one. The script only adds
+# files: it never changes, moves or deletes anything that was already there. Research notes, design
+# notes and examples stay behind; they describe the template.
 #
 # Works in Git Bash on Windows, and in bash on macOS and Linux.
 
 set -euo pipefail
 
 usage() {
-  echo "Usage: scripts/new-project.sh <target-folder> [--name <project>] [--allow-dirty]" >&2
+  echo "Usage: scripts/new-project.sh <target-folder> [--name <project>] [--allow-dirty] [--inside-repo]" >&2
   exit 2
 }
 
 target=""
 name=""
 allow_dirty=0
+inside_repo=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --name) [ $# -ge 2 ] || usage; name="$2"; shift 2 ;;
     --allow-dirty) allow_dirty=1; shift ;;
+    --inside-repo) inside_repo=1; shift ;;
     -h|--help) usage ;;
     -*) echo "Unknown option: $1" >&2; usage ;;
     *) [ -z "$target" ] || usage; target="$1"; shift ;;
@@ -62,27 +66,49 @@ if git -C "$root" rev-parse --short HEAD >/dev/null 2>&1; then
   fi
 fi
 
-mkdir -p "$target"
-target="$(cd "$target" && pwd)"
+# Work out where the target would be without creating anything yet: the nearest folder that exists.
+probe="$target"
+while [ ! -d "$probe" ]; do probe="$(dirname "$probe")"; done
+probe_abs="$(cd "$probe" && pwd)"
+if [ -d "$target" ]; then
+  target_abs="$(cd "$target" && pwd)"
+else
+  target_abs="$probe_abs/${target#"$probe"/}"
+fi
+existing_material="Existing documents or an existing knowledge repository stay where they are: list their path in PROJECT-PROFILE.md section 6 and /kb-seed reads them in place."
 
-# Never create a project inside the template: it would be copied into every later project.
-case "$target/" in
-  "$root"/*) rmdir "$target" 2>/dev/null
-             echo "The target is inside the template ($root). Choose a folder outside it, e.g. ../<project>-ba-knowledge" >&2; exit 1 ;;
-esac
-
-# Refuse to overwrite anything.
-clashes=()
-while IFS= read -r -d '' f; do
-  rel="${f#"$src"/}"
-  [ -e "$target/$rel" ] && [ ! -d "$target/$rel" ] && clashes+=("$rel")
-done < <(find "$src" -type f -print0)
-[ -e "$target/HARNESS_VERSION" ] && clashes+=("HARNESS_VERSION")
-if [ ${#clashes[@]} -gt 0 ]; then
-  echo "Nothing was copied: these files already exist in $target:" >&2
-  printf '  %s\n' "${clashes[@]}" >&2
+# The target must be new or empty. This script only ever adds files; it never changes, moves or
+# deletes anything that was already there.
+if [ -e "$target" ] && [ ! -d "$target" ]; then
+  echo "The target exists and isn't a folder: $target" >&2; exit 1
+fi
+if [ -d "$target" ] && [ -n "$(ls -A "$target" 2>/dev/null)" ]; then
+  echo "Nothing was copied: the target folder isn't empty ($target_abs)." >&2
+  echo "Create the BA repository in a new, empty folder, for example ../<project>-ba-knowledge." >&2
+  echo "$existing_material" >&2
   exit 1
 fi
+
+# Never create a project inside the template: it would be copied into every later project.
+case "$target_abs/" in
+  "$root"/*) echo "The target is inside the template ($root). Choose a folder outside it, e.g. ../<project>-ba-knowledge" >&2; exit 1 ;;
+esac
+
+# Not inside another git repository, unless the user explicitly asked for a subfolder of one.
+outer=""
+if git -C "$probe_abs" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  outer="$(git -C "$probe_abs" rev-parse --show-toplevel)"
+  if [ "$inside_repo" -ne 1 ]; then
+    echo "Nothing was copied: the target is inside the git repository $outer." >&2
+    echo "Create the BA repository in a new folder outside it (recommended). If the user explicitly wants it" >&2
+    echo "inside, pass --inside-repo: it then becomes a new subfolder there, and nothing else in $outer changes." >&2
+    echo "$existing_material" >&2
+    exit 1
+  fi
+fi
+
+mkdir -p "$target"
+target="$target_abs"
 
 cp -a "$src/." "$target/"
 cp "$root/HARNESS_VERSION" "$target/HARNESS_VERSION"
@@ -117,3 +143,9 @@ echo "       Claude Code: claude, then /mcp"
 echo "       OpenCode:    opencode mcp auth atlassian, then opencode"
 echo "       Codex:       codex, trust the project, approve the hook with /hooks, then codex mcp login atlassian"
 echo "     A team that doesn't use one of them can delete its files; the handbook lists which they are."
+if [ -n "$outer" ]; then
+  echo
+  echo "Note: this folder is inside the git repository $outer, and nothing in that repository was changed."
+  echo "  Its own repository will show up there as an untracked folder. Ask the owner of $outer before adding"
+  echo "  \"$(git -C "$target" rev-parse --show-prefix 2>/dev/null)\" to that repository's .gitignore."
+fi

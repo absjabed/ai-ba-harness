@@ -4,6 +4,28 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.6.4 (2026-11-03)
+
+Setup never touches existing files, and recursive deletes are refused everywhere:
+
+- **Always a new folder.** `new-project.sh` refuses a target that isn't empty or that sits inside
+  another git repository. `--inside-repo`, for when the user explicitly wants it there, creates a new
+  subfolder instead and changes nothing else. The script only ever adds files.
+- **Existing material is read in place.** An existing knowledge repository or document folder is
+  listed in profile section 6 with its full path; `/setup` asks for it and `/kb-seed` reads it
+  without changing, moving or copying it.
+- **A rule for AI assistants** at the top of the README and `SETUP.md`: set up in a new folder, ask the
+  user where, never change an existing folder, and stop rather than delete when something is in the way.
+- **No recursive deletes.** `rm -r`, `Remove-Item -Recurse`, `rmdir`, `rd`, `del /s` and `cmd /c`
+  equivalents are denied in `.claude/settings.json` and `opencode.json`, forbidden (or asked) in the
+  Codex rules. `AGENTS.md` and `CLAUDE.md` forbid deleting outside `inbox/` and `knowledge/_staging/`
+  and touching `.git`.
+
+**To update a project:** copy `AGENTS.md`, `CLAUDE.md`, `agents/`, `.claude/settings.json`,
+`opencode.json` and `.codex/rules/` from the template's `project/`, add the section 6 sentence and
+example row from the template's `PROJECT-PROFILE.md` if you want them, and set `HARNESS_VERSION` to
+0.6.4.
+
 ## 0.6.3 (2026-11-02)
 
 - **Handbook and changelog:** the notes on how far OpenCode and Codex had been run are removed.

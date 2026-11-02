@@ -73,8 +73,10 @@ mark it. Don't move on until each round is answered or deliberately skipped.
    - The "Accepting a knowledge base change" row: every maintainer from round 1 is responsible, the
      Lead BA is accountable, and nobody else is either.
 6. **Existing material** for `/kb-seed`: documents (to be dropped in `inbox/`), Confluence page trees,
-   Jira epics. Each row gets a status: `ready` only if the file is already in `inbox/` (or the page
-   tree or epics exist); otherwise `expected`, with a placeholder name. Replace the template's
+   Jira epics, and folders that stay where they are (an existing knowledge repository, a shared
+   folder), recorded with their full path; never copy, move or change those. Each row gets a status:
+   `ready` only if the file is already in `inbox/` (or the page tree, epics or folder exist);
+   otherwise `expected`, with a placeholder name. Replace the template's
    example rows; `none` is only for fixed rows such as the publish parent page. If there is little written down, say so: the first knowledge can come from a discovery
    workshop through `/intake` instead, and notes for `/intake` don't belong in this table.
 7. **Writing rules** (profile section 7): words the project prefers and the ones to avoid (for

@@ -147,7 +147,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.3</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.4</span></div>
   </div>
   <h2>Start here</h2>
   <a href="walkthrough.html">FleetKeep walkthrough</a>
@@ -531,6 +531,7 @@ diagram sideways.</p>
 <h2 id="setup">Set up a project</h2>
 <p>Done once per project by the lead BA. Plan an hour for steps 1 to 5, plus the time the first
 <code>/kb-seed</code> review takes. <code>SETUP.md</code> in the template has the same steps.</p>
+<div class="callout warn"><p><strong>Always a new folder.</strong> The BA repository is created in a new, empty folder outside any existing repository; <code>new-project.sh</code> refuses anything else. An existing knowledge repository or document folder stays where it is: list its path in profile section 6 and <code>/kb-seed</code> reads it in place. Only when you explicitly want the BA repository inside an existing repository, pass <code>--inside-repo</code>: it becomes a new subfolder there, and nothing else changes. If you ask an AI assistant to do the setup, it follows the same rule, asks you where, and stops rather than deleting anything that is in the way.</p></div>
 <ol class="steps">
 <li>
   <h3>Create the repository from the template</h3>
@@ -539,8 +540,9 @@ diagram sideways.</p>
   <p>It copies everything under <code>project/</code> (dotfiles included), adds
   <code>HARNESS_VERSION</code>, and records the harness version and commit in
   <code>PROJECT-PROFILE.md</code>. With <code>--name</code> it also fills the project name, the
-  repository name and the README title. It never overwrites: if any file already exists in the
-  target, it lists them and copies nothing. If the template has uncommitted changes under
+  repository name and the README title. The target must be a new or empty folder outside any other
+  git repository (or, with <code>--inside-repo</code>, a new subfolder of one): the script only adds files and
+  never changes, moves or deletes anything that was already there. If the template has uncommitted changes under
   <code>project/</code> or in <code>HARNESS_VERSION</code>, it stops; commit them first, or pass <code>--allow-dirty</code> to record the
   commit as <code>&lt;commit&gt;-dirty</code>. Research, design notes and examples stay behind.</p>
 </li>
@@ -549,7 +551,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.6.3"
+git commit -m "Start from AI BA Harness 0.6.4"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -717,7 +719,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <a href="#setup">Set up a project</a>:</p>
 <pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
 cd ../fleetkeep-ba-knowledge
-git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.3"
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.4"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main
 claude</code></pre>
@@ -1790,6 +1792,8 @@ read-only. That's safe, just more prompts.</li>
 <tr><td><strong>OpenCode and Codex</strong> (<code>opencode.json</code>, <code>.codex/</code>)</td><td>The same asks and refusals in each tool's own settings, with the differences listed in <a href="#assistants">OpenCode and Codex</a></td></tr>
 <tr><td><strong>Checks</strong> (<code>tools/kb.py check</code>)</td><td>Broken links, bad properties, unknown or duplicate IDs, out-of-date registers and missing command wrappers are caught before each commit, and by the GitHub workflow on every push</td></tr>
 <tr><td><strong>Harness changes</strong> (<code>/improve-harness</code>)</td><td>Never applied locally when they touch permissions, approval steps, redaction or Jira writes; those go to the harness maintainers only. Claude Code also asks before any edit under <code>.claude/</code></td></tr>
+<tr><td><strong>No recursive deletes</strong></td><td><code>rm -r</code>, <code>Remove-Item -Recurse</code>, <code>rmdir</code>, <code>rd /s</code> and <code>del /s</code> are refused in Claude Code and OpenCode, and refused or asked in Codex. The harness only ever deletes single files in <code>inbox/</code> and <code>knowledge/_staging/</code>, and never touches <code>.git</code> or anything outside the repository</td></tr>
+<tr><td><strong>New folder only</strong> (<code>new-project.sh</code>)</td><td>A BA repository is only ever created in a new, empty folder, never on top of existing files. Existing material is read in place</td></tr>
 <tr><td><strong>inbox/ is gitignored</strong></td><td>Raw notes, transcripts and documents never enter git. Only the redacted source record is committed. Raw files are deleted from <code>inbox/</code> only with your yes</td></tr>
 <tr><td><strong>Redaction</strong></td><td>Intake marks each item's sensitivity and proposes removing names where a role would do, contact details, health or customer data, credentials and anything marked confidential</td></tr>
 <tr><td><strong>No secrets</strong></td><td>Atlassian is OAuth through <code>/mcp</code>. <code>.mcp.json</code> holds only the server URL, <code>/setup</code> never stores a token or password, and the per-user <code>.claude/settings.local.json</code> is gitignored</td></tr>
@@ -1823,7 +1827,9 @@ but they can't stop a wrong item you approve.</p></div>
 <tr><td><code>/intake</code> asks you to move a file</td><td>The file is outside <code>inbox/</code></td><td>Move or copy it into <code>inbox/</code>, so the original is never committed</td></tr>
 <tr><td>Git conflict in <code>index.md</code> or a register</td><td>Two BAs changed the knowledge base on the same day</td><td>Take either side, then run <code>/review kb</code> to rebuild them</td></tr>
 <tr><td>The push after applying is rejected</td><td>Another BA pushed first</td><td>The command pulls with rebase (it asks first) and runs the check, which finds any ID you both created, even without a git conflict. It keeps both sides' log lines and RAID rows, renumbers your clashing items (file, ID, links, log line), rebuilds the generated files, pushes again, and tells you which of your IDs changed. If you both changed the same statement, it stops and shows you both versions</td></tr>
-<tr><td><code>new-project.sh</code> copied nothing</td><td>Files already exist in the target, or the template has uncommitted changes</td><td>Use an empty target folder; commit the template changes or pass <code>--allow-dirty</code></td></tr>
+<tr><td><code>new-project.sh</code> says the target folder isn't empty</td><td>The target already has files, such as an existing knowledge repository</td><td>Choose a new folder next to it, for example <code>../&lt;project&gt;-ba-knowledge</code>. Leave the existing material where it is and list its path in profile section 6 for <code>/kb-seed</code></td></tr>
+<tr><td><code>new-project.sh</code> says the target is inside a git repository</td><td>The new folder would sit inside another repository</td><td>Choose a folder outside it. Only if you explicitly want it inside, pass <code>--inside-repo</code>; then ask the owner before adding the folder to that repository's <code>.gitignore</code></td></tr>
+<tr><td><code>new-project.sh</code> copied nothing for another reason</td><td>The template has uncommitted changes</td><td>Commit the template changes, or pass <code>--allow-dirty</code></td></tr>
 </tbody>
 </table>
 

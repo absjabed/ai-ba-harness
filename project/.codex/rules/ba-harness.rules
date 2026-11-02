@@ -61,3 +61,27 @@ prefix_rule(
     decision = "forbidden",
     justification = "Rewrites the shared history.",
 )
+
+# Never: recursive deletes. The harness only ever deletes single staging or inbox files.
+prefix_rule(
+    pattern = ["rm", ["-r", "-R", "-rf", "-fr", "-Rf", "-fR"]],
+    decision = "forbidden",
+    justification = "Recursive deletes can wipe the repository, its history or other projects.",
+    match = ["rm -rf .git", "rm -r knowledge"],
+    not_match = ["rm knowledge/_staging/2026-10-14-intake-notes.md"],
+)
+prefix_rule(
+    pattern = [["rmdir", "rd"]],
+    decision = "forbidden",
+    justification = "Removes whole folders.",
+)
+prefix_rule(
+    pattern = ["cmd", "/c", ["rmdir", "rd", "del"]],
+    decision = "forbidden",
+    justification = "Removes whole folders or many files at once.",
+)
+prefix_rule(
+    pattern = [["Remove-Item", "ri", "del", "erase"]],
+    decision = "prompt",
+    justification = "Deletes files; a recursive delete must never be approved.",
+)
