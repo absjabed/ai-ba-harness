@@ -148,7 +148,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.5</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.6</span></div>
   </div>
   <h2>Start here</h2>
   <a href="walkthrough.html">FleetKeep walkthrough</a>
@@ -555,7 +555,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.6.5"
+git commit -m "Start from AI BA Harness 0.6.6"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -723,7 +723,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <a href="#setup">Set up a project</a>:</p>
 <pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
 cd ../fleetkeep-ba-knowledge
-git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.5"
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.6"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main
 claude</code></pre>
@@ -1768,8 +1768,8 @@ and sign in in the browser, then start <code>opencode</code> and run <code>/setu
 asked. Run <code>/hooks</code> and trust the knowledge base sync. Then run
 <code>codex mcp login atlassian</code>, restart Codex, and run <code>$setup</code>.</li>
 </ul>
-<p>Teams that use only one assistant can delete the other assistants' files. <code>tools/kb.py check</code>
-only checks the wrappers of assistants whose folder is still there.</p>
+<p>Teams that use only one assistant can ignore the other assistants' files: they do nothing unless
+that assistant is opened in the folder. Leave them in place.</p>
 <h3>Good to know</h3>
 <ul>
 <li><strong>OpenCode also sees the Codex skills</strong> in <code>.agents/skills/</code>. The project's

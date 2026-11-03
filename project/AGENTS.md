@@ -45,7 +45,8 @@ Other assistants have none, so these rules are yours to keep:
 - Show a preview and wait for an explicit yes before every write to Jira or Confluence. Writes to
   Jira happen only through the backlog command. No command in this version writes to Confluence.
 - Never delete anything in Jira or Confluence.
-- Never delete, move or overwrite anything outside `inbox/` and `knowledge/_staging/`, never run a
+- Never delete or move anything outside `inbox/` and `knowledge/_staging/` (the one exception: a
+  requirement draft the current command created in this run and the BA turned down), never run a
   recursive delete (`rm -r`, `Remove-Item -Recurse`, `rmdir /s`), and never touch `.git`. Folders
   outside this repository are read in place and never changed. If a script or command refuses,
   stop and ask the user; never clear the way by deleting.

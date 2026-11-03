@@ -89,7 +89,7 @@ date until `/review` runs again.
    their provisional IDs for now.
 7. **Show both together:** the document with the pre-check's remaining findings, and the staging
    file (pipeline step 5). The BA says yes or no to the document and decides each staged item.
-   - If the document is a no, delete the draft file; staged items can still be applied on their own,
+   - If the document is a no, delete the draft file this run created (only that file); staged items can still be applied on their own,
      with their links to the draft removed.
 8. **Apply and commit once.** Apply the accepted items (pipeline step 6, steps 1 to 8), replace the
    provisional IDs in the document with the real ones, bring the document in line with any staged

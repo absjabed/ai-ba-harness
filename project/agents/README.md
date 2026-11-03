@@ -32,7 +32,8 @@ second copy waiting to drift.
 
 Each wrapper only names the command and points here. `python tools/kb.py check` fails when a
 command is missing from an assistant's folder, or when a wrapper doesn't point at its definition.
-A team that never uses one of the assistants can delete that assistant's folder and file.
+A team that never uses one of the assistants can ignore that assistant's folder and file: they do
+nothing unless that assistant is opened here. Leave them in place.
 
 ## Safety, in layers
 

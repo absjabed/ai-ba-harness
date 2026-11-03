@@ -4,6 +4,21 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.6.6 (2026-11-03)
+
+No instruction invites an assistant to delete files any more:
+
+- **Unused assistants' files are ignored, not deleted.** `new-project.sh`, the handbook and
+  `agents/README.md` used to say a team could delete the files of an assistant it doesn't use. They
+  now say to ignore them and leave them in place.
+- **The delete rule matches the commands.** `AGENTS.md` and `CLAUDE.md` now forbid deleting or moving
+  anything outside `inbox/` and `knowledge/_staging/`, with one exception: the requirement draft
+  `/requirements` created in the same run, when the BA turns it down. `/requirements` deletes only
+  that file.
+
+**To update a project:** copy `AGENTS.md`, `CLAUDE.md`, `agents/README.md` and
+`agents/requirements.md` from the template's `project/`.
+
 ## 0.6.5 (2026-11-03)
 
 - **A one-line summary at the top of the README and the handbook** of what the harness is built on,

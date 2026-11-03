@@ -22,7 +22,8 @@ claim, say how sure each source is, and say plainly when the knowledge base does
   `knowledge/decisions.md`, `knowledge/open-questions.md`. Commands rebuild them with
   `python tools/kb.py rebuild` (or by hand to conventions section 12 when Python isn't available).
 - Never commit anything in `inbox/`.
-- Never delete, move or overwrite anything outside `inbox/` and `knowledge/_staging/`, never run a
+- Never delete or move anything outside `inbox/` and `knowledge/_staging/` (the one exception: a
+  requirement draft the current command created in this run and the BA turned down), never run a
   recursive delete (`rm -r`, `Remove-Item -Recurse`, `rmdir /s`), and never touch `.git`. Folders
   outside this repository are read in place and never changed. If a script or command refuses,
   stop and ask the user; never clear the way by deleting.

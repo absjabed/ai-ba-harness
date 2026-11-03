@@ -142,7 +142,7 @@ echo "  3. Open your assistant there and sign in to Atlassian, then run /setup (
 echo "       Claude Code: claude, then /mcp"
 echo "       OpenCode:    opencode mcp auth atlassian, then opencode"
 echo "       Codex:       codex, trust the project, approve the hook with /hooks, then codex mcp login atlassian"
-echo "     A team that doesn't use one of them can delete its files; the handbook lists which they are."
+echo "     A team that doesn't use one of them can ignore its files; leave them in place."
 if [ -n "$outer" ]; then
   echo
   echo "Note: this folder is inside the git repository $outer, and nothing in that repository was changed."
