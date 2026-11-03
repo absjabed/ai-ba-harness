@@ -49,6 +49,14 @@
       "rm knowledge/_staging/*": "allow",
       "rm *..*": "ask",
       "git rm *..*": "ask",
+      "rm *:*": "ask",
+      "rm * /*": "ask",
+      "rm *~*": "ask",
+      "rm *$*": "ask",
+      "git rm *:*": "ask",
+      "git rm * /*": "ask",
+      "git rm *~*": "ask",
+      "git rm *$*": "ask",
       "git push": "ask",
       "git push *": "ask",
       "git push --force*": "deny",
@@ -82,6 +90,7 @@
       "powershell*Remove-Item*": "deny",
       "pwsh*Remove-Item*": "deny"
     },
+    "external_directory": "ask",
     "skill": {
       "setup": "deny",
       "kb-seed": "deny",

@@ -148,7 +148,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.6</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.7</span></div>
   </div>
   <h2>Start here</h2>
   <a href="walkthrough.html">FleetKeep walkthrough</a>
@@ -536,6 +536,15 @@ diagram sideways.</p>
 <p>Done once per project by the lead BA. Plan an hour for steps 1 to 5, plus the time the first
 <code>/kb-seed</code> review takes. <code>SETUP.md</code> in the template has the same steps.</p>
 <div class="callout warn"><p><strong>Always a new folder.</strong> The BA repository is created in a new, empty folder outside any existing repository; <code>new-project.sh</code> refuses anything else. An existing knowledge repository or document folder stays where it is: list its path in profile section 6 and <code>/kb-seed</code> reads it in place. Only when you explicitly want the BA repository inside an existing repository, pass <code>--inside-repo</code>: it becomes a new subfolder there, and nothing else changes. If you ask an AI assistant to do the setup, it follows the same rule, asks you where, and stops rather than deleting anything that is in the way.</p></div>
+<div class="callout warn"><p><strong>OpenCode: set your global config first.</strong> Until the BA repository's <code>opencode.json</code> exists, OpenCode uses only your global config, and with none it runs every command without asking, anywhere on the disk. Add these rules to <code>~/.config/opencode/opencode.json</code> (on Windows, <code>%USERPROFILE%\.config\opencode\opencode.json</code>) so it asks before every shell command and before touching anything outside the folder it was opened in:</p>
+<pre><code>{
+  &quot;$schema&quot;: &quot;https://opencode.ai/config.json&quot;,
+  &quot;permissions&quot;: [
+    { &quot;action&quot;: &quot;shell&quot;, &quot;resource&quot;: &quot;*&quot;, &quot;effect&quot;: &quot;ask&quot; },
+    { &quot;action&quot;: &quot;external_directory&quot;, &quot;resource&quot;: &quot;*&quot;, &quot;effect&quot;: &quot;ask&quot; }
+  ]
+}</code></pre>
+<p>On OpenCode 1.x the same rules are <code>{ &quot;permission&quot;: { &quot;bash&quot;: &quot;ask&quot;, &quot;external_directory&quot;: &quot;ask&quot; } }</code>. Inside the BA repository its own <code>opencode.json</code> takes over, so the commands still run their routine steps without asking. Never answer "always allow" to a shell command, and use a capable model for setup.</p></div>
 <ol class="steps">
 <li>
   <h3>Create the repository from the template</h3>
@@ -555,7 +564,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.6.6"
+git commit -m "Start from AI BA Harness 0.6.7"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -723,7 +732,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <a href="#setup">Set up a project</a>:</p>
 <pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
 cd ../fleetkeep-ba-knowledge
-git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.6"
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.7"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main
 claude</code></pre>
@@ -1762,7 +1771,7 @@ intake"), but nothing in the repository enforces its prompts.</p>
 <h3>Setting up with OpenCode or Codex</h3>
 <p>The steps in <a href="#setup">Set up a project</a> are the same; only step 3 changes.</p>
 <ul>
-<li><strong>OpenCode:</strong> in the repository folder, run <code>opencode mcp auth atlassian</code>
+<li><strong>OpenCode:</strong> first set your global config as shown in <a href="#setup">Set up a project</a>. Then, in the repository folder, run <code>opencode mcp auth atlassian</code>
 and sign in in the browser, then start <code>opencode</code> and run <code>/setup</code>.</li>
 <li><strong>Codex:</strong> start <code>codex</code> in the repository folder and trust the project when
 asked. Run <code>/hooks</code> and trust the knowledge base sync. Then run
@@ -1797,6 +1806,7 @@ read-only. That's safe, just more prompts.</li>
 <tr><td><strong>Checks</strong> (<code>tools/kb.py check</code>)</td><td>Broken links, bad properties, unknown or duplicate IDs, out-of-date registers and missing command wrappers are caught before each commit, and by the GitHub workflow on every push</td></tr>
 <tr><td><strong>Harness changes</strong> (<code>/improve-harness</code>)</td><td>Never applied locally when they touch permissions, approval steps, redaction or Jira writes; those go to the harness maintainers only. Claude Code also asks before any edit under <code>.claude/</code></td></tr>
 <tr><td><strong>No recursive deletes</strong></td><td><code>rm -r</code>, <code>Remove-Item -Recurse</code>, <code>rmdir</code>, <code>rd /s</code> and <code>del /s</code> are refused in Claude Code and OpenCode, and refused or asked in Codex. The harness only ever deletes single files in <code>inbox/</code> and <code>knowledge/_staging/</code>, and never touches <code>.git</code> or anything outside the repository</td></tr>
+<tr><td><strong>Deletes stay inside</strong></td><td>A delete that names a drive, an absolute path, the home folder or a variable asks first, even when the command around it is one a command may run without asking. OpenCode also asks before reading or editing anything outside the repository</td></tr>
 <tr><td><strong>New folder only</strong> (<code>new-project.sh</code>)</td><td>A BA repository is only ever created in a new, empty folder, never on top of existing files. Existing material is read in place</td></tr>
 <tr><td><strong>inbox/ is gitignored</strong></td><td>Raw notes, transcripts and documents never enter git. Only the redacted source record is committed. Raw files are deleted from <code>inbox/</code> only with your yes</td></tr>
 <tr><td><strong>Redaction</strong></td><td>Intake marks each item's sensitivity and proposes removing names where a role would do, contact details, health or customer data, credentials and anything marked confidential</td></tr>

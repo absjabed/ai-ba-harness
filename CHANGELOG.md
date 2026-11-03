@@ -4,6 +4,28 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.6.7 (2026-11-03)
+
+Deletes can't reach outside the repository without a prompt, and OpenCode setup is covered:
+
+- **Deletes that name an outside path ask first.** The commands may delete a staging file without
+  asking, but an extra path could ride along in the same command (`rm knowledge/_staging/x.md
+  E:/other/file`). A delete that names a drive letter, an absolute path, the home folder or a variable
+  now asks, in `.claude/settings.json` (Bash and PowerShell, `Remove-Item` included) and
+  `opencode.json`. Codex needs nothing: its sandbox keeps commands inside the repository.
+- **OpenCode asks before touching anything outside the repository.** `opencode.json` sets
+  `external_directory` to ask. OpenCode 2.x doesn't prompt for outside folders unless a rule says so.
+  Expect one prompt when `/kb-seed` first reads an outside folder listed in the profile.
+- **Set OpenCode's global config before setup.** `SETUP.md` and the handbook show the two rules
+  (shell commands and outside folders ask), for OpenCode 1.x and 2.x. Until the project's
+  `opencode.json` exists, OpenCode uses only the global config, and with none it runs every command
+  without asking. The project's own rules still take over inside the repository.
+- Checked against OpenCode 1.19.0 and 2.2.5: the project config converts correctly on 2.x, single
+  staging deletes still run without asking, outside paths ask, recursive deletes are refused.
+
+**To update a project:** copy `.claude/settings.json` and `opencode.json` from the template's
+`project/`, and set the global OpenCode config on every machine that uses OpenCode.
+
 ## 0.6.6 (2026-11-03)
 
 No instruction invites an assistant to delete files any more:

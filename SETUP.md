@@ -11,6 +11,27 @@ an hour for steps 1 to 5, plus however long the first `/kb-seed` review takes.
 > are: list their path in `PROJECT-PROFILE.md` section 6, and `/kb-seed` reads them in place. If a
 > script refuses or anything looks wrong, stop and ask the user; never clear the way by deleting.
 
+> **Setting up with OpenCode? Do this first.** Until the project's `opencode.json` exists, OpenCode
+> uses only your global config, and with none it runs every command without asking, anywhere on the
+> disk. Put these rules in `~/.config/opencode/opencode.json` (on Windows,
+> `%USERPROFILE%\.config\opencode\opencode.json`; if the file already has a `permissions` list, add the
+> two entries to it) so OpenCode asks before every shell command and before touching anything outside
+> the folder it was opened in:
+>
+> ```json
+> {
+>   "$schema": "https://opencode.ai/config.json",
+>   "permissions": [
+>     { "action": "shell", "resource": "*", "effect": "ask" },
+>     { "action": "external_directory", "resource": "*", "effect": "ask" }
+>   ]
+> }
+> ```
+>
+> On OpenCode 1.x the same rules are `{ "permission": { "bash": "ask", "external_directory": "ask" } }`. Inside a project repository its own
+> `opencode.json` takes over and lets the harness commands run their routine steps without asking.
+> Never answer "always allow" to a shell command, and use a capable model for setup.
+
 ## What you need
 
 | Need | Why |
