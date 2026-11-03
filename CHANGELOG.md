@@ -4,6 +4,13 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.6.5 (2026-11-03)
+
+- **A one-line summary at the top of the README and the handbook** of what the harness is built on,
+  linking to the "Built on" section.
+
+**To update a project:** nothing to do.
+
 ## 0.6.4 (2026-11-03)
 
 Setup never touches existing files, and recursive deletes are refused everywhere:

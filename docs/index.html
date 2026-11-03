@@ -45,6 +45,7 @@ nav a.sub{padding-left:22px;font-size:.84rem;color:var(--muted)}
 main{padding:44px 48px 90px;min-width:0}
 h1{font-size:2.1rem;line-height:1.2;margin:0 0 .4rem;letter-spacing:-.02em}
 .lede{font-size:1.08rem;color:var(--muted);margin:0 0 2rem;max-width:68ch}
+.lede:has(+ .lede){margin-bottom:.8rem}
 h2{font-size:1.45rem;margin:3rem 0 .9rem;padding-top:.6rem;letter-spacing:-.015em;border-top:1px solid var(--border)}
 h3{font-size:1.08rem;margin:1.9rem 0 .6rem}
 p,li{max-width:80ch}
@@ -147,7 +148,7 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
         <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
       </svg>
     </div>
-    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.4</span></div>
+    <div><strong>AI BA Harness</strong><span>BA handbook · v0.6.5</span></div>
   </div>
   <h2>Start here</h2>
   <a href="walkthrough.html">FleetKeep walkthrough</a>
@@ -190,6 +191,9 @@ h4{font-size:.98rem;margin:1.6rem 0 .4rem}
 per project, turns meetings, documents and Jira activity into proposed changes you accept item by
 item, writes requirement documents from what is known, and creates Jira issues only after you have
 seen and approved them.</p>
+<p class="lede">It is built on established practice (IIBA BABOK v3, INVEST, EARS and ISO/IEC/IEEE 29148):
+the assistant drafts and checks, and the analyst makes every decision. See
+<a href="#built-on">What it's built on</a>.</p>
 
 <h2 id="what">What it is</h2>
 <p>AI BA Harness is a development-workflow layer for business analysts. It runs inside Claude Code
@@ -551,7 +555,7 @@ diagram sideways.</p>
   <pre><code>cd ../&lt;project&gt;-ba-knowledge
 git init -b main
 git add -A
-git commit -m "Start from AI BA Harness 0.6.4"
+git commit -m "Start from AI BA Harness 0.6.5"
 git remote add origin &lt;repository URL&gt;
 git push -u origin main</code></pre>
   <p>Create the empty private repository <code>&lt;project&gt;-ba-knowledge</code> first, wherever your
@@ -719,7 +723,7 @@ release <code>2026.11</code>. Everything here is fictional.</p>
 <a href="#setup">Set up a project</a>:</p>
 <pre><code>scripts/new-project.sh ../fleetkeep-ba-knowledge --name "FleetKeep"
 cd ../fleetkeep-ba-knowledge
-git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.4"
+git init -b main &amp;&amp; git add -A &amp;&amp; git commit -m "Start from AI BA Harness 0.6.5"
 git remote add origin &lt;URL of the empty private repository&gt;
 git push -u origin main
 claude</code></pre>

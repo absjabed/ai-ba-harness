@@ -2,6 +2,10 @@
 
 **A business-analysis harness layer for Claude Code, OpenCode and Codex:** commands, agents and a project knowledge base that sit on top of the assistant's own agent runtime.
 
+It gives business analysts an AI-assisted way of working built on established practice (IIBA BABOK v3,
+INVEST, EARS and ISO/IEC/IEEE 29148): the assistant drafts and checks, and the analyst makes every
+decision. See [Built on](#built-on).
+
 Each project gets a BA knowledge repository. Its knowledge base grows every day from meetings, documents, Jira and Confluence, and
 nine commands turn it into reviewed requirements and a clean Jira backlog. Anyone on the project can
 clone that repository and ask it questions.
