@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How the BA Harness Works</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230F8A72'/%3E%3Cpath d='M7 10.4c3-1.3 6-1.1 9 .8 3-1.9 6-2.1 9-.8v12.2c-3-1.3-6-1.1-9 .8-3-1.9-6-2.1-9-.8z' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linejoin='round'/%3E%3Cpath d='M16 11.2v12.2' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f7f9fb; --surface-2:#eef2f6; --text:#101a24; --muted:#5b6b7f;
+  --border:#dde4ec; --accent:#0b5d51; --accent-soft:#e6f4f1; --warn-bg:#fef3c7; --warn-text:#92400e;
+  --danger:#b91c1c; --ok:#166534; --code-bg:#f1f5f9; --shadow:0 1px 2px rgba(16,26,36,.06),0 8px 24px rgba(16,26,36,.06);
+  --mark-bg:#0F8A72; /* brand mark + favicon: one value for both themes (same as the Dev handbook) */
+  --dg-proc:#dae8fc; --dg-proc-s:#6c8ebf; --dg-gate:#fff2cc; --dg-gate-s:#d6b656; --dg-par:#d5e8d4; --dg-par-s:#82b366;
+  --dg-rv:#e1d5e7; --dg-rv-s:#9673a6; --dg-opt:#f5f5f5; --dg-opt-s:#999999; --dg-lane:#ffffff; --dg-lane-h:#f1f4f8;
+  --dg-badge:#9a7a12; --dg-edge:#5b6b7f;
+  --mono:ui-monospace,'Cascadia Mono','SF Mono',Consolas,monospace;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1120; --surface:#111c33; --surface-2:#16233d; --text:#e2e8f0; --muted:#94a3b8;
+    --border:#2b3a52; --accent:#45af9b; --accent-soft:#0f2b28; --warn-bg:#3b2f10; --warn-text:#fbbf24;
+    --danger:#f87171; --ok:#4ade80; --code-bg:#0f1a2e;
+    --dg-proc:#1b2c47; --dg-proc-s:#7b9fd4; --dg-gate:#3a3014; --dg-gate-s:#d6b656; --dg-par:#1a3324; --dg-par-s:#82b366;
+    --dg-rv:#2d2340; --dg-rv-s:#b195d1; --dg-opt:#151e30; --dg-opt-s:#7d8799; --dg-lane:#0e1729; --dg-lane-h:#16233d;
+    --dg-badge:#e2c35c; --dg-edge:#94a3b8; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:1rem}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;font-size:16px}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:0;max-width:1400px;margin:0 auto}
+nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:28px 20px;border-right:1px solid var(--border);background:var(--surface)}
+nav h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:22px 0 8px}
+nav h2:first-child{margin-top:0}
+nav a{display:block;padding:5px 10px;margin:1px -10px;color:var(--text);text-decoration:none;border-radius:6px;font-size:.88rem}
+nav a:hover{background:var(--surface-2);color:var(--accent)}
+nav a.sub{padding-left:22px;font-size:.84rem;color:var(--muted)}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.brand .mark{width:34px;height:34px;flex:none;display:block}
+.brand .mark svg{display:block}
+.brand strong{font-size:1rem;letter-spacing:-.01em}
+.brand span{display:block;font-size:.72rem;color:var(--muted);font-weight:400}
+main{padding:44px 48px 90px;min-width:0}
+h1{font-size:2.1rem;line-height:1.2;margin:0 0 .4rem;letter-spacing:-.02em}
+.lede{font-size:1.08rem;color:var(--muted);margin:0 0 2rem;max-width:68ch}
+.lede:has(+ .lede){margin-bottom:.8rem}
+h2{font-size:1.45rem;margin:3rem 0 .9rem;padding-top:.6rem;letter-spacing:-.015em;border-top:1px solid var(--border)}
+h3{font-size:1.08rem;margin:1.9rem 0 .6rem}
+p,li{max-width:80ch}
+p code,li code{overflow-wrap:anywhere}
+code{font-family:var(--mono);font-size:.855em;background:var(--code-bg);padding:.12em .38em;border-radius:4px;border:1px solid var(--border)}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.855rem;line-height:1.55}
+pre code{background:none;border:none;padding:0}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.9rem;display:block;overflow-x:auto}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+th{background:var(--surface-2);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap}
+tbody tr:hover{background:var(--surface)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin:1.1rem 0;box-shadow:var(--shadow)}
+.card h3{margin:0 0 .35rem;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.card>p{margin:.2rem 0 .4rem}
+.card table{margin:.5rem 0 0}
+.card td:first-child{white-space:nowrap;width:1%}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:14px 18px;margin:1.1rem 0}
+.callout.warn{border-left-color:var(--warn-text);background:var(--warn-bg);color:var(--warn-text)}
+.callout p{margin:.3rem 0}
+.callout strong{color:inherit}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:1.1rem 0}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.tile h4{margin:0 0 .3rem;font-size:.95rem}
+.tile p{margin:0;font-size:.87rem;color:var(--muted)}
+.pill{display:inline-block;font-size:.7rem;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--border);white-space:nowrap}
+.pill.block{background:var(--warn-bg);color:var(--warn-text)}
+.steps{counter-reset:s;list-style:none;padding:0;margin:1.2rem 0}
+.steps>li{counter-increment:s;position:relative;padding:0 0 1.5rem 3rem;border-left:2px solid var(--border);margin-left:14px}
+.steps>li:last-child{border-left-color:transparent;padding-bottom:0}
+.steps>li::before{content:counter(s);position:absolute;left:-15px;top:-2px;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.steps h3{margin:0 0 .4rem}
+footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--border);color:var(--muted);font-size:.84rem}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:1rem 0;font-family:var(--mono);font-size:.82rem}
+.flow span{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:7px 11px}
+.flow em{color:var(--muted);font-style:normal}
+main a{color:var(--accent);text-underline-offset:2px}
+.dg-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:10px;margin:1.1rem 0}
+.dg{display:block;width:100%;min-width:860px;height:auto;font-family:var(--sans)}
+.dg-lane{fill:var(--dg-lane);stroke:var(--border)}
+.dg-lane-h{fill:var(--dg-lane-h);stroke:var(--border)}
+.dg-n{stroke-width:1.3}
+.dg-proc{fill:var(--dg-proc);stroke:var(--dg-proc-s)}
+.dg-gate{fill:var(--dg-gate);stroke:var(--dg-gate-s);stroke-width:2}
+.dg-par{fill:var(--dg-par);stroke:var(--dg-par-s)}
+.dg-rv{fill:var(--dg-rv);stroke:var(--dg-rv-s);stroke-width:2}
+.dg-opt{fill:var(--dg-opt);stroke:var(--dg-opt-s)}
+.dg-note{fill:var(--dg-lane-h);stroke:var(--dg-opt-s);stroke-dasharray:4 3}
+.dg-guard{fill:var(--accent-soft);stroke:var(--accent)}
+.dg-e{stroke:var(--dg-edge);stroke-width:1.4;fill:none}
+.dg-dash{stroke-dasharray:3 3}
+.dg-ah{fill:var(--dg-edge)}
+.dg-h{font-size:15px;font-weight:700;fill:var(--text)}
+.dg-lg{font-size:11px;fill:var(--muted)}
+.dg-lt{font-size:12.5px;font-weight:700;fill:var(--text)}
+.dg-lc{font-size:9.5px;fill:var(--muted);font-family:var(--mono)}
+.dg-t{font-size:10.5px;font-weight:600;fill:var(--text)}
+.dg-s{font-size:9.5px;fill:var(--muted)}
+.dg-badge{font-size:7.5px;font-weight:800;letter-spacing:.06em;fill:var(--dg-badge)}
+.tl{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:1.1rem 0}
+.tl-row{display:grid;grid-template-columns:84px 200px minmax(0,1fr);gap:12px;padding:9px 14px;border-bottom:1px solid var(--border);font-size:.9rem;align-items:baseline}
+.tl-row:last-child{border-bottom:none}
+.tl-part{padding:7px 14px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tl-date{color:var(--muted);font-size:.8rem;font-weight:600}
+.tl-cmd{font-family:var(--mono);font-size:.84rem;color:var(--accent);font-weight:600}
+.io{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:1rem 0}
+.io-col{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;min-width:0}
+.io-col h4{margin:0 0 .3rem;font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.io-col ul{margin:0;padding-left:1.1rem;font-size:.88rem}
+.io-col li{margin:.15rem 0}
+.chat{display:flex;flex-direction:column;gap:10px;margin:1rem 0}
+.msg{border:1px solid var(--border);border-radius:12px;padding:10px 14px;max-width:82ch;font-size:.92rem;min-width:0}
+.msg>b{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:2px}
+.msg p{margin:.35rem 0}
+.msg ul,.msg ol{margin:.35rem 0;padding-left:1.2rem}
+.msg.ai{background:var(--surface)}
+.msg.you{background:var(--accent-soft);align-self:flex-end;border-color:var(--accent)}
+.cmd{margin:1.4rem 0 .5rem}
+.cmd code{font-size:.95rem;padding:.35em .7em;border-color:var(--accent)}
+.flow-list{padding-left:1.3rem}
+.flow-list li{margin:.4rem 0}
+h4{font-size:.98rem;margin:1.6rem 0 .4rem}
+@media(max-width:900px){
+  .tl-row{grid-template-columns:1fr;gap:2px}
+  .msg.you{align-self:stretch}
+  .layout{grid-template-columns:1fr}
+  nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}
+  main{padding:28px 16px 60px}
+  h1{font-size:1.65rem}
+}
+
+/* how-it-works.html: generated from docs/harness-docs/ai-ba-harness.md */
+figure.diagram{margin:1.2rem 0 1.6rem}
+figure.diagram a{display:block;border:1px solid var(--border);border-radius:12px;background:#fff;padding:10px;box-shadow:var(--shadow)}
+figure.diagram img{display:block;width:100%;height:auto}
+figure.diagram figcaption{font-size:.8rem;color:var(--muted);margin-top:.45rem}
+main h2 .num{color:var(--muted);font-weight:500;margin-right:.35rem}
+main pre{white-space:pre;overflow-x:auto;max-width:100%}
+</style>
+</head>
+<body>
+<!-- Generated by scripts/build-harness-guide.py from docs/harness-docs/ai-ba-harness.md. Do not edit by hand. -->
+<div class="layout">
+<nav>
+  <div class="brand">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" width="34" height="34" role="img">
+        <rect width="32" height="32" rx="7" fill="var(--mark-bg)"/>
+        <path d="M7 10.4c3-1.3 6-1.1 9 .8 3-1.9 6-2.1 9-.8v12.2c-3-1.3-6-1.1-9 .8-3-1.9-6-2.1-9-.8z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linejoin="round"/>
+        <path d="M16 11.2v12.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div><strong>AI BA Harness</strong><span>How it works · v0.6.8</span></div>
+  </div>
+  <h2>How it works</h2>
+  <a href="#1-architecture-definitions-wiring-and-knowledge">Architecture: definitions, wiring and knowledge</a>
+  <a href="#2-agent-pattern-one-definition-three-wrappers">Agent pattern: one definition, three wrappers</a>
+  <a href="#3-the-ba-lifecycle">The BA lifecycle</a>
+  <a href="#4-the-knowledge-pipeline">The knowledge pipeline</a>
+  <a href="#5-requirements-and-review-requirements-review">Requirements and review (/requirements, /review)</a>
+  <a href="#6-backlog-backlog">Backlog (/backlog)</a>
+  <a href="#7-ask-ask">Ask (/ask)</a>
+  <a href="#8-safety-layers">Safety layers</a>
+  <a href="#9-changing-the-harness-improve-harness">Changing the harness (/improve-harness)</a>
+  <a href="#10-concepts-that-apply-everywhere">Concepts that apply everywhere</a>
+  <a href="#11-a-bas-day-and-week">A BA's day and week</a>
+  <a href="#12-which-command-do-i-use">Which command do I use?</a>
+  <a href="#updating-the-diagrams">Updating the diagrams</a>
+  <h2>More</h2>
+  <a href="index.html">The BA handbook</a>
+  <a href="walkthrough.html">FleetKeep walkthrough</a>
+</nav>
+<main id="top">
+<h1>How the AI BA Harness works</h1>
+<p class="lede">The AI BA Harness gives business analysts a way of working with an AI assistant on one project's knowledge. It has nine commands, a knowledge base kept as plain Markdown, fixed steps that stop for the BA's decision before anything is stored or sent to Jira, and safety settings for each assistant it runs in: Claude Code, OpenCode and Codex. Each part of the system has a diagram below.</p>
+<p>The guide is for business analysts who run the commands, teammates who ask the knowledge base questions, and whoever maintains the harness. The command definitions live in <a href="../project/agents/README.md"><code>project/agents/</code></a>, the knowledge base rules in <a href="../project/knowledge/_meta/conventions.md"><code>project/knowledge/_meta/conventions.md</code></a>, and the setup steps in <a href="../SETUP.md"><code>SETUP.md</code></a>. The BA handbook, <a href="index.html"><code>../index.html</code></a>, has a worked example of every command; this guide shows how the pieces fit together. All the diagrams come from one multi-page draw.io file, <a href="harness-docs/diagrams/ai-ba-harness/ai-ba-harness.drawio"><code>diagrams/ai-ba-harness/ai-ba-harness.drawio</code></a> (see <a href="#updating-the-diagrams">Updating the diagrams</a>).</p>
+<h2 id="1-architecture-definitions-wiring-and-knowledge"><span class="num">1.</span>Architecture: definitions, wiring and knowledge</h2>
+<figure class="diagram"><a href="harness-docs/diagrams/ai-ba-harness/01-architecture.png" title="Open full size"><img src="harness-docs/diagrams/ai-ba-harness/01-architecture.png" alt="Architecture: a BA works in a Claude Code, OpenCode or Codex session; each assistant&#x27;s wiring points at the same command definitions, which read and change the project knowledge and run the tools; Jira and Confluence, inbox/, the git remote, Obsidian and the harness template sit outside the harness" width="2465" height="1418" loading="lazy"></a><figcaption>Click the diagram to open it full size.</figcaption></figure>
+<p>A project gets its own BA repository, created from this template with <code>scripts/new-project.sh</code>. Everything in that repository comes from <a href="../project/README.md"><code>project/</code></a>. You open your assistant in the repository and type a command. The assistant's wiring finds the command and points it at its definition in <code>agents/</code>, which holds all the instructions. The definition reads the knowledge base, stages changes for you to accept, writes what you accept, and runs the tools.</p>
+<table><thead><tr><th>Part</th><th>Folder or file</th><th>Holds</th><th>Who runs it</th></tr></thead><tbody>
+<tr><td>Command definitions</td><td><code>agents/</code></td><td>The nine commands, the shared knowledge pipeline and the critic, in plain Markdown</td><td>Read by the assistant; the only place with instructions</td></tr>
+<tr><td>Wiring for each assistant</td><td><code>.claude/</code>, <code>.opencode/</code> and <code>opencode.json</code>, <code>.agents/skills/</code> and <code>.codex/</code></td><td>The thin wrappers, the read-only sub-agents and each assistant's safety settings</td><td>Each assistant loads its own</td></tr>
+<tr><td>Project knowledge</td><td><code>knowledge/</code>, <code>requirements/</code>, <code>trace/</code>, <code>PROJECT-PROFILE.md</code>, <code>templates/</code>, <code>harness-feedback/</code></td><td>What the project knows, the requirement documents, the trace from requirement to Jira, the project's settings</td><td>Written only through the commands, after your accept</td></tr>
+<tr><td>Tools</td><td><code>tools/</code>, <code>.github/workflows/</code></td><td>The knowledge base tool, the sync script and the check that runs on every push</td><td>The commands, the session start, and the git host</td></tr>
+<tr><td>Root files</td><td><code>CLAUDE.md</code>, <code>AGENTS.md</code>, <code>.mcp.json</code>, <code>HARNESS_VERSION</code></td><td>Guidance for Claude Code and for every other assistant, the Atlassian server, the template version</td><td>Loaded into each session</td></tr></tbody></table>
+<p>The project knowledge:</p>
+<table><thead><tr><th>Path</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><a href="../project/knowledge/README.md"><code>knowledge/</code></a></td><td>Pages for capabilities, processes, entities, decisions and questions; the glossary, stakeholders, RAID log and change log; the generated index and registers</td></tr>
+<tr><td><code>knowledge/_staging/</code></td><td>Proposed changes waiting for the BA's decision, one file per input</td></tr>
+<tr><td><code>knowledge/sources/</code></td><td>One source record per input: a redacted summary, what it changed, what was rejected and why</td></tr>
+<tr><td><a href="../project/knowledge/_meta/conventions.md"><code>knowledge/_meta/</code></a></td><td>The conventions every command follows, the page templates, and <code>sync.json</code>, the place <code>/sync</code> reached</td></tr>
+<tr><td><code>requirements/&lt;slug&gt;/</code></td><td><code>requirement.md</code>, written by <code>/requirements</code>, and <code>review.md</code>, written by <code>/review</code></td></tr>
+<tr><td><a href="../project/trace/map.csv"><code>trace/map.csv</code></a></td><td>One row per story: its requirements, Jira key, knowledge pages and requirement document</td></tr>
+<tr><td><a href="../project/PROJECT-PROFILE.md"><code>PROJECT-PROFILE.md</code></a></td><td>Eight sections: project and maintainers, Atlassian, Jira conventions, business areas, settings, material for <code>/kb-seed</code>, writing rules, local harness changes</td></tr>
+<tr><td><a href="../project/templates/"><code>templates/</code></a></td><td>The requirement document, the five Jira issue types (epic, story, task, spike, bug) and the harness feedback proposal</td></tr>
+<tr><td><code>harness-feedback/</code></td><td>Proposals for the harness maintainers, written by <code>/improve-harness</code></td></tr>
+<tr><td><code>inbox/</code></td><td>Raw notes, transcripts and documents. Git ignores everything in it, so nothing raw is ever committed</td></tr></tbody></table>
+<p>The wiring for each assistant:</p>
+<table><thead><tr><th>Assistant</th><th>Commands</th><th>Read-only sub-agents</th><th>Settings</th></tr></thead><tbody>
+<tr><td>Claude Code</td><td><a href="../project/.claude/commands/"><code>.claude/commands/</code></a>, run as <code>/intake</code></td><td><a href="../project/.claude/agents/critic.md"><code>.claude/agents/critic.md</code></a></td><td><a href="../project/.claude/settings.json"><code>.claude/settings.json</code></a>, <code>.mcp.json</code>, <code>CLAUDE.md</code></td></tr>
+<tr><td>OpenCode</td><td><a href="../project/.opencode/commands/"><code>.opencode/commands/</code></a>, run as <code>/intake</code></td><td><a href="../project/.opencode/agents/"><code>.opencode/agents/</code></a>: <code>critic.md</code> and <code>kb-reader.md</code></td><td><a href="../project/opencode.json"><code>opencode.json</code></a>, <code>AGENTS.md</code></td></tr>
+<tr><td>Codex</td><td><a href="../project/.agents/skills/"><code>.agents/skills/</code></a>, run as <code>$intake</code></td><td><a href="../project/.codex/agents/critic.toml"><code>.codex/agents/critic.toml</code></a></td><td><a href="../project/.codex/config.toml"><code>.codex/config.toml</code></a>, <a href="../project/.codex/rules/"><code>.codex/rules/</code></a>, <a href="../project/.codex/hooks.json"><code>.codex/hooks.json</code></a>, <code>AGENTS.md</code></td></tr>
+<tr><td>Any other</td><td>None; you ask it to "run intake" by name</td><td>None</td><td><a href="../project/AGENTS.md"><code>AGENTS.md</code></a></td></tr></tbody></table>
+<p>Jira and Confluence are reached through the Atlassian MCP server (<code>https://mcp.atlassian.com/v2/mcp</code>), signed in as you with OAuth: <code>/mcp</code> in Claude Code, <code>opencode mcp auth atlassian</code> in OpenCode, <code>codex mcp login atlassian</code> in Codex. No token is stored in the repository. When the server isn't connected, <code>/setup</code> records your answers as "not verified", <code>/review</code> reports the Jira duplicate check as not run, and <code>/ask</code> answers from the knowledge base alone. <code>/sync</code> and <code>/backlog</code> need the connection and stop without it.</p>
+<h2 id="2-agent-pattern-one-definition-three-wrappers"><span class="num">2.</span>Agent pattern: one definition, three wrappers</h2>
+<figure class="diagram"><a href="harness-docs/diagrams/ai-ba-harness/02-agent-pattern.png" title="Open full size"><img src="harness-docs/diagrams/ai-ba-harness/02-agent-pattern.png" alt="Agent pattern: one row per command, with its Claude Code command, OpenCode command and Codex skill, the definition in agents/ they all point to, and the read-only critic or kb-reader sub-agent where one is used" width="2525" height="1223" loading="lazy"></a><figcaption>Click the diagram to open it full size.</figcaption></figure>
+<p>A command is defined once and wired into each assistant:</p>
+<ol><li>The definition, <code>agents/&lt;command&gt;.md</code>, holds every instruction: what to read first, the steps, the report and the list of things never to do. It is plain Markdown that any assistant can follow.</li><li>Each assistant has a wrapper that names the command, gives its description and what it may run without asking, and points to the definition. The wrapper carries no instructions of its own, so it can't drift from the definition. <code>python tools/kb.py check</code> fails when a command has no wrapper in an assistant's folder, or when a wrapper points somewhere else.</li><li>Four commands share <a href="../project/agents/_knowledge-pipeline.md"><code>_knowledge-pipeline.md</code></a>: <code>/kb-seed</code>, <code>/intake</code>, <code>/sync</code> and <code>/requirements</code>. All of them put knowledge into the knowledge base the same way.</li><li>The read-only <code>critic</code> sub-agent follows <a href="../project/agents/_critic.md"><code>_critic.md</code></a>. The pipeline starts it at step 4 to check each staging file, and <code>/requirements</code> starts it for its pre-check. When an assistant has no sub-agents, the same checks run as a separate second pass.</li></ol>
+<p>How each assistant limits a command:</p>
+<ul><li>In Claude Code, each wrapper's <code>allowed-tools</code> pre-approves only the reads and git commands that command needs. <code>/ask</code> also lists every write, shell, sub-agent and Atlassian write tool under <code>disallowed-tools</code>. The <code>critic</code> sub-agent has only <code>Read</code>, <code>Grep</code> and <code>Glob</code>.</li><li>In OpenCode, <code>opencode.json</code> holds the rules for every command. <code>/ask</code> runs as the <code>kb-reader</code> agent, which has no edit, shell, sub-agent or Jira write tools. OpenCode also reads the Codex skills in <code>.agents/skills/</code>, so <code>opencode.json</code> blocks them there and the commands run only as <code>/commands</code>.</li><li>In Codex, each skill except <code>ask</code> has <code>agents/openai.yaml</code> set so that it runs only when you name it. The <code>critic</code> agent runs in a read-only sandbox.</li><li>Any other assistant follows <code>AGENTS.md</code>, which lists the commands and the rules to keep where nothing enforces them.</li></ul>
+<h2 id="3-the-ba-lifecycle"><span class="num">3.</span>The BA lifecycle</h2>
+<figure class="diagram"><a href="harness-docs/diagrams/ai-ba-harness/03-ba-lifecycle.png" title="Open full size"><img src="harness-docs/diagrams/ai-ba-harness/03-ba-lifecycle.png" alt="BA lifecycle: a Jira issue or inbox material, /intake or /sync, /requirements, /review, the owner&#x27;s sign-off, /backlog and delivery from left to right, the files each stage writes, two hand-offs, the other entry points and the utilities" width="2825" height="1523" loading="lazy"></a><figcaption>Click the diagram to open it full size.</figcaption></figure>
+<p>The lifecycle runs once for each piece of work. Setting up a project (<code>new-project.sh</code>, <code>/setup</code>, the first <code>/kb-seed</code>) happens once and isn't part of it. The standard path:</p>
+<pre><code class="language-text">Jira issue, or notes or a document in inbox/
+/intake &lt;inbox file&gt; or /sync    → knowledge/_staging/&lt;date&gt;-&lt;command&gt;-&lt;slug&gt;.md, then the accepted
+                                   knowledge pages, sources/SRC-&lt;n&gt;-&lt;date&gt;-&lt;slug&gt;.md, log.md
+                                   (and _meta/sync.json for /sync)
+/requirements &lt;epic or topic&gt;     → requirements/&lt;slug&gt;/requirement.md (draft), a staging file for
+                                   new terms, rules and questions
+/review requirements/&lt;slug&gt;/requirement.md
+                                  → requirements/&lt;slug&gt;/review.md with the verdict
+  … owner sign-off: the owner approves the document; the BA records it with /intake …
+/backlog requirements/&lt;slug&gt;/requirement.md
+                                  → the Jira epic and stories, the keys in requirement.md,
+                                   rows in trace/map.csv, a log.md line
+  … delivery: the AI Dev and QA Harnesses, or the team, start from the Jira stories …</code></pre>
+<p>How the stages connect:</p>
+<ul><li>You decide at every step that changes something. Each item a command proposes waits for your accept, edit or reject. <code>/requirements</code> asks its questions one at a time and waits for a yes to the document. <code>/backlog</code> shows a preview and waits for an explicit yes before it creates anything, and your assistant asks again before each Jira write.</li><li><code>/requirements</code> starts from what the knowledge base already says and cites its rules, decisions and questions by ID. If the knowledge base has nothing on the area, it suggests an <code>/intake</code> of existing material first.</li><li><code>/backlog</code> takes only the stories <code>review.md</code> lists as ready, and needs <code>review.md</code> to be newer than the document. A sign-off approves the content, not its quality, so it never overrides the review.</li><li>The owner signs off outside the harness. When the sign-off arrives, for example as an email saved in <code>inbox/</code>, <code>/intake</code> records it: the document becomes <code>approved</code>, and every proposal it was waiting on becomes an answered question and a rule.</li><li><code>/backlog</code> writes each story's Jira key into the document and <code>trace/map.csv</code>. When <code>/sync</code> later sees a traced story reach Done, it proposes bringing what the story delivered into the knowledge pages.</li></ul>
+<p>There are other ways in. Anyone can run <code>/ask</code> to get an answer with citations. <code>/backlog task</code>, <code>spike</code> or <code>bug</code> turns a single action, question or UAT finding into one Jira issue. <code>/review</code> also takes a Jira key, or <code>kb</code> for a weekly health check of the knowledge base. A teammate's <code>/intake</code> proposes but can't decide, and its staging file goes to the BA or onto a <code>kb/stage-&lt;slug&gt;</code> branch for a pull request. <code>/improve-harness</code> changes how the harness itself works.</p>
+<h2 id="4-the-knowledge-pipeline"><span class="num">4.</span>The knowledge pipeline</h2>
+<figure class="diagram"><a href="harness-docs/diagrams/ai-ba-harness/04-knowledge-pipeline.png" title="Open full size"><img src="harness-docs/diagrams/ai-ba-harness/04-knowledge-pipeline.png" alt="Knowledge pipeline: prepare, a STOP when the pull isn&#x27;t clean, extract, judge, stage, the critic sub-agent, the maintainer check with the teammate route, the STOP where the BA decides each item, apply, commit and the STOP before pushing" width="2344" height="2108" loading="lazy"></a><figcaption>Click the diagram to open it full size.</figcaption></figure>
+<p>The pipeline is <a href="../project/agents/_knowledge-pipeline.md"><code>_knowledge-pipeline.md</code></a>, and the rules it enforces are in <a href="../project/knowledge/_meta/conventions.md"><code>conventions.md</code></a>. <code>/kb-seed</code>, <code>/intake</code>, <code>/sync</code> and <code>/requirements</code> all run it.</p>
+<p>When it runs:</p>
+<ul><li>It first asks who is running it, if that isn't clear. Only the maintainers listed in profile section 1 apply changes. Anyone else follows the teammate route: the proposal is explained in plain words and handed to the BA, or committed on a <code>kb/stage-&lt;slug&gt;</code> branch for a pull request.</li><li>It pulls first (<code>git pull --ff-only</code>) and stops if that fails, so nothing is staged against an old copy.</li><li>Extract takes every item from the input with an exact quote and where it was found: a file and bullet, a transcript time, a Jira key and comment number, or a Confluence page and section.</li><li>Judge gives each item four verdicts. Against the knowledge base it is new, confirms, extends, contradicts, a duplicate, or answers a question. It also gets a clarity verdict (vague words come from profile section 7), an authority verdict from <code>stakeholders.md</code> (can this person decide it?) and a sensitivity verdict (what to redact).</li><li>Stage writes one file to <code>knowledge/_staging/</code> with the exact change for every item, including the whole text of any new page. Items that change an existing page also list the requirements, stories and Jira keys that rely on it. Meetings get a play-back message the BA can send to the participants.</li><li>The critic re-reads the source and checks the staging file against it and the knowledge base. The command corrects what the critic marks <code>fix</code> and leaves its <code>check</code> findings for you.</li><li>At the STOP you accept, edit or reject each item, by ticking boxes in the file or in the chat. Every decision is written into the staging file before anything is applied.</li><li>Apply gives the real IDs (<code>python tools/kb.py next</code>), writes exactly what you accepted, writes the source record, rebuilds the index and registers, adds a <code>log.md</code> line, removes the staging file and runs <code>python tools/kb.py check</code>. It commits as <code>kb: &lt;command&gt; &lt;SRC-id&gt; &lt;description&gt;</code> and asks before pushing.</li><li>Confirmed or approved text is never overwritten. A contradiction becomes a question, and a change by someone who can decide it becomes a decision that supersedes the old rule.</li><li>To decide later or on another machine, commit the staging file and resume with <code>/intake knowledge/_staging/&lt;file&gt;</code>. It re-checks what changed in the knowledge base since.</li></ul>
+<p><code>/sync</code> feeds the pipeline from Jira and Confluence. It reads what changed since <code>last_synced</code> in <code>knowledge/_meta/sync.json</code>, keeps answers, decisions, changes, terms, status changes with business meaning and delivered work, and moves <code>last_synced</code> only after you have decided every item. <code>/kb-seed</code> feeds it from the existing material listed in profile section 6, which it reads in place and never changes.</p>
+<h2 id="5-requirements-and-review-requirements-review"><span class="num">5.</span>Requirements and review (<code>/requirements</code>, <code>/review</code>)</h2>
+<figure class="diagram"><a href="harness-docs/diagrams/ai-ba-harness/05-requirements-review.png" title="Open full size"><img src="harness-docs/diagrams/ai-ba-harness/05-requirements-review.png" alt="Requirements and review: /requirements goes from the current state through the clarifying interview, the draft, the critic&#x27;s pre-check and staged knowledge to the STOP and one commit; /review runs rule-based and judgement checks, gives a ready or not ready verdict, writes review.md and asks whether to set the document to confirmed" width="2405" height="1583" loading="lazy"></a><figcaption>Click the diagram to open it full size.</figcaption></figure>
+<p>The commands are <a href="../project/agents/requirements.md"><code>requirements.md</code></a> and <a href="../project/agents/review.md"><code>review.md</code></a>, and the document follows <a href="../project/templates/requirement.md"><code>templates/requirement.md</code></a>.</p>
+<p>When you run <code>/requirements</code>:</p>
+<ul><li>It takes an epic name, a topic or a Jira epic key, and starts with a cited summary of what the knowledge base says about the area and the open questions that touch it.</li><li>It decides what it can from the knowledge base, states small gaps as assumptions, and asks the rest in rounds of at most five questions, one at a time, each with a recommended answer. Scope comes first, then rules and permissions, then data, then the user's experience.</li><li>Scope, the story split and the fix version are yours to settle. Product behaviour belongs to whoever <code>stakeholders.md</code> says can decide it. When that isn't you, your answer becomes a proposal: a question to the owner, with the requirement marked "pending Q-x" until the owner's sign-off answers them all at once.</li><li>The draft has functional requirements, non-functional requirements in EARS form with a measure, user stories with at least two Given/When/Then criteria including a failure or permission path, assumptions, open questions and any conflicts with the knowledge base.</li><li>The critic's pre-check runs the rule-based checks from <code>review.md</code> and fixes what is mechanical. It gives no verdict.</li><li>New terms, rules, assumptions and questions are staged through the pipeline. You say yes or no to the document and decide each staged item, and it commits everything once as <code>req: draft &lt;slug&gt;</code>. A no deletes only the draft this run created.</li></ul>
+<p>When you run <code>/review</code>:</p>
+<ul><li>It changes nothing but its report. Rule-based checks run first (the story form, two criteria, one testable statement per requirement, EARS, vague words, IDs, the fix version, cited IDs that exist), then judgement checks (contradictions, glossary use, INVEST, missing paths, likely Jira duplicates, UI steps in criteria).</li><li>The verdict is ready when there are no critical or major findings. Either way it lists the stories that are ready and the blocked ones with their questions.</li><li>For a document it writes <code>requirements/&lt;slug&gt;/review.md</code> and commits it as <code>req: review &lt;slug&gt; &lt;verdict&gt;</code>. For a Jira key the report stays in the chat. <code>/review kb</code> runs <code>tools/kb.py check</code>, the judgement checks no script can do, a message per role with the questions to chase, and a rebuild of the index and registers.</li><li>If the document is ready and still a draft, it asks whether to set it to <code>confirmed</code>, the status <code>/backlog</code> needs.</li></ul>
+<h2 id="6-backlog-backlog"><span class="num">6.</span>Backlog (<code>/backlog</code>)</h2>
+<figure class="diagram"><a href="harness-docs/diagrams/ai-ba-harness/06-backlog.png" title="Open full size"><img src="harness-docs/diagrams/ai-ba-harness/06-backlog.png" alt="Backlog: readiness checks, building the issues from the Jira templates, the duplicate search, the preview STOP, creating and reading back each issue, writing the keys back, and the commit; on the right the single task, spike or bug path" width="2405" height="1658" loading="lazy"></a><figcaption>Click the diagram to open it full size.</figcaption></figure>
+<p>The command is <a href="../project/agents/backlog.md"><code>backlog.md</code></a>, with the issue templates in <a href="../project/templates/jira/"><code>templates/jira/</code></a>.</p>
+<p>When you run it on a requirement:</p>
+<ul><li>It checks readiness before it touches Jira: <code>review.md</code> must be newer than the document, and the document must be <code>confirmed</code> or <code>approved</code>. <code>review.md</code> decides which stories can go; stories with a blocking question wait.</li><li>It builds the epic and one story per <code>ST-</code> from the templates, with the labels, the fix version and every field Jira requires. Story points and assignee stay empty, and priority is set only when the requirement states one.</li><li>Issues that already have a key are compared section by section, and a change is proposed as a diff. A key whose story left the document is never transitioned or deleted; it is listed for you to close in Jira by hand.</li><li>It searches Jira for duplicates of each new issue and offers to link, to update the existing issue instead, or to create anyway.</li><li>The preview shows every issue with its action and fields, in batches of at most <code>max_batch</code> (default 15). Nothing is created before your explicit yes for the batch.</li><li>It creates the epic first and then each story, reads every issue back, and reports any field that didn't stick with an offer to fix it. Then it writes the keys into the document and <code>trace/map.csv</code>, adds a <code>log.md</code> line and commits as <code>req: backlog &lt;slug&gt; &lt;epic key&gt;</code>.</li></ul>
+<p><code>/backlog task ACT-&lt;n&gt;</code>, <code>spike Q-&lt;n&gt;</code> and <code>bug &lt;SRC-id&gt; &lt;item&gt;</code> create one issue from an action in <code>raid.md</code>, an open question, or a UAT finding recorded by <code>/intake</code>, after the same duplicate search and a preview, and write the key back to where it came from.</p>
+<h2 id="7-ask-ask"><span class="num">7.</span>Ask (<code>/ask</code>)</h2>
+<figure class="diagram"><a href="harness-docs/diagrams/ai-ba-harness/07-ask.png" title="Open full size"><img src="harness-docs/diagrams/ai-ba-harness/07-ask.png" alt="Ask: find in the index, glossary and pages, optionally search Jira and Confluence, answer with citations, check each claim, and say plainly what the knowledge base doesn&#x27;t answer" width="2344" height="1388" loading="lazy"></a><figcaption>Click the diagram to open it full size.</figcaption></figure>
+<p>The command is <a href="../project/agents/ask.md"><code>ask.md</code></a>. <code>CLAUDE.md</code> and <code>AGENTS.md</code> tell every assistant to answer any project question this way, whether or not the person typed <code>/ask</code>.</p>
+<p>When you ask:</p>
+<ul><li>It starts from <code>knowledge/index.md</code>, widens the search with the glossary's other names and page aliases, and searches <code>knowledge/</code> and <code>requirements/</code>. It never reads <code>inbox/</code>.</li><li>It reads Jira and Confluence only when the knowledge base doesn't settle the question, or the question is about delivery status, and labels what it found there as "from Jira" or "from Confluence".</li><li>Every claim cites the page and ID that defines it. Confirmed and approved content is stated plainly, draft content is marked "(unconfirmed: draft page)", and superseded content is never used.</li><li>Before answering, it checks each claim against the sentence on the cited page and drops anything from general knowledge.</li><li>When the knowledge base doesn't know, it says so and points to the open question that already asks it, or drafts one you can send to the BA.</li></ul>
+<h2 id="8-safety-layers"><span class="num">8.</span>Safety layers</h2>
+<figure class="diagram"><a href="harness-docs/diagrams/ai-ba-harness/08-safety-layers.png" title="Open full size"><img src="harness-docs/diagrams/ai-ba-harness/08-safety-layers.png" alt="Safety layers: one row per protection and one column for Claude Code, OpenCode and Codex, each cell marked REFUSE, ASK, SANDBOX, RULE or CONTEXT, with the safeguards beyond the settings" width="2435" height="1838" loading="lazy"></a><figcaption>Click the diagram to open it full size.</figcaption></figure>
+<p>Each assistant enforces the same protections through its own settings: <a href="../project/.claude/settings.json"><code>.claude/settings.json</code></a> for Claude Code, <a href="../project/opencode.json"><code>opencode.json</code></a> for OpenCode, and <a href="../project/.codex/config.toml"><code>.codex/config.toml</code></a> with <a href="../project/.codex/rules/ba-harness.rules"><code>.codex/rules/ba-harness.rules</code></a> and <a href="../project/.codex/hooks.json"><code>.codex/hooks.json</code></a> for Codex. <a href="../project/agents/README.md"><code>agents/README.md</code></a> explains the layers.</p>
+<table><thead><tr><th>Protection</th><th>Claude Code</th><th>OpenCode</th><th>Codex</th></tr></thead><tbody>
+<tr><td>Jira and Confluence writes</td><td>Asks before each write tool, matched by verb</td><td>Asks for every Atlassian tool that isn't a listed read</td><td>Asks for every tool not marked read-only; <code>executeWrite</code> always asks</td></tr>
+<tr><td>Jira and Confluence deletes</td><td>Refused</td><td>Refused</td><td>Refused: <code>executeDestructive</code> is switched off</td></tr>
+<tr><td><code>git push</code></td><td>Asks</td><td>Asks</td><td>Asks</td></tr>
+<tr><td>Force push, hard reset, <code>git clean</code>, <code>branch -D</code>, <code>filter-branch</code></td><td>Refused</td><td>Refused</td><td>Refused when the command starts that way</td></tr>
+<tr><td>Recursive deletes</td><td>Refused</td><td>Refused</td><td>Refused for <code>rm -r</code> and <code>rmdir</code>; <code>Remove-Item</code> asks</td></tr>
+<tr><td>A delete naming a path outside the repository</td><td>Asks</td><td>Asks; <code>external_directory</code> asks before any outside folder</td><td>The sandbox keeps commands inside the repository</td></tr>
+<tr><td>Edits to the harness's own files</td><td>Asks for <code>.claude/</code></td><td>Asks for the harness folders, <code>opencode.json</code> and <code>.mcp.json</code></td><td>The sandbox, and the definitions' rules</td></tr>
+<tr><td><code>/ask</code></td><td>Refused writes, shell, sub-agents and Atlassian writes</td><td>Runs as <code>kb-reader</code>, with no write tools</td><td>Follows the definition</td></tr>
+<tr><td>Knowledge base sync</td><td>The SessionStart hook runs <code>tools/kb-sync.sh</code></td><td>Each command runs it first</td><td>The SessionStart hook, once you trust it with <code>/hooks</code></td></tr></tbody></table>
+<p>The rules match commands as assistants normally write them, so only the narrow git commands each command needs run without asking, and anything unusual prompts. Codex applies the <code>.codex/</code> settings only to a trusted project.</p>
+<p>Other safeguards:</p>
+<ul><li>Every Jira batch needs a preview and an explicit yes, and every knowledge item needs the BA's accept.</li><li><code>inbox/</code> is ignored by git, and <code>/intake</code> proposes removing names, contact details and other personal data before anything is stored.</li><li><code>CLAUDE.md</code> and <code>AGENTS.md</code> forbid deleting or moving anything outside <code>inbox/</code> and <code>knowledge/_staging/</code>, recursive deletes, and touching <code>.git</code>. When a script or command refuses, the assistant stops and asks.</li><li><code>python tools/kb.py check</code>, and the Knowledge base check on every push, catch broken links, bad properties, unknown or duplicate IDs, stale registers and missing wrappers.</li><li><code>new-project.sh</code> only adds files, in a new folder.</li></ul>
+<p>To change a protection, use <code>/improve-harness</code>. A change to a permission or approval step is never applied in a project; it goes to the harness maintainers.</p>
+<h2 id="9-changing-the-harness-improve-harness"><span class="num">9.</span>Changing the harness (<code>/improve-harness</code>)</h2>
+<figure class="diagram"><a href="harness-docs/diagrams/ai-ba-harness/09-improve-harness.png" title="Open full size"><img src="harness-docs/diagrams/ai-ba-harness/09-improve-harness.png" alt="Changing the harness: understand the problem, decide whether it is knowledge, a project setting or a harness change, draft the diff, judge the risk, write the proposal, apply it locally only when it is safe and the BA agrees, commit and ask before pushing" width="2344" height="1658" loading="lazy"></a><figcaption>Click the diagram to open it full size.</figcaption></figure>
+<p>The command is <a href="../project/agents/improve-harness.md"><code>improve-harness.md</code></a>:</p>
+<ol><li>It asks at most three questions, one at a time: which command, what should have happened, and an example.</li><li>It decides where the fix belongs. A project setting goes into <code>PROJECT-PROFILE.md</code> after a yes. Knowledge goes through <code>/intake</code>. Anything else is a harness change.</li><li>It writes the exact change as a diff and checks it against the other commands, the conventions and the handbook.</li><li>It judges the risk: a safety change, a behaviour change, or a wording change, with the version impact.</li><li>It writes the proposal to <code>harness-feedback/&lt;date&gt;-&lt;slug&gt;.md</code> from <a href="../project/templates/harness-feedback.md"><code>templates/harness-feedback.md</code></a>.</li><li>It applies the change locally only when you maintain the repository, the change isn't a safety change, and you say yes. A local change is recorded in profile section 8, so a later harness update doesn't silently undo it.</li><li>It commits as <code>harness: &lt;proposed|local&gt; &lt;slug&gt;</code> and asks before pushing. You send the proposal to the harness maintainers.</li></ol>
+<p>A safety change touches whether, when or with what approval the harness writes anything: the settings, a wrapper's tool grants, a "Never" rule, a preview or approval step, redaction, or when Jira or Confluence is written. Those are never applied in a project. <code>/improve-harness list</code> shows the proposals and the local changes a harness update could undo.</p>
+<p>For the maintainers, <a href="../SETUP.md"><code>SETUP.md</code></a> describes taking a proposal into the template and updating a project to a new harness version.</p>
+<h2 id="10-concepts-that-apply-everywhere"><span class="num">10.</span>Concepts that apply everywhere</h2>
+<ul><li>Pages, rules and terms are <code>draft</code>, <code>confirmed</code>, <code>approved</code> or <code>superseded</code>. Confirmed means a BA checked the item against its source; approved means someone with authority decided or signed it off. Questions have a <code>state</code> instead, open or answered. Requirement documents use the same four statuses.</li><li>Every item has a stable ID with three digits (<code>CAP-</code>, <code>PROC-</code>, <code>ENT-</code>, <code>DEC-</code>, <code>Q-</code>, <code>SRC-</code>, <code>BR-</code>, <code>T-</code>, the RAID prefixes and <code>ACT-</code>), and an ID is never reused. Staging files use provisional IDs such as <code>CAP-new-1</code>; <code>python tools/kb.py next</code> gives the real number when an item is applied.</li><li>Every fact cites the source record it came from. A fact with no source becomes an open question or a stated assumption.</li><li><code>stakeholders.md</code> records what each role can decide, with a RACI for recurring decisions. A statement from someone who can't decide it is recorded as their view, with a question to the owner.</li><li><code>PROJECT-PROFILE.md</code> holds everything specific to the project: the maintainers, the Jira and Confluence settings, the business areas, limits such as <code>max_batch</code>, the vague words and preferred terms, and local harness changes.</li><li><code>tools/kb-sync.sh</code> only fast-forwards your copy, never overwrites your work, and says what to run when it can't. Switch it off with <code>kb_auto_sync: off</code> in profile section 5.</li><li><code>knowledge/index.md</code> and the three registers are generated by <code>python tools/kb.py rebuild</code> and never edited by hand.</li><li>The <code>knowledge/</code> folder opens as an Obsidian vault. Links stay in standard Markdown, so the pages read the same on GitHub and in any editor.</li></ul>
+<h2 id="11-a-bas-day-and-week"><span class="num">11.</span>A BA's day and week</h2>
+<p>The commands fall into a daily rhythm, a cycle for each epic, and a weekly check. Set-up happens once at the start and isn't repeated. In Codex, type <code>$</code> in place of <code>/</code>.</p>
+<p>Every day:</p>
+<table><thead><tr><th>When</th><th>Run</th><th>What you get</th></tr></thead><tbody>
+<tr><td>At the start of the day</td><td><code>/sync</code></td><td>New answers, decisions and changes from Jira and Confluence since the last run, proposed for you to accept</td></tr>
+<tr><td>After a meeting or workshop</td><td>Save the notes or transcript to <code>inbox/</code>, then <code>/intake inbox/&lt;file&gt;</code></td><td>The decisions, questions and requirements, and a play-back message for the participants</td></tr>
+<tr><td>When a document or email arrives</td><td><code>/intake inbox/&lt;file&gt;</code>, or paste the text after <code>/intake</code></td><td>The same, for documents</td></tr>
+<tr><td>When a stakeholder answers a question or signs off</td><td><code>/intake</code> with the answer or the email</td><td>The <code>Q-</code> item closed and its pages updated; a sign-off sets the requirement to <code>approved</code></td></tr>
+<tr><td>When an action needs tracking in Jira</td><td><code>/backlog task ACT-&lt;n&gt;</code></td><td>One Jira task, linked back to its row in <code>raid.md</code></td></tr>
+<tr><td>At the end of a working session</td><td><code>/intake</code> with no argument</td><td>What you worked out in the conversation, captured as proposals</td></tr>
+<tr><td>When someone asks you something</td><td><code>/ask &lt;question&gt;</code></td><td>A cited answer, or a drafted question when the knowledge base doesn't know</td></tr></tbody></table>
+<p>Every <code>/intake</code> and <code>/sync</code> ends the same way: you accept, edit or reject each staged item, and the command commits and asks before pushing. Decide staging files the same day; <code>/review kb</code> lists any older than a day.</p>
+<p>For each epic or change:</p>
+<ol><li>Run <code>/sync</code>, and <code>/intake</code> anything outstanding for the area, so the knowledge base is current.</li><li>Run <code>/requirements &lt;epic or topic&gt;</code>. It interviews you and writes the document, with the epic's fix version: a release such as <code>2.26</code>, or <code>unscheduled</code>.</li><li>Run <code>/review requirements/&lt;slug&gt;/requirement.md</code>. Fix what it finds and review again until the verdict is ready, then set the document to <code>confirmed</code>. Owner sign-off, when it comes, makes it <code>approved</code>.</li><li>Run <code>/backlog requirements/&lt;slug&gt;/requirement.md</code>. It creates the epic and one story per <code>ST-</code> under it, with the fix version, after a duplicate search, a preview and your explicit yes. The fix version must already exist in Jira; <code>/backlog</code> never creates one.</li><li>Developers and testers take the Jira keys. Sprints, story points and assignees stay with the team in Jira.</li><li>If the requirement changes, run <code>/requirements</code>, <code>/review</code> and <code>/backlog</code> again. Existing stories are updated as a diff, new ones created, and dropped ones listed for you to close by hand.</li><li>In UAT, <code>/intake</code> the session notes, then run <code>/backlog bug &lt;SRC-id&gt; &lt;item&gt;</code> for each problem, or <code>/backlog bug &lt;description&gt;</code> for one you describe yourself. Defects found in testing belong to the QA harness.</li><li>As stories reach Done, <code>/sync</code> proposes updating the knowledge pages to match what was delivered.</li></ol>
+<p>Every week, run <code>/review kb</code>. It reports broken links, old drafts, overdue questions and actions, leftover staging files, contradictions and business areas with no pages yet, and rebuilds the index and registers. It also drafts one message per stakeholder with the open questions waiting on them, for you to send or take to the next meeting.</p>
+<p>A task or spike always comes from something recorded first: a task from an <code>ACT-</code> action in <code>raid.md</code>, a spike from an open <code>Q-</code> question. To raise one that came up in passing, record it with <code>/intake</code> (pasting one line is enough), then run <code>/backlog task</code> or <code>/backlog spike</code>. Teammates don't run this cycle. They use <code>/ask</code>, and send new material to you.</p>
+<h2 id="12-which-command-do-i-use"><span class="num">12.</span>Which command do I use?</h2>
+<table><thead><tr><th>I want to…</th><th>Claude Code or OpenCode</th><th>Codex</th></tr></thead><tbody>
+<tr><td>Configure a new BA repository, once</td><td><code>/setup</code></td><td><code>$setup</code></td></tr>
+<tr><td>Build the first knowledge base from existing material</td><td><code>/kb-seed</code></td><td><code>$kb-seed</code></td></tr>
+<tr><td>Turn notes, a transcript or a document into proposed knowledge</td><td><code>/intake inbox/&lt;file&gt;</code></td><td><code>$intake inbox/&lt;file&gt;</code></td></tr>
+<tr><td>Bring new Jira and Confluence activity in</td><td><code>/sync</code></td><td><code>$sync</code></td></tr>
+<tr><td>Write the requirement document for an epic or topic</td><td><code>/requirements &lt;epic&gt;</code></td><td><code>$requirements &lt;epic&gt;</code></td></tr>
+<tr><td>Check a document, a Jira issue or the knowledge base</td><td><code>/review &lt;path, key or kb&gt;</code></td><td><code>$review &lt;path, key or kb&gt;</code></td></tr>
+<tr><td>Put approved stories into Jira</td><td><code>/backlog requirements/&lt;slug&gt;/requirement.md</code></td><td><code>$backlog requirements/&lt;slug&gt;/requirement.md</code></td></tr>
+<tr><td>Create one Jira task, spike or UAT bug</td><td><code>/backlog task ACT-&lt;n&gt;</code></td><td><code>$backlog task ACT-&lt;n&gt;</code></td></tr>
+<tr><td>Ask a question about the project</td><td><code>/ask &lt;question&gt;</code></td><td><code>$ask &lt;question&gt;</code></td></tr>
+<tr><td>Change a setting or propose a harness change</td><td><code>/improve-harness &lt;problem&gt;</code></td><td><code>$improve-harness &lt;problem&gt;</code></td></tr></tbody></table>
+<p>In any other assistant, ask it to run the command by name. The handbook's command reference, <a href="index.html#commands"><code>../index.html#commands</code></a>, lists every argument.</p>
+<h2 id="updating-the-diagrams">Updating the diagrams</h2>
+<p>Edit <code>diagrams/ai-ba-harness/ai-ba-harness.drawio</code> in the draw.io desktop app, or in VS Code with the "Draw.io Integration" extension. It is one uncompressed file with a page for each diagram. Then export each page to its PNG from <code>docs/harness-docs/diagrams/ai-ba-harness/</code>:</p>
+<pre><code class="language-bash"># Windows per-user install; a machine-wide install is at "/c/Program Files/draw.io/draw.io.exe".
+# macOS: /Applications/draw.io.app/Contents/MacOS/draw.io · Linux: drawio (under xvfb-run if headless)
+DRAWIO="$LOCALAPPDATA/Programs/draw.io/draw.io.exe"
+names=(01-architecture 02-agent-pattern 03-ba-lifecycle 04-knowledge-pipeline 05-requirements-review
+       06-backlog 07-ask 08-safety-layers 09-improve-harness)
+for i in "${!names[@]}"; do
+  "$DRAWIO" -x -f png -p $((i + 1)) -s 1.5 -b 20 -o "${names[$i]}.png" ai-ba-harness.drawio
+done</code></pre>
+<p>When a harness change adds, renames or removes a command, a wrapper, a safety rule or a workflow step, update the diagrams and this guide in the same change.</p>
+<p>This guide is also published as <a href="how-it-works.html"><code>docs/how-it-works.html</code></a>, which the handbook and the README link to. That page is generated from this file, so edit the <code>.md</code>, then run <code>python scripts/build-harness-guide.py</code> and commit both files together. <code>--check</code> tells you whether the page is out of date.</p>
+
+<footer>
+<p>This page is generated from <a href="harness-docs/ai-ba-harness.md"><code>docs/harness-docs/ai-ba-harness.md</code></a>
+by <code>scripts/build-harness-guide.py</code>. Edit the Markdown, then run the script. The diagrams'
+editable source is <a href="harness-docs/diagrams/ai-ba-harness/ai-ba-harness.drawio"><code>ai-ba-harness.drawio</code></a>.</p>
+<p>AI BA Harness · MIT License.</p>
+</footer>
+</main>
+</div>
+</body>
+</html>

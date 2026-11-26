@@ -4,7 +4,8 @@
 
 The worked example is written once, in docs/index.html, between <h2 id="example"> and the next
 section. This script copies it into a page of its own, with the handbook's styles, so the two never
-drift. Run it after every change to that section, and commit both files.
+drift. Run it after every change to that section, and commit both files. The how-it-works page is
+built the same way: edit docs/harness-docs/ai-ba-harness.md, then run scripts/build-harness-guide.py.
 """
 import pathlib
 import re
@@ -49,6 +50,7 @@ page = f"""{head}</head>
 {nav_links}
   <h2>More</h2>
   <a href="index.html">The BA handbook</a>
+  <a href="how-it-works.html">How it works (diagrams)</a>
 </nav>
 <main>
 <h1>FleetKeep, from setup to ask</h1>

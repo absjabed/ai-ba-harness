@@ -4,6 +4,21 @@ All notable changes to the AI BA Harness template. Versions follow the rule in t
 fixes, minor for new features projects can use without changes, major when project repositories must
 change something.
 
+## 0.6.8 (2026-11-26)
+
+- **How it works, with diagrams.** A new guide, `docs/harness-docs/ai-ba-harness.md`, explains how the
+  harness fits together: the architecture, the agent pattern across Claude Code, OpenCode and Codex,
+  the BA lifecycle from a Jira issue or inbox material to the Jira backlog, the knowledge pipeline,
+  requirements and review, backlog, ask, the safety layers, `/improve-harness`, and a BA's day
+  and week. Its nine diagrams
+  come from one draw.io file in `docs/harness-docs/diagrams/ai-ba-harness/`.
+- **Published as `docs/how-it-works.html`,** built by the new `scripts/build-harness-guide.py`
+  (`--check` says whether the page is out of date). It takes its styles from the handbook, and its
+  links to repository files are relative, so they work from a local clone. The handbook, the
+  walkthrough and the README link to it.
+
+**To update a project:** nothing to copy; the guide lives in the template.
+
 ## 0.6.7 (2026-11-03)
 
 Deletes can't reach outside the repository without a prompt, and OpenCode setup is covered:
