@@ -27,8 +27,9 @@ from one multi-page draw.io file,
 8. [Safety layers](#8-safety-layers)
 9. [Changing the harness (`/improve-harness`)](#9-changing-the-harness-improve-harness)
 10. [Concepts that apply everywhere](#10-concepts-that-apply-everywhere)
-11. [Which command do I use?](#11-which-command-do-i-use)
-12. [Updating the diagrams](#updating-the-diagrams)
+11. [A BA's day and week](#11-a-bas-day-and-week)
+12. [Which command do I use?](#12-which-command-do-i-use)
+13. [Updating the diagrams](#updating-the-diagrams)
 
 ## 1. Architecture: definitions, wiring and knowledge
 
@@ -393,7 +394,58 @@ updating a project to a new harness version.
 - The `knowledge/` folder opens as an Obsidian vault. Links stay in standard Markdown, so the pages
   read the same on GitHub and in any editor.
 
-## 11. Which command do I use?
+## 11. A BA's day and week
+
+The commands fall into a daily rhythm, a cycle for each epic, and a weekly check. Set-up happens
+once at the start and isn't repeated. In Codex, type `$` in place of `/`.
+
+Every day:
+
+| When | Run | What you get |
+|---|---|---|
+| At the start of the day | `/sync` | New answers, decisions and changes from Jira and Confluence since the last run, proposed for you to accept |
+| After a meeting or workshop | Save the notes or transcript to `inbox/`, then `/intake inbox/<file>` | The decisions, questions and requirements, and a play-back message for the participants |
+| When a document or email arrives | `/intake inbox/<file>`, or paste the text after `/intake` | The same, for documents |
+| When a stakeholder answers a question or signs off | `/intake` with the answer or the email | The `Q-` item closed and its pages updated; a sign-off sets the requirement to `approved` |
+| When an action needs tracking in Jira | `/backlog task ACT-<n>` | One Jira task, linked back to its row in `raid.md` |
+| At the end of a working session | `/intake` with no argument | What you worked out in the conversation, captured as proposals |
+| When someone asks you something | `/ask <question>` | A cited answer, or a drafted question when the knowledge base doesn't know |
+
+Every `/intake` and `/sync` ends the same way: you accept, edit or reject each staged item, and the
+command commits and asks before pushing. Decide staging files the same day; `/review kb` lists any
+older than a day.
+
+For each epic or change:
+
+1. Run `/sync`, and `/intake` anything outstanding for the area, so the knowledge base is current.
+2. Run `/requirements <epic or topic>`. It interviews you and writes the document, with the epic's fix
+   version: a release such as `2.26`, or `unscheduled`.
+3. Run `/review requirements/<slug>/requirement.md`. Fix what it finds and review again until the
+   verdict is ready, then set the document to `confirmed`. Owner sign-off, when it comes, makes it
+   `approved`.
+4. Run `/backlog requirements/<slug>/requirement.md`. It creates the epic and one story per `ST-` under
+   it, with the fix version, after a duplicate search, a preview and your explicit yes. The fix version
+   must already exist in Jira; `/backlog` never creates one.
+5. Developers and testers take the Jira keys. Sprints, story points and assignees stay with the team
+   in Jira.
+6. If the requirement changes, run `/requirements`, `/review` and `/backlog` again. Existing stories
+   are updated as a diff, new ones created, and dropped ones listed for you to close by hand.
+7. In UAT, `/intake` the session notes, then run `/backlog bug <SRC-id> <item>` for each problem, or
+   `/backlog bug <description>` for one you describe yourself. Defects found in testing belong to the
+   QA harness.
+8. As stories reach Done, `/sync` proposes updating the knowledge pages to match what was delivered.
+
+Every week, run `/review kb`. It reports broken links, old drafts, overdue questions and actions,
+leftover staging files, contradictions and business areas with no pages yet, and rebuilds the index
+and registers. It also drafts one message per stakeholder with the open questions waiting on them,
+for you to send or take to the next meeting.
+
+A task or spike always comes from something recorded first: a task from an `ACT-` action in
+`raid.md`, a spike from an open `Q-` question. To raise one that came up in passing, record it with
+`/intake` (pasting one line is enough), then run `/backlog task` or `/backlog spike`. Teammates don't
+run this cycle. They use `/ask`, and send new material to you.
+
+## 12. Which command do I use?
 
 | I want to… | Claude Code or OpenCode | Codex |
 |---|---|---|

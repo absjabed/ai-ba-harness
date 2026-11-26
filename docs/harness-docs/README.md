@@ -6,7 +6,7 @@ Technical references for how the AI BA Harness works, with editable diagrams.
 
 | Guide | What it covers |
 |-------|----------------|
-| [AI BA Harness](ai-ba-harness.md) | How the AI BA Harness works: architecture, the agent pattern across Claude Code, OpenCode and Codex, the BA lifecycle, the knowledge pipeline, requirements and review, backlog, ask, safety layers, changing the harness, concepts and which command to use, with draw.io diagrams. Published as [`../how-it-works.html`](../how-it-works.html). |
+| [AI BA Harness](ai-ba-harness.md) | How the AI BA Harness works: architecture, the agent pattern across Claude Code, OpenCode and Codex, the BA lifecycle, the knowledge pipeline, requirements and review, backlog, ask, safety layers, changing the harness, concepts, a BA's day and week, and which command to use, with draw.io diagrams. Published as [`../how-it-works.html`](../how-it-works.html). |
 
 ## Conventions
 

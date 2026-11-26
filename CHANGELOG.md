@@ -9,7 +9,8 @@ change something.
 - **How it works, with diagrams.** A new guide, `docs/harness-docs/ai-ba-harness.md`, explains how the
   harness fits together: the architecture, the agent pattern across Claude Code, OpenCode and Codex,
   the BA lifecycle from a Jira issue or inbox material to the Jira backlog, the knowledge pipeline,
-  requirements and review, backlog, ask, the safety layers and `/improve-harness`. Its nine diagrams
+  requirements and review, backlog, ask, the safety layers, `/improve-harness`, and a BA's day
+  and week. Its nine diagrams
   come from one draw.io file in `docs/harness-docs/diagrams/ai-ba-harness/`.
 - **Published as `docs/how-it-works.html`,** built by the new `scripts/build-harness-guide.py`
   (`--check` says whether the page is out of date). It takes its styles from the handbook, and its
