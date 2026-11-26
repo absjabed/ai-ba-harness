@@ -29,7 +29,9 @@ This repository is the template, so don't do project work in it. Create a projec
 > harness does, setting up a project, a worked example of every command on one project (from `/setup`
 > to `/ask`), what to run when, the knowledge base, Jira templates and troubleshooting. Open it in a
 > browser. To share the worked example with a team, use its own page,
-> [`docs/walkthrough.html`](docs/walkthrough.html).
+> [`docs/walkthrough.html`](docs/walkthrough.html). How the pieces fit together, with a diagram for
+> each part, is in [`docs/how-it-works.html`](docs/how-it-works.html), generated from
+> [`docs/harness-docs/ai-ba-harness.md`](docs/harness-docs/ai-ba-harness.md).
 
 ## Built on
 
@@ -74,11 +76,14 @@ Then follow [SETUP.md](SETUP.md): create the shared remote, sign in to Atlassian
 | [`project/`](project) | Everything a project repository receives. Edit the harness here |
 | [`scripts/new-project.sh`](scripts/new-project.sh) | Copies `project/` into a new project repository and records the harness version |
 | [`scripts/build-walkthrough.py`](scripts/build-walkthrough.py) | Rebuilds `docs/walkthrough.html` from the handbook's "Follow a whole project" section |
+| [`scripts/build-harness-guide.py`](scripts/build-harness-guide.py) | Rebuilds `docs/how-it-works.html` from `docs/harness-docs/ai-ba-harness.md`; `--check` says whether it is out of date |
 | [`examples/fleetkeep-ba-knowledge/`](examples/fleetkeep-ba-knowledge) | A complete, filled-in project repository to learn from |
 | [`examples/fleetkeep-demo-test/`](examples/fleetkeep-demo-test/DEMO-TEST.md) | The raw output of the 0.5.0 demo test, kept as it was left (see `research/08-demo-test.md`) |
 | [`examples/fleetkeep-demo-test-2/`](examples/fleetkeep-demo-test-2/DEMO-TEST.md) | The raw output of the second demo test, with two BAs and a developer (see `research/09-second-demo-test.md`) |
 | [`docs/index.html`](docs/index.html) | The BA handbook |
 | [`docs/walkthrough.html`](docs/walkthrough.html) | The handbook's worked example as a page of its own, for sharing with a team. Generated: don't edit it |
+| [`docs/harness-docs/`](docs/harness-docs/README.md) | How the harness works: the guide `ai-ba-harness.md` and its draw.io diagrams |
+| [`docs/how-it-works.html`](docs/how-it-works.html) | The same guide as a page that matches the handbook. Generated: don't edit it |
 | [`SETUP.md`](SETUP.md) | Step-by-step setup of a project repository |
 | [`design/`](design) | The agreed design: decisions, command definitions, workflow, knowledge-base conventions, Jira templates, layout |
 | [`research/`](research) | The research behind the design |
@@ -96,7 +101,9 @@ a `CHANGELOG.md` entry and tag the commit `v<version>`:
 
 The handbook's sidebar shows the same version, so update it in the same change. Then run
 `python scripts/build-walkthrough.py`, which copies the new version and any edits to the worked
-example into the walkthrough page.
+example into the walkthrough page, and `python scripts/build-harness-guide.py`, which does the same
+for the how-it-works page. To change that page, edit `docs/harness-docs/ai-ba-harness.md`, then run
+the script.
 
 ## License
 
